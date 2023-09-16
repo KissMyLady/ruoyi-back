@@ -33,11 +33,13 @@ server:
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 100
 
+# 配置包路径日志级别
 # 日志配置
 logging:
   level:
-    com.ruoyi: debug
+    com.ruoyi: info
     org.springframework: warn
+    org.apache.shiro.cache.ehcache: warn
 
 # 用户配置
 user:

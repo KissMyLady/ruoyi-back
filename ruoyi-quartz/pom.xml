@@ -8,15 +8,15 @@
         <version>3.8.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    
     <artifactId>ruoyi-quartz</artifactId>
-
+    
     <description>
         quartz定时任务
     </description>
-
+    
     <dependencies>
-
+        
         <!-- 定时任务 -->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
@@ -28,13 +28,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        
         <!-- 通用工具-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common</artifactId>
         </dependency>
-
+    
     </dependencies>
 
 </project>
