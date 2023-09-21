@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -66,7 +67,10 @@ public class LogAspect {
      * @param joinPoint 切点
      */
     @AfterReturning(pointcut = "@annotation(controllerLog)", returning = "jsonResult")
-    public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult) {
+    public void doAfterReturning(JoinPoint joinPoint,
+                                 Log controllerLog,
+                                 Object jsonResult
+    ) {
         handleLog(joinPoint, controllerLog, null, jsonResult);
     }
 
@@ -81,7 +85,11 @@ public class LogAspect {
         handleLog(joinPoint, controllerLog, e, null);
     }
 
-    protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult) {
+    protected void handleLog(final JoinPoint joinPoint,
+                             Log controllerLog,
+                             final Exception e,
+                             Object jsonResult
+    ) {
         try {
             // 获取当前的用户
             LoginUser loginUser = SecurityUtils.getLoginUser();
@@ -89,10 +97,33 @@ public class LogAspect {
             // *========数据库日志=========*//
             SysOperLog operLog = new SysOperLog();
             operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
+
             // 请求的地址
             String ip = IpUtils.getIpAddr();
             operLog.setOperIp(ip);
-            operLog.setOperUrl(StringUtils.substring(ServletUtils.getRequest().getRequestURI(), 0, 255));
+
+            HttpServletRequest request = ServletUtils.getRequest();  // 获取request
+            String requestURI = request.getRequestURI();  // 请求url
+
+            operLog.setOperUrl(StringUtils.substring(requestURI, 0, 255));
+
+            String header = request.getHeader("User-Agent");
+
+            //请求
+            //设置浏览器, 访问ip
+            final UserAgent userAgent = UserAgent.parseUserAgentString(header);
+
+            // 获取客户端操作系统
+            String os = userAgent.getOperatingSystem().getName();
+            // 获取客户端浏览器
+            String browser = userAgent.getBrowser().getName();
+
+            operLog.setReqAgent(userAgent.toString());
+            operLog.setReqBrowser(browser);
+            operLog.setReqSystem(os);
+
+            logger.info("获取到的浏览器请求头: {}, os: {}, browser: {}", userAgent.toString(), os, browser);
+
             if (loginUser != null) {
                 operLog.setOperName(loginUser.getUsername());
             }
@@ -101,6 +132,7 @@ public class LogAspect {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
                 operLog.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
             }
+
             // 设置方法名称
             String className = joinPoint.getTarget().getClass().getName();
             String methodName = joinPoint.getSignature().getName();
@@ -113,6 +145,7 @@ public class LogAspect {
             operLog.setCostTime(System.currentTimeMillis() - TIME_THREADLOCAL.get());
             // 保存数据库
             AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
+
         } catch (Exception exp) {
             // 记录本地异常日志
             logger.error("异常信息:{}", exp.getMessage());
@@ -129,7 +162,11 @@ public class LogAspect {
      * @param operLog 操作日志
      * @throws Exception
      */
-    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog, Object jsonResult) throws Exception {
+    public void getControllerMethodDescription(JoinPoint joinPoint,
+                                               Log log,
+                                               SysOperLog operLog,
+                                               Object jsonResult
+    ) throws Exception {
         // 设置action动作
         operLog.setBusinessType(log.businessType().ordinal());
         // 设置标题
@@ -139,7 +176,11 @@ public class LogAspect {
         // 是否需要保存request，参数和值
         if (log.isSaveRequestData()) {
             // 获取参数的信息，传入到数据库中。
-            setRequestValue(joinPoint, operLog, log.excludeParamNames());
+            setRequestValue(
+                    joinPoint,
+                    operLog,
+                    log.excludeParamNames()
+            );
         }
         // 是否需要保存response，参数和值
         if (log.isSaveResponseData() && StringUtils.isNotNull(jsonResult)) {

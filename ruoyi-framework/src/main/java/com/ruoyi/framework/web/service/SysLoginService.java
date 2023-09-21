@@ -30,6 +30,8 @@ import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 
+import java.util.TimerTask;
+
 /**
  * 登录校验方法
  *
@@ -68,6 +70,7 @@ public class SysLoginService {
         loginPreCheck(username, password);
         // 用户验证
         Authentication authentication = null;
+
         try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             AuthenticationContextHolder.setContext(authenticationToken);
@@ -84,11 +87,20 @@ public class SysLoginService {
         } finally {
             AuthenticationContextHolder.clearContext();
         }
-        AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+
+        String message = MessageUtils.message("user.login.success");
+        TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, message);
+
+        //异步任务执行, 执行
+        AsyncManager.me().execute(timerTask);
+
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+
         recordLoginInfo(loginUser.getUserId());
+
         // 生成token
-        return tokenService.createToken(loginUser);
+        String token = tokenService.createToken(loginUser);
+        return token;
     }
 
     /**

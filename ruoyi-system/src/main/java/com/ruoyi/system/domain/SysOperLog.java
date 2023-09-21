@@ -118,6 +118,43 @@ public class SysOperLog extends BaseEntity {
     @Excel(name = "操作时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date operTime;
 
+
+    //请求头
+    @Excel(name = "请求头")
+    private String reqAgent;
+
+    //浏览器
+    @Excel(name = "浏览器")
+    private String reqBrowser;
+
+    //操作系统
+    @Excel(name = "操作系统")
+    private String reqSystem;
+
+    public String getReqAgent() {
+        return reqAgent;
+    }
+
+    public void setReqAgent(String reqAgent) {
+        this.reqAgent = reqAgent;
+    }
+
+    public String getReqBrowser() {
+        return reqBrowser;
+    }
+
+    public void setReqBrowser(String reqBrowser) {
+        this.reqBrowser = reqBrowser;
+    }
+
+    public String getReqSystem() {
+        return reqSystem;
+    }
+
+    public void setReqSystem(String reqSystem) {
+        this.reqSystem = reqSystem;
+    }
+
     /**
      * 消耗时间
      */

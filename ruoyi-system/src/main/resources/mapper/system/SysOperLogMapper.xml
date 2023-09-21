@@ -22,6 +22,9 @@
         <result property="errorMsg" column="error_msg"/>
         <result property="operTime" column="oper_time"/>
         <result property="costTime" column="cost_time"/>
+        <result property="reqAgent" column="req_agent"/>
+        <result property="reqBrowser" column="req_browser"/>
+        <result property="reqSystem" column="req_system"/>
     </resultMap>
     
     <sql id="selectOperLogVo">
@@ -44,19 +47,27 @@
                status,
                error_msg,
                oper_time,
-               cost_time,
                is_delete,
-               create_time,
-               update_time
+               cost_time
         from sys_oper_log
     </sql>
     
     <insert id="insertOperlog" parameterType="SysOperLog">
         insert into sys_oper_log(title, business_type, method, request_method, operator_type, oper_name, dept_name,
-                                 oper_url, oper_ip, oper_location, oper_param, json_result, status, error_msg,
-                                 cost_time, oper_time)
+                                 oper_url, oper_ip, oper_location,
+                                 req_agent,
+                                 req_browser,
+                                 req_system,
+                                 oper_param, json_result, status, error_msg,
+                                 cost_time, oper_time
+                                 
+                                 )
         values (#{title}, #{businessType}, #{method}, #{requestMethod}, #{operatorType}, #{operName}, #{deptName},
-                #{operUrl}, #{operIp}, #{operLocation}, #{operParam}, #{jsonResult}, #{status}, #{errorMsg},
+                #{operUrl}, #{operIp}, #{operLocation},
+                #{reqAgent},
+                #{reqBrowser},
+                #{reqSystem},
+                #{operParam}, #{jsonResult}, #{status}, #{errorMsg},
                 #{costTime}, sysdate())
     </insert>
     

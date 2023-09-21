@@ -34,8 +34,11 @@ public class AsyncFactory {
      * @param args     列表
      * @return 任务task
      */
-    public static TimerTask recordLogininfor(final String username, final String status, final String message,
-                                             final Object... args) {
+    public static TimerTask recordLogininfor(final String username,
+                                             final String status,
+                                             final String message,
+                                             final Object... args)
+    {
         final UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
         final String ip = IpUtils.getIpAddr();
         return new TimerTask() {
@@ -85,7 +88,9 @@ public class AsyncFactory {
             @Override
             public void run() {
                 // 远程查询操作地点
-                operLog.setOperLocation(AddressUtils.getRealAddressByIP(operLog.getOperIp()));
+                String realAddressByIP = AddressUtils.getRealAddressByIP(operLog.getOperIp());
+                operLog.setOperLocation(realAddressByIP);
+
                 SpringUtils.getBean(ISysOperLogService.class).insertOperlog(operLog);
             }
         };
