@@ -39,7 +39,8 @@ import com.ruoyi.system.domain.SysOperLog;
 @Aspect
 @Component
 public class LogAspect {
-    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
     /**
      * 排除敏感属性字段
@@ -114,7 +115,7 @@ public class LogAspect {
             AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
         } catch (Exception exp) {
             // 记录本地异常日志
-            log.error("异常信息:{}", exp.getMessage());
+            logger.error("异常信息:{}", exp.getMessage());
             exp.printStackTrace();
         } finally {
             TIME_THREADLOCAL.remove();
@@ -142,7 +143,9 @@ public class LogAspect {
         }
         // 是否需要保存response，参数和值
         if (log.isSaveResponseData() && StringUtils.isNotNull(jsonResult)) {
-            operLog.setJsonResult(StringUtils.substring(JSON.toJSONString(jsonResult), 0, 2000));
+            String jsonString = JSON.toJSONString(jsonResult);
+            // String substring = StringUtils.substring(JSON.toJSONString(jsonResult), 0, 2000);
+            operLog.setJsonResult(jsonString);
         }
     }
 
@@ -152,15 +155,23 @@ public class LogAspect {
      * @param operLog 操作日志
      * @throws Exception 异常
      */
-    private void setRequestValue(JoinPoint joinPoint, SysOperLog operLog, String[] excludeParamNames) throws Exception {
+    private void setRequestValue(JoinPoint joinPoint,
+                                 SysOperLog operLog,
+                                 String[] excludeParamNames
+    ) throws Exception {
         Map<?, ?> paramsMap = ServletUtils.getParamMap(ServletUtils.getRequest());
         String requestMethod = operLog.getRequestMethod();
+
         if (StringUtils.isEmpty(paramsMap)
-                && (HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod))) {
+                && (HttpMethod.PUT.name().equals(requestMethod)
+                || HttpMethod.POST.name().equals(requestMethod)))
+        {
             String params = argsArrayToString(joinPoint.getArgs(), excludeParamNames);
             operLog.setOperParam(StringUtils.substring(params, 0, 2000));
         } else {
-            operLog.setOperParam(StringUtils.substring(JSON.toJSONString(paramsMap, excludePropertyPreFilter(excludeParamNames)), 0, 2000));
+            String jsonString = JSON.toJSONString(paramsMap, excludePropertyPreFilter(excludeParamNames));
+            // String substring = StringUtils.substring(jsonString, 0, 2000);  //保留2000个字符
+            operLog.setOperParam(jsonString);
         }
     }
 
@@ -176,6 +187,7 @@ public class LogAspect {
                         String jsonObj = JSON.toJSONString(o, excludePropertyPreFilter(excludeParamNames));
                         params += jsonObj.toString() + " ";
                     } catch (Exception e) {
+                        logger.warn("参数拼装错误, 原因是: {}", e.toString());
                     }
                 }
             }
@@ -187,7 +199,11 @@ public class LogAspect {
      * 忽略敏感属性
      */
     public PropertyPreExcludeFilter excludePropertyPreFilter(String[] excludeParamNames) {
-        return new PropertyPreExcludeFilter().addExcludes(ArrayUtils.addAll(EXCLUDE_PROPERTIES, excludeParamNames));
+        //敏感属性字段
+        String[] strings = ArrayUtils.addAll(EXCLUDE_PROPERTIES, excludeParamNames);
+        PropertyPreExcludeFilter pro = new PropertyPreExcludeFilter();
+        pro.addExcludes(strings);
+        return pro;
     }
 
     /**
@@ -213,7 +229,11 @@ public class LogAspect {
                 return entry.getValue() instanceof MultipartFile;
             }
         }
-        return o instanceof MultipartFile || o instanceof HttpServletRequest || o instanceof HttpServletResponse
+
+        boolean b = o instanceof MultipartFile
+                || o instanceof HttpServletRequest
+                || o instanceof HttpServletResponse
                 || o instanceof BindingResult;
+        return b;
     }
 }

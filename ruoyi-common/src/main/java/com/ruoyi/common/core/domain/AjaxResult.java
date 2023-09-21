@@ -12,11 +12,10 @@ import com.ruoyi.common.utils.StringUtils;
  * @author ruoyi
  */
 public class AjaxResult extends HashMap<String, Object> {
+
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 状态码
-     */
+    //状态码
     public static final String CODE_TAG = "code";
 
     /**

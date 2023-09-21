@@ -52,7 +52,7 @@ public class FileUploadUtils {
      * @return 文件名称
      * @throws Exception
      */
-    public static final String upload(MultipartFile file) throws IOException {
+    public static String upload(MultipartFile file) throws IOException {
         try {
             return upload(getDefaultBaseDir(), file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
         } catch (Exception e) {
@@ -68,9 +68,10 @@ public class FileUploadUtils {
      * @return 文件名称
      * @throws IOException
      */
-    public static final String upload(String baseDir, MultipartFile file) throws IOException {
+    public static String upload(String baseDir, MultipartFile file) throws IOException {
         try {
-            return upload(baseDir, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+            String pathFileName = upload(baseDir, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+            return pathFileName;
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -88,32 +89,54 @@ public class FileUploadUtils {
      * @throws IOException                          比如读写文件出错时
      * @throws InvalidExtensionException            文件校验异常
      */
-    public static final String upload(String baseDir, MultipartFile file, String[] allowedExtension)
-            throws FileSizeLimitExceededException, IOException, FileNameLengthLimitExceededException,
-            InvalidExtensionException {
+    public static String upload(String baseDir,
+                                MultipartFile file,
+                                String[] allowedExtension)
+            throws FileSizeLimitExceededException,
+            IOException,
+            FileNameLengthLimitExceededException,
+            InvalidExtensionException
+    {
+        //获取文件长度
         int fileNamelength = Objects.requireNonNull(file.getOriginalFilename()).length();
         if (fileNamelength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
             throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
         }
 
+        //文件大小校验, 类型校验
         assertAllowed(file, allowedExtension);
 
+        //编码文件名
         String fileName = extractFilename(file);
 
-        String absPath = getAbsoluteFile(baseDir, fileName).getAbsolutePath();
+        //获取File对象
+        String absPath = getAbsoluteFile(
+                baseDir,
+                fileName
+        ).getAbsolutePath();
+
+        //写入. 将当前对象的输入流（可能是文件或其他数据源）的内容复制到指定的目录路径。
         file.transferTo(Paths.get(absPath));
-        return getPathFileName(baseDir, fileName);
+
+        String pathFileName = getPathFileName(baseDir, fileName);
+        return pathFileName;
     }
 
     /**
      * 编码文件名
      */
-    public static final String extractFilename(MultipartFile file) {
-        return StringUtils.format("{}/{}_{}.{}", DateUtils.datePath(),
-                FilenameUtils.getBaseName(file.getOriginalFilename()), Seq.getId(Seq.uploadSeqType), getExtension(file));
+    public static String extractFilename(MultipartFile file) {
+        String format = StringUtils.format(
+                "{}/{}_{}.{}",
+                DateUtils.datePath(),
+                FilenameUtils.getBaseName(file.getOriginalFilename()),
+                Seq.getId(Seq.uploadSeqType),
+                getExtension(file)
+        );
+        return format;
     }
 
-    public static final File getAbsoluteFile(String uploadDir, String fileName) throws IOException {
+    public static File getAbsoluteFile(String uploadDir, String fileName) throws IOException {
         File desc = new File(uploadDir + File.separator + fileName);
 
         if (!desc.exists()) {
@@ -124,7 +147,7 @@ public class FileUploadUtils {
         return desc;
     }
 
-    public static final String getPathFileName(String uploadDir, String fileName) throws IOException {
+    public static String getPathFileName(String uploadDir, String fileName) throws IOException {
         int dirLastIndex = RuoYiConfig.getProfile().length() + 1;
         String currentDir = StringUtils.substring(uploadDir, dirLastIndex);
         return Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
@@ -138,7 +161,7 @@ public class FileUploadUtils {
      * @throws FileSizeLimitExceededException 如果超出最大大小
      * @throws InvalidExtensionException
      */
-    public static final void assertAllowed(MultipartFile file, String[] allowedExtension)
+    public static void assertAllowed(MultipartFile file, String[] allowedExtension)
             throws FileSizeLimitExceededException, InvalidExtensionException {
         long size = file.getSize();
         if (size > DEFAULT_MAX_SIZE) {
@@ -147,19 +170,16 @@ public class FileUploadUtils {
 
         String fileName = file.getOriginalFilename();
         String extension = getExtension(file);
+
         if (allowedExtension != null && !isAllowedExtension(extension, allowedExtension)) {
             if (allowedExtension == MimeTypeUtils.IMAGE_EXTENSION) {
-                throw new InvalidExtensionException.InvalidImageExtensionException(allowedExtension, extension,
-                        fileName);
+                throw new InvalidExtensionException.InvalidImageExtensionException(allowedExtension, extension, fileName);
             } else if (allowedExtension == MimeTypeUtils.FLASH_EXTENSION) {
-                throw new InvalidExtensionException.InvalidFlashExtensionException(allowedExtension, extension,
-                        fileName);
+                throw new InvalidExtensionException.InvalidFlashExtensionException(allowedExtension, extension, fileName);
             } else if (allowedExtension == MimeTypeUtils.MEDIA_EXTENSION) {
-                throw new InvalidExtensionException.InvalidMediaExtensionException(allowedExtension, extension,
-                        fileName);
+                throw new InvalidExtensionException.InvalidMediaExtensionException(allowedExtension, extension, fileName);
             } else if (allowedExtension == MimeTypeUtils.VIDEO_EXTENSION) {
-                throw new InvalidExtensionException.InvalidVideoExtensionException(allowedExtension, extension,
-                        fileName);
+                throw new InvalidExtensionException.InvalidVideoExtensionException(allowedExtension, extension, fileName);
             } else {
                 throw new InvalidExtensionException(allowedExtension, extension, fileName);
             }
@@ -173,7 +193,7 @@ public class FileUploadUtils {
      * @param allowedExtension
      * @return
      */
-    public static final boolean isAllowedExtension(String extension, String[] allowedExtension) {
+    public static boolean isAllowedExtension(String extension, String[] allowedExtension) {
         for (String str : allowedExtension) {
             if (str.equalsIgnoreCase(extension)) {
                 return true;
@@ -188,7 +208,7 @@ public class FileUploadUtils {
      * @param file 表单文件
      * @return 后缀名
      */
-    public static final String getExtension(MultipartFile file) {
+    public static String getExtension(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         if (StringUtils.isEmpty(extension)) {
             extension = MimeTypeUtils.getExtension(Objects.requireNonNull(file.getContentType()));

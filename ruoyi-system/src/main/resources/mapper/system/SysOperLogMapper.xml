@@ -36,12 +36,18 @@
                oper_url,
                oper_ip,
                oper_location,
+               req_agent,
+               req_browser,
+               req_system,
                oper_param,
                json_result,
                status,
                error_msg,
                oper_time,
-               cost_time
+               cost_time,
+               is_delete,
+               create_time,
+               update_time
         from sys_oper_log
     </sql>
     

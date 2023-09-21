@@ -32,12 +32,14 @@ public class SysOperlogController extends BaseController {
     @Autowired
     private ISysOperLogService operLogService;
 
+    //查询操作日志
     @PreAuthorize("@ss.hasPermi('monitor:operlog:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysOperLog operLog) {
         startPage();
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
-        return getDataTable(list);
+        TableDataInfo dataTable = getDataTable(list);
+        return dataTable;
     }
 
     @Log(title = "操作日志", businessType = BusinessType.EXPORT)
@@ -53,7 +55,12 @@ public class SysOperlogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('monitor:operlog:remove')")
     @DeleteMapping("/{operIds}")
     public AjaxResult remove(@PathVariable Long[] operIds) {
-        return toAjax(operLogService.deleteOperLogByIds(operIds));
+        int i = operLogService.deleteOperLogByIds(operIds);
+        if (i > 0){
+            return AjaxResult.success();
+        }else {
+            return AjaxResult.error();
+        }
     }
 
     @Log(title = "操作日志", businessType = BusinessType.CLEAN)
@@ -61,6 +68,6 @@ public class SysOperlogController extends BaseController {
     @DeleteMapping("/clean")
     public AjaxResult clean() {
         operLogService.cleanOperLog();
-        return success();
+        return AjaxResult.success();
     }
 }
