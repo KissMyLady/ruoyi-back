@@ -25,7 +25,9 @@ public class HelloV2 {
     @Log(title = "HelloWorld测试", businessType = BusinessType.TEST)
     @GetMapping("/world")
     public AjaxResult getCode(HttpServletResponse response) {
-        logger.info("web接口请求: {}", response.getHeaderNames());
+        logger.info("HelloWorld测试 /hello/world: {}", response.getHeaderNames());
+        logger.warn("HelloWorld测试 /hello/world: {}", response.getHeaderNames());
+        logger.error("HelloWorld测试 /hello/world: {}", response.getHeaderNames());
         return AjaxResult.success("成功");
     }
 

@@ -21,7 +21,9 @@ public class HelloWorld {
     private static final Logger logger = LoggerFactory.getLogger(HelloWorld.class);
     @GetMapping("/v1")
     public AjaxResult getCode(HttpServletResponse response) {
-        logger.info("访问了Hello world, {}", response.getHeaderNames());
+        logger.info("访问 /hi/v1: {}", response.getHeaderNames());
+        logger.warn("访问 /hi/v1: {}", response.getHeaderNames());
+        logger.error("访问 /hi/v1: {}", response.getHeaderNames());
         return AjaxResult.success("Hello World !");
     }
 
