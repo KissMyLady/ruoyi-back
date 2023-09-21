@@ -28,6 +28,7 @@ import com.ruoyi.system.service.ISysOperLogService;
 @RestController
 @RequestMapping("/monitor/operlog")
 public class SysOperlogController extends BaseController {
+
     @Autowired
     private ISysOperLogService operLogService;
 

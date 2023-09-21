@@ -30,6 +30,7 @@ import com.ruoyi.system.domain.SysCache;
 @RestController
 @RequestMapping("/monitor/cache")
 public class CacheController {
+
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 

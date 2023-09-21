@@ -31,6 +31,7 @@ import com.ruoyi.system.service.ISysUserService;
 @RestController
 @RequestMapping("/system/user/profile")
 public class SysProfileController extends BaseController {
+
     @Autowired
     private ISysUserService userService;
 

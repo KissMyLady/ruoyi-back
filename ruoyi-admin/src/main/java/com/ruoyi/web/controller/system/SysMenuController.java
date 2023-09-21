@@ -30,6 +30,7 @@ import com.ruoyi.system.service.ISysMenuService;
 @RestController
 @RequestMapping("/system/menu")
 public class SysMenuController extends BaseController {
+
     @Autowired
     private ISysMenuService menuService;
 
@@ -115,10 +116,10 @@ public class SysMenuController extends BaseController {
     @DeleteMapping("/{menuId}")
     public AjaxResult remove(@PathVariable("menuId") Long menuId) {
         if (menuService.hasChildByMenuId(menuId)) {
-            return warn("存在子菜单,不允许删除");
+            return warn("存在子菜单,不允许删除.");
         }
         if (menuService.checkMenuExistRole(menuId)) {
-            return warn("菜单已分配,不允许删除");
+            return warn("菜单已分配给角色,不允许删除. 需要删除角色里使用的菜单,再执行删除.");
         }
         return toAjax(menuService.deleteMenuById(menuId));
     }
