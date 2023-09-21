@@ -122,7 +122,7 @@ public class LogAspect {
             operLog.setReqBrowser(browser);
             operLog.setReqSystem(os);
 
-            logger.info("获取到的浏览器请求头: {}, os: {}, browser: {}", userAgent.toString(), os, browser);
+            // logger.info("获取到的浏览器请求头: {}, os: {}, browser: {}", userAgent.toString(), os, browser);
 
             if (loginUser != null) {
                 operLog.setOperName(loginUser.getUsername());
@@ -148,7 +148,7 @@ public class LogAspect {
 
         } catch (Exception exp) {
             // 记录本地异常日志
-            logger.error("异常信息:{}", exp.getMessage());
+            logger.error("LOG日志注解AOP异常信息:{}", exp.getMessage());
             exp.printStackTrace();
         } finally {
             TIME_THREADLOCAL.remove();
@@ -228,7 +228,7 @@ public class LogAspect {
                         String jsonObj = JSON.toJSONString(o, excludePropertyPreFilter(excludeParamNames));
                         params += jsonObj.toString() + " ";
                     } catch (Exception e) {
-                        logger.warn("参数拼装错误, 原因是: {}", e.toString());
+                        logger.warn("日志Log注解AOP参数拼装错误, 原因是: {}", e.toString());
                     }
                 }
             }

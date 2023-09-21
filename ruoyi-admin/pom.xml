@@ -17,12 +17,12 @@
     
     <dependencies>
         
-        <!-- spring-boot-devtools -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional> <!-- 表示依赖不会传递 -->
-        </dependency>
+        <!-- spring-boot-devtools 自动热重启 -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-devtools</artifactId>-->
+<!--            <optional>true</optional> &lt;!&ndash; 表示依赖不会传递 &ndash;&gt;-->
+<!--        </dependency>-->
         
         <!--测试模块-->
         <dependency>
@@ -80,7 +80,12 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
-    
+        
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-platform</artifactId>
+        </dependency>
+        
     </dependencies>
     
     <build>

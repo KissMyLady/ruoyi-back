@@ -1,5 +1,6 @@
 package com.ruoyi.common.utils;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,7 +54,13 @@ public class SecurityUtils {
         try {
             return (LoginUser) getAuthentication().getPrincipal();
         } catch (Exception e) {
-            throw new ServiceException("获取用户信息异常", HttpStatus.UNAUTHORIZED);
+            // throw new ServiceException("获取用户信息异常", HttpStatus.UNAUTHORIZED);
+            SysUser user = new SysUser();
+            user.setUserName("获取用户信息异常.未知用户");
+            LoginUser notLoginUser = new LoginUser();
+            notLoginUser.setUserId(1L);
+            notLoginUser.setUser(user);
+            return notLoginUser;
         }
     }
 

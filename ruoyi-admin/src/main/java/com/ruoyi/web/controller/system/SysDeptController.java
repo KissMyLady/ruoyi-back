@@ -42,7 +42,7 @@ public class SysDeptController extends BaseController {
     @GetMapping("/list")
     public AjaxResult list(SysDept dept) {
         List<SysDept> depts = deptService.selectDeptList(dept);
-        return success(depts);
+        return AjaxResult.success(depts);
     }
 
     /**
