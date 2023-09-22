@@ -130,7 +130,8 @@ public class LogAspect {
 
             if (e != null) {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
-                operLog.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
+                String eMsg = StringUtils.substring(e.getMessage(), 0, 2000);
+                operLog.setErrorMsg(eMsg);
             }
 
             // 设置方法名称

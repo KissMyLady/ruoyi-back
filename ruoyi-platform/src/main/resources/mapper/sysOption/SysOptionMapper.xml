@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.liveBroadcastApp.sys_option.mapper.SysOptionMapper">
+
+    <resultMap type="SysOption" id="SysOptionResult">
+            <result property="id" column="id"    />
+            <result property="title" column="title"    />
+            <result property="dictKey" column="dict_key"    />
+            <result property="dictValue" column="dict_value"    />
+            <result property="isDelete" column="is_delete"    />
+            <result property="createTime" column="create_time"    />
+            <result property="updateTime" column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysOptionVo">
+        select id, title, dict_key, dict_value, is_delete, create_time, update_time from sys_option
+    </sql>
+
+    <select id="selectSysOptionList"
+            parameterType="SysOption"
+            resultMap="SysOptionResult">
+        <include refid="selectSysOptionVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="dictKey != null  and dictKey != ''"> and dict_key = #{dictKey}</if>
+            <if test="dictValue != null  and dictValue != ''"> and dict_value = #{dictValue}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+
+    <select id="selectSysOptionById"
+            parameterType="Long"
+            resultMap="SysOptionResult">
+            <include refid="selectSysOptionVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertSysOption" parameterType="SysOption" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_option
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="title != null">title,</if>
+                    <if test="dictKey != null">dict_key,</if>
+                    <if test="dictValue != null">dict_value,</if>
+                    <if test="isDelete != null">is_delete,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="title != null">#{title},</if>
+                    <if test="dictKey != null">#{dictKey},</if>
+                    <if test="dictValue != null">#{dictValue},</if>
+                    <if test="isDelete != null">#{isDelete},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysOption" parameterType="SysOption">
+        update sys_option
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="title != null">title = #{title},</if>
+                    <if test="dictKey != null">dict_key = #{dictKey},</if>
+                    <if test="dictValue != null">dict_value = #{dictValue},</if>
+                    <if test="isDelete != null">is_delete = #{isDelete},</if>
+                    <if test="createTime != null">create_time = #{createTime},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysOptionById" parameterType="Long">
+        delete from sys_option where id = #{id}
+    </delete>
+
+    <delete id="deleteSysOptionByIds" parameterType="String">
+        delete from sys_option where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
