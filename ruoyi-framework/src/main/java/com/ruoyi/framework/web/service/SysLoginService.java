@@ -2,6 +2,8 @@ package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -39,6 +41,9 @@ import java.util.TimerTask;
  */
 @Component
 public class SysLoginService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SysLoginService.class);
+
     @Autowired
     private TokenService tokenService;
 
@@ -65,30 +70,39 @@ public class SysLoginService {
      */
     public String login(String username, String password, String code, String uuid) {
         // 验证码校验
-        validateCaptcha(username, code, uuid);
+        // validateCaptcha(username, code, uuid);
+        logger.warn("当前dev开发环境关闭了验证码校验, 部署环境请打开");
         // 登录前置校验
         loginPreCheck(username, password);
         // 用户验证
         Authentication authentication = null;
 
         try {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-            AuthenticationContextHolder.setContext(authenticationToken);
+            UsernamePasswordAuthenticationToken aToken = new UsernamePasswordAuthenticationToken(username, password);
+            AuthenticationContextHolder.setContext(aToken);
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
-            authentication = authenticationManager.authenticate(authenticationToken);
+            authentication = authenticationManager.authenticate(aToken);
         } catch (Exception e) {
             if (e instanceof BadCredentialsException) {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+                String msg = MessageUtils.message("user.password.not.match");
+                //记录登录信息
+                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, msg);
+                AsyncManager.me().execute(timerTask);
                 throw new UserPasswordNotMatchException();
             } else {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
+                //记录登录信息
+                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage());
+                AsyncManager.me().execute(timerTask);
                 throw new ServiceException(e.getMessage());
             }
         } finally {
             AuthenticationContextHolder.clearContext();
         }
 
+        //消息
         String message = MessageUtils.message("user.login.success");
+
+        //任务
         TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, message);
 
         //异步任务执行, 执行
@@ -113,16 +127,24 @@ public class SysLoginService {
      */
     public void validateCaptcha(String username, String code, String uuid) {
         boolean captchaEnabled = configService.selectCaptchaEnabled();
+
         if (captchaEnabled) {
             String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
             String captcha = redisCache.getCacheObject(verifyKey);
             redisCache.deleteObject(verifyKey);
+
             if (captcha == null) {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
+                String message = MessageUtils.message("user.jcaptcha.expire");
+                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, message);
+                AsyncManager.me().execute(timerTask);
+                //验证码失效
                 throw new CaptchaExpireException();
             }
             if (!code.equalsIgnoreCase(captcha)) {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
+                String message = MessageUtils.message("user.jcaptcha.error");
+                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, message);
+                AsyncManager.me().execute(timerTask);
+                //验证码错误
                 throw new CaptchaException();
             }
         }
