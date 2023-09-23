@@ -56,6 +56,8 @@
             <if test="reqParams != null  and reqParams != ''"> and req_params like '%${reqParams}%' </if>
             <if test="isDelete != null "> and is_delete like '%${isDelete}%' </if>
         </where>
+        
+        order by '-create_time'
     </select>
 
     <select id="selectLlmChatLogById"
