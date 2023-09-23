@@ -59,6 +59,10 @@ public class VelocityUtils {
         velocityContext.put("basePackage", getPackagePrefix(packageName));
         velocityContext.put("packageName", packageName);
         velocityContext.put("author", genTable.getFunctionAuthor());
+        //自定义模板 用于拼接like查询
+        velocityContext.put("sqllike1", "'%$");
+        velocityContext.put("sqllike2", "%'");
+
         velocityContext.put("datetime", DateUtils.getDate());
         velocityContext.put("pkColumn", genTable.getPkColumn());
         velocityContext.put("importList", getImportList(genTable));

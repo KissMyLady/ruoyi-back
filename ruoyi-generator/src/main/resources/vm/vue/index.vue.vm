@@ -17,23 +17,27 @@
                         v-model="queryParams.${column.javaField}"
                         placeholder="请输入${comment}"
                         clearable
+                        @change="handleQuery"
                         @keyup.enter.native="handleQuery"
                     />
                   </el-form-item>
                 #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && "" != $dictType)
                   <el-form-item label="${comment}" prop="${column.javaField}">
-                    <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable>
-                      <el-option
-                          v-for="dict in dict.type.${dictType}"
-                          :key="dict.value"
-                          :label="dict.label"
-                          :value="dict.value"
-                      />
+                    <el-select v-model="queryParams.${column.javaField}"
+                               @change="handleQuery"
+                               placeholder="请选择${comment}" clearable>
+                      <el-option v-for="dict in dict.type.${dictType}"
+                                 :key="dict.value"
+                                 :label="dict.label"
+                                 :value="dict.value"/>
                     </el-select>
                   </el-form-item>
                 #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && $dictType)
                   <el-form-item label="${comment}" prop="${column.javaField}">
-                    <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable>
+                    <el-select v-model="queryParams.${column.javaField}"
+                               @change="handleQuery"
+                               placeholder="请选择${comment}"
+                               clearable>
                       <el-option label="请选择字典生成" value="" />
                     </el-select>
                   </el-form-item>
@@ -42,20 +46,21 @@
                     <el-date-picker clearable
                                     v-model="queryParams.${column.javaField}"
                                     type="date"
+                                    @change="handleQuery"
                                     value-format="yyyy-MM-dd"
                                     placeholder="请选择${comment}">
                     </el-date-picker>
                   </el-form-item>
                 #elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
                   <el-form-item label="${comment}">
-                    <el-date-picker
-                        v-model="daterange${AttrName}"
-                        style="width: 240px"
-                        value-format="yyyy-MM-dd"
-                        type="daterange"
-                        range-separator="-"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
+                    <el-date-picker v-model="daterange${AttrName}"
+                                    @change="handleQuery"
+                                    style="width: 240px"
+                                    value-format="yyyy-MM-dd"
+                                    type="daterange"
+                                    range-separator="-"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
                     ></el-date-picker>
                   </el-form-item>
                 #end
@@ -128,7 +133,7 @@
                 #set($comment=$column.columnComment)
             #end
             #if($column.pk)
-              <el-table-column label="${comment}" align="center" prop="${javaField}" />
+              <el-table-column label="${comment}" align="center" prop="${javaField}" width="auto"/>
             #elseif($column.list && $column.htmlType == "datetime")
               <el-table-column label="${comment}" align="center" prop="${javaField}" width="180">
                 <template slot-scope="scope">
@@ -152,7 +157,7 @@
                 </template>
               </el-table-column>
             #elseif($column.list && "" != $javaField)
-              <el-table-column label="${comment}" align="center" prop="${javaField}" />
+              <el-table-column align="center" width="auto" label="${comment}" prop="${javaField}" />
             #end
         #end
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -282,7 +287,7 @@
                         </el-form-item>
                       #elseif($column.htmlType == "textarea")
                         <el-form-item label="${comment}" prop="${field}">
-                          <el-input v-model="form.${field}" type="textarea" placeholder="请输入内容" />
+                          <el-input v-model="form.${field}" autosize type="textarea" placeholder="请输入内容" />
                         </el-form-item>
                       #end
                   #end
