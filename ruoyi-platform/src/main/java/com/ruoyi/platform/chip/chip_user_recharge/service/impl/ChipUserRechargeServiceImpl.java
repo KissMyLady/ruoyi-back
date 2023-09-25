@@ -1,7 +1,8 @@
 package com.ruoyi.platform.chip.chip_user_recharge.service.impl;
 
 import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
+
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.platform.chip.chip_user_recharge.mapper.ChipUserRechargeMapper;
@@ -49,8 +50,8 @@ public class ChipUserRechargeServiceImpl implements IChipUserRechargeService {
      */
     @Override
     public int insertChipUserRecharge(ChipUserRecharge chipUserRecharge) {
-                chipUserRecharge.setCreateTime(DateUtils.getNowDate());
-            return chipUserRechargeMapper.insertChipUserRecharge(chipUserRecharge);
+        chipUserRecharge.setCreateTime(DateUtils.getNowDate());
+        return chipUserRechargeMapper.insertChipUserRecharge(chipUserRecharge);
     }
 
     /**
@@ -61,7 +62,7 @@ public class ChipUserRechargeServiceImpl implements IChipUserRechargeService {
      */
     @Override
     public int updateChipUserRecharge(ChipUserRecharge chipUserRecharge) {
-                chipUserRecharge.setUpdateTime(DateUtils.getNowDate());
+        chipUserRecharge.setUpdateTime(DateUtils.getNowDate());
         return chipUserRechargeMapper.updateChipUserRecharge(chipUserRecharge);
     }
 

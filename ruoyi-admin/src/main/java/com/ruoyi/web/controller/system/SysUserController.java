@@ -65,7 +65,7 @@ public class SysUserController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "用户管理", businessType = BusinessType.EXPORT)
+    @Log(title = "导出用户管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysUser user) {
@@ -74,7 +74,7 @@ public class SysUserController extends BaseController {
         util.exportExcel(response, list, "用户数据");
     }
 
-    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    @Log(title = "导入用户管理", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
@@ -115,7 +115,7 @@ public class SysUserController extends BaseController {
      * 新增用户
      */
     @PreAuthorize("@ss.hasPermi('system:user:add')")
-    @Log(title = "用户管理", businessType = BusinessType.INSERT)
+    @Log(title = "新增用户", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysUser user) {
         if (!userService.checkUserNameUnique(user)) {
@@ -134,7 +134,7 @@ public class SysUserController extends BaseController {
      * 修改用户
      */
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
-    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    @Log(title = "修改用户", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysUser user) {
         userService.checkUserAllowed(user);
@@ -154,7 +154,7 @@ public class SysUserController extends BaseController {
      * 删除用户
      */
     @PreAuthorize("@ss.hasPermi('system:user:remove')")
-    @Log(title = "用户管理", businessType = BusinessType.DELETE)
+    @Log(title = "删除用户", businessType = BusinessType.DELETE)
     @DeleteMapping("/{userIds}")
     public AjaxResult remove(@PathVariable Long[] userIds) {
         if (ArrayUtils.contains(userIds, getUserId())) {
@@ -167,7 +167,7 @@ public class SysUserController extends BaseController {
      * 重置密码
      */
     @PreAuthorize("@ss.hasPermi('system:user:resetPwd')")
-    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    @Log(title = "重置密码", businessType = BusinessType.UPDATE)
     @PutMapping("/resetPwd")
     public AjaxResult resetPwd(@RequestBody SysUser user) {
         userService.checkUserAllowed(user);
@@ -181,7 +181,7 @@ public class SysUserController extends BaseController {
      * 状态修改
      */
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
-    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    @Log(title = "用户状态修改", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysUser user) {
         userService.checkUserAllowed(user);
@@ -208,7 +208,7 @@ public class SysUserController extends BaseController {
      * 用户授权角色
      */
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
-    @Log(title = "用户管理", businessType = BusinessType.GRANT)
+    @Log(title = "用户授权角色", businessType = BusinessType.GRANT)
     @PutMapping("/authRole")
     public AjaxResult insertAuthRole(Long userId, Long[] roleIds) {
         userService.checkUserDataScope(userId);

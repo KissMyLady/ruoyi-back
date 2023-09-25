@@ -49,7 +49,7 @@ public class SysDictDataController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "字典数据", businessType = BusinessType.EXPORT)
+    @Log(title = "字典数据导出", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysDictData dictData) {
@@ -83,7 +83,7 @@ public class SysDictDataController extends BaseController {
      * 新增字典类型
      */
     @PreAuthorize("@ss.hasPermi('system:dict:add')")
-    @Log(title = "字典数据", businessType = BusinessType.INSERT)
+    @Log(title = "新增字典类型", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysDictData dict) {
         dict.setCreateBy(getUsername());
@@ -94,7 +94,7 @@ public class SysDictDataController extends BaseController {
      * 修改保存字典类型
      */
     @PreAuthorize("@ss.hasPermi('system:dict:edit')")
-    @Log(title = "字典数据", businessType = BusinessType.UPDATE)
+    @Log(title = "修改保存字典类型", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysDictData dict) {
         dict.setUpdateBy(getUsername());
@@ -105,7 +105,7 @@ public class SysDictDataController extends BaseController {
      * 删除字典类型
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
-    @Log(title = "字典类型", businessType = BusinessType.DELETE)
+    @Log(title = "删除字典类型", businessType = BusinessType.DELETE)
     @DeleteMapping("/{dictCodes}")
     public AjaxResult remove(@PathVariable Long[] dictCodes) {
         dictDataService.deleteDictDataByIds(dictCodes);

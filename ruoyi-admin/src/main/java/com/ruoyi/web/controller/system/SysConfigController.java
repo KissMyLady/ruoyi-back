@@ -45,7 +45,7 @@ public class SysConfigController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "参数管理", businessType = BusinessType.EXPORT)
+    @Log(title = "导出参数管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:config:export')")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysConfig config) {
@@ -75,7 +75,7 @@ public class SysConfigController extends BaseController {
      * 新增参数配置
      */
     @PreAuthorize("@ss.hasPermi('system:config:add')")
-    @Log(title = "参数管理", businessType = BusinessType.INSERT)
+    @Log(title = "新增参数配置", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysConfig config) {
         if (!configService.checkConfigKeyUnique(config)) {
@@ -89,7 +89,7 @@ public class SysConfigController extends BaseController {
      * 修改参数配置
      */
     @PreAuthorize("@ss.hasPermi('system:config:edit')")
-    @Log(title = "参数管理", businessType = BusinessType.UPDATE)
+    @Log(title = "修改参数配置", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysConfig config) {
         if (!configService.checkConfigKeyUnique(config)) {
@@ -103,7 +103,7 @@ public class SysConfigController extends BaseController {
      * 删除参数配置
      */
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
-    @Log(title = "参数管理", businessType = BusinessType.DELETE)
+    @Log(title = "删除参数配置", businessType = BusinessType.DELETE)
     @DeleteMapping("/{configIds}")
     public AjaxResult remove(@PathVariable Long[] configIds) {
         configService.deleteConfigByIds(configIds);
@@ -114,7 +114,7 @@ public class SysConfigController extends BaseController {
      * 刷新参数缓存
      */
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
-    @Log(title = "参数管理", businessType = BusinessType.CLEAN)
+    @Log(title = "刷新参数缓存", businessType = BusinessType.CLEAN)
     @DeleteMapping("/refreshCache")
     public AjaxResult refreshCache() {
         configService.resetConfigCache();

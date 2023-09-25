@@ -18,7 +18,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.platform.chip.chip_user_recharge.domain.ChipUserRecharge;
-import com.ruoyi.platform.chip.chip_user_recharge.service.IChipUserRechargeService;
+import com.ruoyi.platform.chip.chip_user_recharge.service.impl.ChipUserRechargeServiceImpl;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -33,7 +33,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class ChipUserRechargeController extends BaseController {
 
     @Autowired
-    private IChipUserRechargeService chipUserRechargeService;
+    private ChipUserRechargeServiceImpl chipUserRechargeService;
 
     /**
      * 查询用户芯片-用户充值列表

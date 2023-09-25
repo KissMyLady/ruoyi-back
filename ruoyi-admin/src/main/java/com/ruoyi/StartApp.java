@@ -22,6 +22,6 @@ public class StartApp {
     public static void main(String[] args) {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(StartApp.class, args);
-        logger.info("项目启动成功 !!");
+        logger.warn("项目启动成功 !!");
     }
 }

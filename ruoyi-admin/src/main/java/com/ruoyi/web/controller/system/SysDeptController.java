@@ -52,7 +52,10 @@ public class SysDeptController extends BaseController {
     @GetMapping("/list/exclude/{deptId}")
     public AjaxResult excludeChild(@PathVariable(value = "deptId", required = false) Long deptId) {
         List<SysDept> depts = deptService.selectDeptList(new SysDept());
-        depts.removeIf(d -> d.getDeptId().intValue() == deptId || ArrayUtils.contains(StringUtils.split(d.getAncestors(), ","), deptId + ""));
+        depts.removeIf(
+                d -> d.getDeptId().intValue() == deptId
+                || ArrayUtils.contains(StringUtils.split(d.getAncestors(), ","), deptId + "")
+        );
         return success(depts);
     }
 
@@ -70,7 +73,7 @@ public class SysDeptController extends BaseController {
      * 新增部门
      */
     @PreAuthorize("@ss.hasPermi('system:dept:add')")
-    @Log(title = "部门管理", businessType = BusinessType.INSERT)
+    @Log(title = "新增部门", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysDept dept) {
         if (!deptService.checkDeptNameUnique(dept)) {
@@ -84,7 +87,7 @@ public class SysDeptController extends BaseController {
      * 修改部门
      */
     @PreAuthorize("@ss.hasPermi('system:dept:edit')")
-    @Log(title = "部门管理", businessType = BusinessType.UPDATE)
+    @Log(title = "修改部门", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysDept dept) {
         Long deptId = dept.getDeptId();
@@ -104,7 +107,7 @@ public class SysDeptController extends BaseController {
      * 删除部门
      */
     @PreAuthorize("@ss.hasPermi('system:dept:remove')")
-    @Log(title = "部门管理", businessType = BusinessType.DELETE)
+    @Log(title = "删除部门", businessType = BusinessType.DELETE)
     @DeleteMapping("/{deptId}")
     public AjaxResult remove(@PathVariable Long deptId) {
         if (deptService.hasChildByDeptId(deptId)) {

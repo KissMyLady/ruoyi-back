@@ -46,7 +46,7 @@ public class SysPostController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
+    @Log(title = "导出岗位管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:post:export')")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysPost post) {
@@ -68,7 +68,7 @@ public class SysPostController extends BaseController {
      * 新增岗位
      */
     @PreAuthorize("@ss.hasPermi('system:post:add')")
-    @Log(title = "岗位管理", businessType = BusinessType.INSERT)
+    @Log(title = "新增岗位管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysPost post) {
         if (!postService.checkPostNameUnique(post)) {
@@ -84,7 +84,7 @@ public class SysPostController extends BaseController {
      * 修改岗位
      */
     @PreAuthorize("@ss.hasPermi('system:post:edit')")
-    @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
+    @Log(title = "修改岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysPost post) {
         if (!postService.checkPostNameUnique(post)) {
@@ -100,7 +100,7 @@ public class SysPostController extends BaseController {
      * 删除岗位
      */
     @PreAuthorize("@ss.hasPermi('system:post:remove')")
-    @Log(title = "岗位管理", businessType = BusinessType.DELETE)
+    @Log(title = "删除岗位管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{postIds}")
     public AjaxResult remove(@PathVariable Long[] postIds) {
         return toAjax(postService.deletePostByIds(postIds));

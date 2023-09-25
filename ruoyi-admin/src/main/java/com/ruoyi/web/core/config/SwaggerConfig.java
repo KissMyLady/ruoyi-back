@@ -54,7 +54,7 @@ public class SwaggerConfig {
      */
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.OAS_30)
+        Docket docket = new Docket(DocumentationType.OAS_30)
                 // 是否启用Swagger
                 .enable(enabled)
                 // 用来创建该API的基本信息，展示在文档的页面中（自定义展示的信息）
@@ -72,6 +72,7 @@ public class SwaggerConfig {
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts())
                 .pathMapping(pathMapping);
+        return docket;
     }
 
     /**
@@ -87,13 +88,15 @@ public class SwaggerConfig {
      * 安全上下文
      */
     private List<SecurityContext> securityContexts() {
-        List<SecurityContext> securityContexts = new ArrayList<>();
-        securityContexts.add(
-                SecurityContext.builder()
-                        .securityReferences(defaultAuth())
-                        .operationSelector(o -> o.requestMappingPattern().matches("/.*"))
-                        .build());
-        return securityContexts;
+        List<SecurityContext> sCtx = new ArrayList<>();
+
+        SecurityContext securityBuild = SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .operationSelector(o -> o.requestMappingPattern().matches("/.*"))
+                .build();
+
+        sCtx.add(securityBuild);
+        return sCtx;
     }
 
     /**
@@ -112,10 +115,9 @@ public class SwaggerConfig {
      * 添加摘要信息
      */
     private ApiInfo apiInfo() {
-        // 用ApiInfoBuilder进行定制
-        return new ApiInfoBuilder()
+        ApiInfo build = new ApiInfoBuilder()
                 // 设置标题
-                .title("标题：若依管理系统_接口文档")
+                .title("标题：后台管理系统_接口文档")
                 // 描述
                 .description("描述：用于管理集团旗下公司的人员信息,具体包括XXX,XXX模块...")
                 // 作者信息
@@ -123,5 +125,8 @@ public class SwaggerConfig {
                 // 版本
                 .version("版本号:" + ruoyiConfig.getVersion())
                 .build();
+
+        // 用ApiInfoBuilder进行定制
+        return build;
     }
 }

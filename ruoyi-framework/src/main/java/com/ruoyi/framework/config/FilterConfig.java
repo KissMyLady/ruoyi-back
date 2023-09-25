@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.DispatcherType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -20,6 +22,9 @@ import com.ruoyi.common.utils.StringUtils;
  */
 @Configuration
 public class FilterConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(FilterConfig.class);
+
     @Value("${xss.excludes}")
     private String excludes;
 
@@ -28,7 +33,7 @@ public class FilterConfig {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
-    @ConditionalOnProperty(value = "xss.enabled", havingValue = "true")
+    @ConditionalOnProperty(value = "xss.enabled", havingValue = "true")  //只有当为true, 才会创建这个Bean
     public FilterRegistrationBean xssFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
@@ -39,6 +44,7 @@ public class FilterConfig {
         Map<String, String> initParameters = new HashMap<String, String>();
         initParameters.put("excludes", excludes);
         registration.setInitParameters(initParameters);
+        logger.info("XXS攻击防御开启..");
         return registration;
     }
 
