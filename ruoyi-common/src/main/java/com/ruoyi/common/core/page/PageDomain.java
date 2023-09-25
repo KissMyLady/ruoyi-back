@@ -24,9 +24,10 @@ public class PageDomain {
     private String orderByColumn;
 
     /**
-     * 排序的方向desc或者asc
+     * 排序的方向 desc 或者 asc
      */
-    private String isAsc = "asc";
+    // private String isAsc = "asc";
+    private String isAsc = "desc";
 
     /**
      * 分页参数合理化

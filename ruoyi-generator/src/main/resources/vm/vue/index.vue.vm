@@ -406,6 +406,8 @@
           #end
         // 查询参数
         queryParams: {
+          orderByColumn: 'create_time',
+          isAsc: "desc",  //desc, acs
           pageNum: 1,
           pageSize: 10,
             #foreach ($column in $columns)

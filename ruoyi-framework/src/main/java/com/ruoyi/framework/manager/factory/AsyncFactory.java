@@ -45,6 +45,7 @@ public class AsyncFactory {
             @Override
             public void run() {
                 String address = AddressUtils.getRealAddressByIP(ip);
+                sys_user_logger.info("用户开始登录, ip: {}, 地址查询: {}", ip, address);
                 StringBuilder s = new StringBuilder();
                 s.append(LogUtils.getBlock(ip));
                 s.append(address);

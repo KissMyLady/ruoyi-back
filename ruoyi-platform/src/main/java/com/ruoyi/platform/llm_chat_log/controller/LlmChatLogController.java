@@ -17,7 +17,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.platform.llm_chat_log.domain.LlmChatLog;
-import com.ruoyi.platform.llm_chat_log.service.ILlmChatLogService;
+import com.ruoyi.platform.llm_chat_log.service.impl.LlmChatLogServiceImpl;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -32,7 +32,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class LlmChatLogController extends BaseController {
 
     @Autowired
-    private ILlmChatLogService llmChatLogService;
+    private LlmChatLogServiceImpl llmChatLogService;
 
     /**
      * 查询语言模型聊天记录列表
@@ -40,6 +40,7 @@ public class LlmChatLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('llm_chat_log:llm_chat_log:list')")
     @GetMapping("/list")
     public TableDataInfo list(LlmChatLog llmChatLog) {
+        //分页实例化
         startPage();
         List<LlmChatLog> list = llmChatLogService.selectLlmChatLogList(llmChatLog);
         return getDataTable(list);

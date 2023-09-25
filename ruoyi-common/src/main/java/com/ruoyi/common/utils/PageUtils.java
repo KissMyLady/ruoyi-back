@@ -24,8 +24,8 @@ public class PageUtils extends PageHelper {
         Integer pageNum = pageDomain.getPageNum();   //页码
         Integer pageSize = pageDomain.getPageSize();  //每页大小
         String orderBy1 = pageDomain.getOrderBy();    // 排序
-        String orderBy = SqlUtil.escapeOrderBySql(orderBy1);
-        Boolean reasonable = pageDomain.getReasonable();
+        String orderBy = SqlUtil.escapeOrderBySql(orderBy1);  //检查字符, 防止注入
+        Boolean reasonable = pageDomain.getReasonable();  //分页参数合理化
         PageHelper.startPage(pageNum, pageSize, orderBy).setReasonable(reasonable);
     }
 

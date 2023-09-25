@@ -102,14 +102,19 @@ public class SysLoginService {
         //消息
         String message = MessageUtils.message("user.login.success");
 
-        //任务
-        TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, message);
+        //任务, 调用方法 recordLogininfor, 记录登录过程信息
+        TimerTask timerTask = AsyncFactory.recordLogininfor(
+                username,
+                Constants.LOGIN_SUCCESS,
+                message
+        );
 
         //异步任务执行, 执行
         AsyncManager.me().execute(timerTask);
 
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
 
+        //刷新用户表的登录信息
         recordLoginInfo(loginUser.getUserId());
 
         // 生成token
@@ -192,6 +197,7 @@ public class SysLoginService {
         sysUser.setUserId(userId);
         sysUser.setLoginIp(IpUtils.getIpAddr());
         sysUser.setLoginDate(DateUtils.getNowDate());
+        // logger.info("记录用户登录信息: {}", sysUser);
         userService.updateUserProfile(sysUser);
     }
 }
