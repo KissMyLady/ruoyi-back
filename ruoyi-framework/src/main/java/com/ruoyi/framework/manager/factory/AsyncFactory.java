@@ -101,11 +101,9 @@ public class AsyncFactory {
         return new TimerTask() {
             @Override
             public void run() {
-                // 远程查询操作地点
-                String realAddressByIP = AddressUtils.getRealAddressByIP(operLog.getOperIp());
-                operLog.setOperLocation(realAddressByIP);
-
-                SpringUtils.getBean(ISysOperLogService.class).insertOperlog(operLog);
+                // 获取类型为requiredType的对象
+                ISysOperLogService bean = SpringUtils.getBean(ISysOperLogService.class);
+                bean.insertOperlog(operLog);
             }
         };
     }

@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import eu.bitwalker.useragentutils.UserAgent;
+import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
+import net.dreamlu.mica.ip2region.core.IpInfo;
 import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -14,6 +16,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -42,6 +45,9 @@ import com.ruoyi.system.domain.SysOperLog;
 public class LogAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
+    @Autowired
+    private Ip2regionSearcher ip2regionSearcher;
 
     /**
      * 排除敏感属性字段
@@ -144,9 +150,16 @@ public class LogAspect {
             getControllerMethodDescription(joinPoint, controllerLog, operLog, jsonResult);
             // 设置消耗时间
             operLog.setCostTime(System.currentTimeMillis() - TIME_THREADLOCAL.get());
-            // 保存数据库
-            AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
 
+            //查询ip地址
+            IpInfo ipInfo = ip2regionSearcher.memorySearch(ip);
+            String address = ipInfo.getAddress();
+            operLog.setOperLocation(address);
+
+            // 保存数据库
+            AsyncManager.me().execute(
+                    AsyncFactory.recordOper(operLog)
+            );
         } catch (Exception exp) {
             // 记录本地异常日志
             logger.error("LOG日志注解AOP异常信息:{}", exp.getMessage());
