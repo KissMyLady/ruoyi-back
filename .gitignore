@@ -18,6 +18,7 @@ target/
 .project
 .settings
 .springBeans
+application-ms.yml
 
 ### IntelliJ IDEA ###
 .idea

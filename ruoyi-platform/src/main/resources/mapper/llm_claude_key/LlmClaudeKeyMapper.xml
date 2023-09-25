@@ -36,7 +36,7 @@
             <if test="createUser != null  and createUser != ''"> and create_user like '%${createUser}%'</if>
             <if test="isDelete != null "> and is_delete like #{isDelete}</if>
         </where>
-        order by '-create_time'
+        order by -create_time
     </select>
 
     <select id="selectLlmClaudeKeyById"

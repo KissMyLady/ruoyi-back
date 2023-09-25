@@ -57,7 +57,7 @@
             <if test="isDelete != null "> and is_delete like '%${isDelete}%' </if>
         </where>
         
-        order by '-create_time'
+        order by -create_time
     </select>
 
     <select id="selectLlmChatLogById"
