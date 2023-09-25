@@ -119,7 +119,12 @@
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
         </dependency>
-        
+        <!-- ip2region IP库 -->
+        <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-ip2region</artifactId>
+        </dependency>
+ 
         <!-- servlet包 -->
         <dependency>
             <groupId>javax.servlet</groupId>

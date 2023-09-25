@@ -24,6 +24,8 @@ public class AddressUtils {
     public static final String UNKNOWN = "XX XX";
 
     public static String getRealAddressByIP(String ip) {
+        log.warn("当前使用url{} 查询 {} 地址, 请注意安全性", IP_URL, ip);
+
         // 内网不查询
         if (IpUtils.internalIp(ip)) {
             return "内网IP";

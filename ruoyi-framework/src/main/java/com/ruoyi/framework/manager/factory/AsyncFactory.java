@@ -17,6 +17,9 @@ import com.ruoyi.system.service.ISysLogininforService;
 import com.ruoyi.system.service.ISysOperLogService;
 import eu.bitwalker.useragentutils.UserAgent;
 
+import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
+import net.dreamlu.mica.ip2region.core.IpInfo;
+
 /**
  * 异步工厂（产生任务用）
  *
@@ -37,23 +40,33 @@ public class AsyncFactory {
     public static TimerTask recordLogininfor(final String username,
                                              final String status,
                                              final String message,
-                                             final Object... args)
-    {
+                                             final Object... args) {
         final UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
         final String ip = IpUtils.getIpAddr();
+
         return new TimerTask() {
             @Override
             public void run() {
-                String address = AddressUtils.getRealAddressByIP(ip);
-                sys_user_logger.info("用户开始登录, ip: {}, 地址查询: {}", ip, address);
+                String address = "XX XXX";
+                for (Object item : args) {
+                    if (item instanceof Ip2regionSearcher) {
+                        IpInfo ipInfo = ((Ip2regionSearcher) item).memorySearch(ip);
+                        address = ipInfo.getAddress();
+                    }
+                }
+                // String address = address;
+                // String address = AddressUtils.getRealAddressByIP(ip);
+                // sys_user_logger.info("用户开始登录, ip: {}, 地址查询: {}", ip, address);
                 StringBuilder s = new StringBuilder();
                 s.append(LogUtils.getBlock(ip));
                 s.append(address);
                 s.append(LogUtils.getBlock(username));
                 s.append(LogUtils.getBlock(status));
                 s.append(LogUtils.getBlock(message));
+
                 // 打印信息到日志
-                sys_user_logger.info(s.toString(), args);
+                sys_user_logger.info("记录登录信息: {}, {}", s.toString(), args);
+
                 // 获取客户端操作系统
                 String os = userAgent.getOperatingSystem().getName();
                 // 获取客户端浏览器

@@ -31,6 +31,7 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
 
 import java.util.TimerTask;
 
@@ -59,6 +60,9 @@ public class SysLoginService {
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    private Ip2regionSearcher ip2regionSearcher;
+
     /**
      * 登录验证
      *
@@ -86,12 +90,12 @@ public class SysLoginService {
             if (e instanceof BadCredentialsException) {
                 String msg = MessageUtils.message("user.password.not.match");
                 //记录登录信息
-                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, msg);
+                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, msg, ip2regionSearcher);
                 AsyncManager.me().execute(timerTask);
                 throw new UserPasswordNotMatchException();
             } else {
                 //记录登录信息
-                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage());
+                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage(), ip2regionSearcher);
                 AsyncManager.me().execute(timerTask);
                 throw new ServiceException(e.getMessage());
             }
@@ -106,7 +110,8 @@ public class SysLoginService {
         TimerTask timerTask = AsyncFactory.recordLogininfor(
                 username,
                 Constants.LOGIN_SUCCESS,
-                message
+                message,
+                ip2regionSearcher
         );
 
         //异步任务执行, 执行
@@ -140,14 +145,24 @@ public class SysLoginService {
 
             if (captcha == null) {
                 String message = MessageUtils.message("user.jcaptcha.expire");
-                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, message);
+                TimerTask timerTask = AsyncFactory.recordLogininfor(
+                        username,
+                        Constants.LOGIN_FAIL,
+                        message,
+                        ip2regionSearcher
+                );
                 AsyncManager.me().execute(timerTask);
                 //验证码失效
                 throw new CaptchaExpireException();
             }
             if (!code.equalsIgnoreCase(captcha)) {
                 String message = MessageUtils.message("user.jcaptcha.error");
-                TimerTask timerTask = AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, message);
+                TimerTask timerTask = AsyncFactory.recordLogininfor(
+                        username,
+                        Constants.LOGIN_FAIL,
+                        message,
+                        ip2regionSearcher
+                );
                 AsyncManager.me().execute(timerTask);
                 //验证码错误
                 throw new CaptchaException();
@@ -164,25 +179,52 @@ public class SysLoginService {
     public void loginPreCheck(String username, String password) {
         // 用户名或密码为空 错误
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("not.null")));
+            String msg = MessageUtils.message("not.null");
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(
+                            username,
+                            Constants.LOGIN_FAIL,
+                            msg,
+                            ip2regionSearcher
+                    )
+            );
             throw new UserNotExistsException();
         }
+
         // 密码如果不在指定范围内 错误
         if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
                 || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+            String msg = MessageUtils.message("user.password.not.match");
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(
+                            username,
+                            Constants.LOGIN_FAIL,
+                            msg
+                    )
+            );
             throw new UserPasswordNotMatchException();
         }
+
         // 用户名不在指定范围内 错误
         if (username.length() < UserConstants.USERNAME_MIN_LENGTH
                 || username.length() > UserConstants.USERNAME_MAX_LENGTH) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+            String msg = MessageUtils.message("user.password.not.match");
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(
+                    username,
+                    Constants.LOGIN_FAIL,
+                    msg,
+                    ip2regionSearcher)
+            );
             throw new UserPasswordNotMatchException();
         }
         // IP黑名单校验
         String blackStr = configService.selectConfigByKey("sys.login.blackIPList");
         if (IpUtils.isMatchedIp(blackStr, IpUtils.getIpAddr())) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("login.blocked")));
+            String msg = MessageUtils.message("login.blocked");
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(
+                    username,
+                    Constants.LOGIN_FAIL,
+                    msg,
+                    ip2regionSearcher)
+            );
             throw new BlackListException();
         }
     }
