@@ -50,7 +50,7 @@ public class LlmClaudeKeyController extends BaseController {
      * 导出语言模型,api,claude连接池列表
      */
     @PreAuthorize("@ss.hasPermi('llm_claude_key:llm_claude_key:export')")
-    @Log(title = "语言模型,api,claude连接池", businessType = BusinessType.EXPORT)
+    @Log(title = "导出语言模型,api,claude连接池", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, LlmClaudeKey llmClaudeKey) {
         List<LlmClaudeKey> list = llmClaudeKeyService.selectLlmClaudeKeyList(llmClaudeKey);
@@ -71,7 +71,7 @@ public class LlmClaudeKeyController extends BaseController {
      * 新增语言模型,api,claude连接池
      */
     @PreAuthorize("@ss.hasPermi('llm_claude_key:llm_claude_key:add')")
-    @Log(title = "语言模型,api,claude连接池", businessType = BusinessType.INSERT)
+    @Log(title = "新增语言模型,api,claude连接池数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody LlmClaudeKey llmClaudeKey) {
         return toAjax(llmClaudeKeyService.insertLlmClaudeKey(llmClaudeKey));
@@ -81,7 +81,7 @@ public class LlmClaudeKeyController extends BaseController {
      * 修改语言模型,api,claude连接池
      */
     @PreAuthorize("@ss.hasPermi('llm_claude_key:llm_claude_key:edit')")
-    @Log(title = "语言模型,api,claude连接池", businessType = BusinessType.UPDATE)
+    @Log(title = "修改语言模型,api,claude连接池数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody LlmClaudeKey llmClaudeKey) {
         return toAjax(llmClaudeKeyService.updateLlmClaudeKey(llmClaudeKey));
@@ -91,7 +91,7 @@ public class LlmClaudeKeyController extends BaseController {
      * 删除语言模型,api,claude连接池
      */
     @PreAuthorize("@ss.hasPermi('llm_claude_key:llm_claude_key:remove')")
-    @Log(title = "语言模型,api,claude连接池", businessType = BusinessType.DELETE)
+    @Log(title = "删除语言模型,api,claude连接池数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(llmClaudeKeyService.deleteLlmClaudeKeyByIds(ids));

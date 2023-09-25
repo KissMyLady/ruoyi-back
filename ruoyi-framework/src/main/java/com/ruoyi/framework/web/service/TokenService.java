@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
+import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
+import net.dreamlu.mica.ip2region.core.IpInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,9 @@ public class TokenService {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private Ip2regionSearcher ip2regionSearcher;
 
     /**
      * 获取用户身份信息
@@ -104,6 +109,7 @@ public class TokenService {
      */
     public String createToken(LoginUser loginUser) {
         String token = IdUtils.fastUUID();
+
         loginUser.setToken(token);
         setUserAgent(loginUser);
         refreshToken(loginUser);
@@ -149,7 +155,13 @@ public class TokenService {
         UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
         String ip = IpUtils.getIpAddr();
         loginUser.setIpaddr(ip);
-        loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
+        //
+        IpInfo ipInfo = ip2regionSearcher.memorySearch(ip);
+        String address = ipInfo.getAddress();
+
+        // loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
+        loginUser.setLoginLocation(address);
+
         loginUser.setBrowser(userAgent.getBrowser().getName());
         loginUser.setOs(userAgent.getOperatingSystem().getName());
     }

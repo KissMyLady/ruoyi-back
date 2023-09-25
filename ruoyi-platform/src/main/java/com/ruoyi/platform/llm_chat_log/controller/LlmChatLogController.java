@@ -50,7 +50,7 @@ public class LlmChatLogController extends BaseController {
      * 导出语言模型聊天记录列表
      */
     @PreAuthorize("@ss.hasPermi('llm_chat_log:llm_chat_log:export')")
-    @Log(title = "语言模型聊天记录", businessType = BusinessType.EXPORT)
+    @Log(title = "导出语言模型聊天记录列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, LlmChatLog llmChatLog) {
         List<LlmChatLog> list = llmChatLogService.selectLlmChatLogList(llmChatLog);
@@ -71,7 +71,7 @@ public class LlmChatLogController extends BaseController {
      * 新增语言模型聊天记录
      */
     @PreAuthorize("@ss.hasPermi('llm_chat_log:llm_chat_log:add')")
-    @Log(title = "语言模型聊天记录", businessType = BusinessType.INSERT)
+    @Log(title = "新增语言模型聊天记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody LlmChatLog llmChatLog) {
         return toAjax(llmChatLogService.insertLlmChatLog(llmChatLog));
@@ -81,7 +81,7 @@ public class LlmChatLogController extends BaseController {
      * 修改语言模型聊天记录
      */
     @PreAuthorize("@ss.hasPermi('llm_chat_log:llm_chat_log:edit')")
-    @Log(title = "语言模型聊天记录", businessType = BusinessType.UPDATE)
+    @Log(title = "修改语言模型聊天记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody LlmChatLog llmChatLog) {
         return toAjax(llmChatLogService.updateLlmChatLog(llmChatLog));
@@ -91,7 +91,7 @@ public class LlmChatLogController extends BaseController {
      * 删除语言模型聊天记录
      */
     @PreAuthorize("@ss.hasPermi('llm_chat_log:llm_chat_log:remove')")
-    @Log(title = "语言模型聊天记录", businessType = BusinessType.DELETE)
+    @Log(title = "删除语言模型聊天记录", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(llmChatLogService.deleteLlmChatLogByIds(ids));
