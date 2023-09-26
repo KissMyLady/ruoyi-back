@@ -30,7 +30,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/chip_user_sn/chip_user_sn")
-public class ChipUserSnController extends BaseController {
+public class ChipUserSnCtrl extends BaseController {
 
     @Autowired
     private IChipUserSnService chipUserSnService;

@@ -6,7 +6,6 @@ import com.ruoyi.common.utils.http.RequestEncoder;
 import com.ruoyi.platform.chip.chip_user_sn.domain.ChipUserSn;
 import com.ruoyi.platform.chip.chip_user_sn.service.IChipUserSnOpenApiServer;
 import com.ruoyi.platform.request_api.request_api_key.service.impl.RequestOpenApiServerImpl;
-import com.ruoyi.platform.request_api.request_api_key_send_log.service.impl.RequestApiKeySendLogServiceImpl;
 import com.ruoyi.platform.users.platform_user.domain.PlatformSysUser;
 import com.ruoyi.platform.users.platform_user.service.impl.PlatformSysUserServiceImpl;
 import org.slf4j.Logger;
@@ -33,9 +32,6 @@ public class ChipUserSnOpenApiServerImpl implements IChipUserSnOpenApiServer {
     private RequestOpenApiServerImpl requestOpenApiServer;
 
     @Autowired
-    private RequestApiKeySendLogServiceImpl requestApiKeySendLogService;
-
-    @Autowired
     private ChipUserSnServiceImpl chipUserSnService;
 
     @Autowired
@@ -46,6 +42,11 @@ public class ChipUserSnOpenApiServerImpl implements IChipUserSnOpenApiServer {
 
     @Override
     public ResultVo<?> pushData(ChipUserSn dto) {
+        //判断key是否存在, 是否有效 ?
+        String resHasEffect = requestOpenApiServer.hasEffect(dto.getKey());
+        if (!Objects.equals(resHasEffect, "")) {
+            return ResultVo.error(resHasEffect);
+        }
         // 校验
         Long userId = dto.getUserId();  //关联用户id
         String phone = dto.getPhone();  //用户手机
@@ -65,15 +66,8 @@ public class ChipUserSnOpenApiServerImpl implements IChipUserSnOpenApiServer {
         if (status == null) {
             return ResultVo.error("status 不能为空");
         }
-
         if (ObjectUtil.isEmpty(dto.getKey())) {
             return ResultVo.error("key 不能为空");
-        }
-
-        //判断key是否存在, 是否有效 ?
-        String resHasEffect = requestOpenApiServer.hasEffect(dto.getKey());
-        if (!Objects.equals(resHasEffect, "")) {
-            return ResultVo.error(resHasEffect);
         }
 
         //校验md5值
