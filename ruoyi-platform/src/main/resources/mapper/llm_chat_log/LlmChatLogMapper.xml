@@ -3,143 +3,162 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.platform.llm_chat_log.mapper.LlmChatLogMapper">
-
+    
     <resultMap type="LlmChatLog" id="LlmChatLogResult">
-            <result property="id" column="id"    />
-            <result property="user" column="user"    />
-            <result property="userDeviceType" column="user_device_type"    />
-            <result property="userIp" column="user_ip"    />
-            <result property="userAddress" column="user_address"    />
-            <result property="userAgent" column="user_agent"    />
-            <result property="userBrowser" column="user_browser"    />
-            <result property="userSystem" column="user_system"    />
-            <result property="roleName" column="role_name"    />
-            <result property="currentRoleName" column="current_role_name"    />
-            <result property="llm" column="llm"    />
-            <result property="prompt" column="prompt"    />
-            <result property="response" column="response"    />
-            <result property="consumeTime" column="consume_time"    />
-            <result property="history" column="history"    />
-            <result property="reqParams" column="req_params"    />
-            <result property="isDelete" column="is_delete"    />
-            <result property="createTime" column="create_time"    />
-            <result property="updateTime" column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="user" column="user"/>
+        <result property="userDeviceType" column="user_device_type"/>
+        <result property="userIp" column="user_ip"/>
+        <result property="userAddress" column="user_address"/>
+        <result property="userAgent" column="user_agent"/>
+        <result property="userBrowser" column="user_browser"/>
+        <result property="userSystem" column="user_system"/>
+        <result property="roleName" column="role_name"/>
+        <result property="currentRoleName" column="current_role_name"/>
+        <result property="llm" column="llm"/>
+        <result property="prompt" column="prompt"/>
+        <result property="response" column="response"/>
+        <result property="consumeTime" column="consume_time"/>
+        <result property="history" column="history"/>
+        <result property="reqParams" column="req_params"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
-
+    
     <sql id="selectLlmChatLogVo">
         select id,
-               user, user_device_type, user_ip, user_address, user_agent, user_browser, user_system,
-               role_name, current_role_name, llm, prompt, response, consume_time, history, req_params,
-               is_delete, create_time, update_time
+               user,
+               user_device_type,
+               user_ip,
+               user_address,
+               user_agent,
+               user_browser,
+               user_system,
+               role_name,
+               current_role_name,
+               llm,
+               prompt,
+               response,
+               consume_time,
+               history,
+               req_params,
+               is_delete,
+               create_time,
+               update_time
         from llm_chat_log
     </sql>
-
+    
     <select id="selectLlmChatLogList"
             parameterType="LlmChatLog"
             resultMap="LlmChatLogResult">
         <include refid="selectLlmChatLogVo"/>
         <where>
-            <if test="user != null  and user != ''"> and user like '%${user}%' </if>
-            <if test="userDeviceType != null "> and user_device_type like '%${userDeviceType}%' </if>
-            <if test="userIp != null  and userIp != ''"> and user_ip like '%${userIp}%' </if>
-            <if test="userAddress != null  and userAddress != ''"> and user_address like '%${userAddress}%' </if>
-            <if test="userAgent != null  and userAgent != ''"> and user_agent like '%${userAgent}%' </if>
-            <if test="userBrowser != null  and userBrowser != ''"> and user_browser like '%${userBrowser}%' </if>
-            <if test="userSystem != null  and userSystem != ''"> and user_system like '%${userSystem}%' </if>
-            <if test="roleName != null  and roleName != ''"> and role_name like concat('%', #{roleName}, '%')</if>
-            <if test="currentRoleName != null  and currentRoleName != ''"> and current_role_name like concat('%', #{currentRoleName}, '%')</if>
-            <if test="llm != null  and llm != ''"> and llm like '%${llm}%' </if>
-            <if test="prompt != null  and prompt != ''"> and prompt like '%${prompt}%' </if>
-            <if test="response != null  and response != ''"> and response like '%${response}%' </if>
-            <if test="consumeTime != null  and consumeTime != ''"> and consume_time like '%${consumeTime}%' </if>
-            <if test="history != null  and history != ''"> and history like '%${history}%' </if>
-            <if test="reqParams != null  and reqParams != ''"> and req_params like '%${reqParams}%' </if>
-            <if test="isDelete != null "> and is_delete like '%${isDelete}%' </if>
+            <if test="user != null  and user != ''">and user like '%${user}%'</if>
+            <if test="userDeviceType != null ">and user_device_type like '%${userDeviceType}%'</if>
+            <if test="userIp != null  and userIp != ''">and user_ip like '%${userIp}%'</if>
+            <if test="userAddress != null  and userAddress != ''">and user_address like '%${userAddress}%'</if>
+            <if test="userAgent != null  and userAgent != ''">and user_agent like '%${userAgent}%'</if>
+            <if test="userBrowser != null  and userBrowser != ''">and user_browser like '%${userBrowser}%'</if>
+            <if test="userSystem != null  and userSystem != ''">and user_system like '%${userSystem}%'</if>
+            <if test="roleName != null  and roleName != ''">and role_name like concat('%', #{roleName}, '%')</if>
+            <if test="currentRoleName != null  and currentRoleName != ''">and current_role_name like concat('%',
+                #{currentRoleName}, '%')
+            </if>
+            <if test="llm != null  and llm != ''">and llm like '%${llm}%'</if>
+            <if test="prompt != null  and prompt != ''">and prompt like '%${prompt}%'</if>
+            <if test="response != null  and response != ''">and response like '%${response}%'</if>
+            <if test="consumeTime != null  and consumeTime != ''">and consume_time like '%${consumeTime}%'</if>
+            <if test="history != null  and history != ''">and history like '%${history}%'</if>
+            <if test="reqParams != null  and reqParams != ''">and req_params like '%${reqParams}%'</if>
+            <if test="isDelete != null ">and is_delete like '%${isDelete}%'</if>
         </where>
         
         order by -create_time
     </select>
-
+    
     <select id="selectLlmChatLogById"
             parameterType="Long"
             resultMap="LlmChatLogResult">
-            <include refid="selectLlmChatLogVo"/>
-            where id = #{id}
+        <include refid="selectLlmChatLogVo"/>
+        where id = #{id}
     </select>
-
+    
     <insert id="insertLlmChatLog" parameterType="LlmChatLog" useGeneratedKeys="true" keyProperty="id">
         insert into llm_chat_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="user != null">user,</if>
-                    <if test="userDeviceType != null">user_device_type,</if>
-                    <if test="userIp != null">user_ip,</if>
-                    <if test="userAddress != null">user_address,</if>
-                    <if test="userAgent != null">user_agent,</if>
-                    <if test="userBrowser != null">user_browser,</if>
-                    <if test="userSystem != null">user_system,</if>
-                    <if test="roleName != null">role_name,</if>
-                    <if test="currentRoleName != null">current_role_name,</if>
-                    <if test="llm != null">llm,</if>
-                    <if test="prompt != null">prompt,</if>
-                    <if test="response != null">response,</if>
-                    <if test="consumeTime != null">consume_time,</if>
-                    <if test="history != null">history,</if>
-                    <if test="reqParams != null">req_params,</if>
-                    <if test="isDelete != null">is_delete,</if>
-                    <if test="createTime != null">create_time,</if>
-                    <if test="updateTime != null">update_time,</if>
+            <if test="user != null">user,</if>
+            <if test="userDeviceType != null">user_device_type,</if>
+            <if test="userIp != null">user_ip,</if>
+            <if test="userAddress != null">user_address,</if>
+            <if test="userAgent != null">user_agent,</if>
+            <if test="userBrowser != null">user_browser,</if>
+            <if test="userSystem != null">user_system,</if>
+            <if test="roleName != null">role_name,</if>
+            <if test="currentRoleName != null">current_role_name,</if>
+            <if test="llm != null">llm,</if>
+            <if test="prompt != null">prompt,</if>
+            <if test="response != null">response,</if>
+            <if test="consumeTime != null">consume_time,</if>
+            <if test="history != null">history,</if>
+            <if test="reqParams != null">req_params,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="user != null">#{user},</if>
-                    <if test="userDeviceType != null">#{userDeviceType},</if>
-                    <if test="userIp != null">#{userIp},</if>
-                    <if test="userAddress != null">#{userAddress},</if>
-                    <if test="userAgent != null">#{userAgent},</if>
-                    <if test="userBrowser != null">#{userBrowser},</if>
-                    <if test="userSystem != null">#{userSystem},</if>
-                    <if test="roleName != null">#{roleName},</if>
-                    <if test="currentRoleName != null">#{currentRoleName},</if>
-                    <if test="llm != null">#{llm},</if>
-                    <if test="prompt != null">#{prompt},</if>
-                    <if test="response != null">#{response},</if>
-                    <if test="consumeTime != null">#{consumeTime},</if>
-                    <if test="history != null">#{history},</if>
-                    <if test="reqParams != null">#{reqParams},</if>
-                    <if test="isDelete != null">#{isDelete},</if>
-                    <if test="createTime != null">#{createTime},</if>
-                    <if test="updateTime != null">#{updateTime},</if>
+            <if test="user != null">#{user},</if>
+            <if test="userDeviceType != null">#{userDeviceType},</if>
+            <if test="userIp != null">#{userIp},</if>
+            <if test="userAddress != null">#{userAddress},</if>
+            <if test="userAgent != null">#{userAgent},</if>
+            <if test="userBrowser != null">#{userBrowser},</if>
+            <if test="userSystem != null">#{userSystem},</if>
+            <if test="roleName != null">#{roleName},</if>
+            <if test="currentRoleName != null">#{currentRoleName},</if>
+            <if test="llm != null">#{llm},</if>
+            <if test="prompt != null">#{prompt},</if>
+            <if test="response != null">#{response},</if>
+            <if test="consumeTime != null">#{consumeTime},</if>
+            <if test="history != null">#{history},</if>
+            <if test="reqParams != null">#{reqParams},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
         </trim>
     </insert>
-
+    
     <update id="updateLlmChatLog" parameterType="LlmChatLog">
         update llm_chat_log
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="user != null">user = #{user},</if>
-                    <if test="userDeviceType != null">user_device_type = #{userDeviceType},</if>
-                    <if test="userIp != null">user_ip = #{userIp},</if>
-                    <if test="userAddress != null">user_address = #{userAddress},</if>
-                    <if test="userAgent != null">user_agent = #{userAgent},</if>
-                    <if test="userBrowser != null">user_browser = #{userBrowser},</if>
-                    <if test="userSystem != null">user_system = #{userSystem},</if>
-                    <if test="roleName != null">role_name = #{roleName},</if>
-                    <if test="currentRoleName != null">current_role_name = #{currentRoleName},</if>
-                    <if test="llm != null">llm = #{llm},</if>
-                    <if test="prompt != null">prompt = #{prompt},</if>
-                    <if test="response != null">response = #{response},</if>
-                    <if test="consumeTime != null">consume_time = #{consumeTime},</if>
-                    <if test="history != null">history = #{history},</if>
-                    <if test="reqParams != null">req_params = #{reqParams},</if>
-                    <if test="isDelete != null">is_delete = #{isDelete},</if>
-                    <if test="createTime != null">create_time = #{createTime},</if>
-                    <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="user != null">user = #{user},</if>
+            <if test="userDeviceType != null">user_device_type = #{userDeviceType},</if>
+            <if test="userIp != null">user_ip = #{userIp},</if>
+            <if test="userAddress != null">user_address = #{userAddress},</if>
+            <if test="userAgent != null">user_agent = #{userAgent},</if>
+            <if test="userBrowser != null">user_browser = #{userBrowser},</if>
+            <if test="userSystem != null">user_system = #{userSystem},</if>
+            <if test="roleName != null">role_name = #{roleName},</if>
+            <if test="currentRoleName != null">current_role_name = #{currentRoleName},</if>
+            <if test="llm != null">llm = #{llm},</if>
+            <if test="prompt != null">prompt = #{prompt},</if>
+            <if test="response != null">response = #{response},</if>
+            <if test="consumeTime != null">consume_time = #{consumeTime},</if>
+            <if test="history != null">history = #{history},</if>
+            <if test="reqParams != null">req_params = #{reqParams},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where id = #{id}
     </update>
-
+    
     <delete id="deleteLlmChatLogById" parameterType="Long">
-        delete from llm_chat_log where id = #{id}
+        delete
+        from llm_chat_log
+        where id = #{id}
     </delete>
-
+    
     <delete id="deleteLlmChatLogByIds" parameterType="String">
         delete from llm_chat_log where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">

@@ -2,6 +2,8 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.domain.SysOperLog;
@@ -15,6 +17,9 @@ import com.ruoyi.system.service.ISysOperLogService;
  */
 @Service
 public class SysOperLogServiceImpl implements ISysOperLogService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SysOperLogServiceImpl.class);
+
     @Autowired
     private SysOperLogMapper operLogMapper;
 
@@ -25,7 +30,13 @@ public class SysOperLogServiceImpl implements ISysOperLogService {
      */
     @Override
     public void insertOperlog(SysOperLog operLog) {
-        operLogMapper.insertOperlog(operLog);
+        try {
+            operLogMapper.insertOperlog(operLog);
+        }
+        catch (Exception e){
+            logger.error("新增操作日志操作失败, 原因是: {}", ""+e);
+        }
+
     }
 
     /**

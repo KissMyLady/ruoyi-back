@@ -50,11 +50,33 @@ public class BaseEntity implements Serializable {
      */
     private String remark;
 
+    //密钥token
+    private String key;
+
+    //md5校验值
+    private String md5;
+
     /**
      * 请求参数
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
+    }
 
     public String getSearchValue() {
         return searchValue;

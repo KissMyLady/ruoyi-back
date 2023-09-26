@@ -54,6 +54,15 @@
             resultMap="RequestApiKeyResult">
         <include refid="selectRequestApiKeyVo"/>
         where id = #{id}
+        and is_delete = 0
+    </select>
+    
+    <select id="selectRequestApiKeyByKey"
+            parameterType="String"
+            resultMap="RequestApiKeyResult">
+        <include refid="selectRequestApiKeyVo"/>
+        where resp_key = #{key}
+            and is_delete = 0
     </select>
     
     <insert id="insertRequestApiKey" parameterType="RequestApiKey" useGeneratedKeys="true" keyProperty="id">
@@ -113,4 +122,11 @@
             #{id}
         </foreach>
     </delete>
+    
+    <update id="addSendCount" parameterType="String">
+        UPDATE request_api_key
+        SET send_count = send_count + 1
+        WHERE resp_key = #{key}
+    </update>
+    
 </mapper>

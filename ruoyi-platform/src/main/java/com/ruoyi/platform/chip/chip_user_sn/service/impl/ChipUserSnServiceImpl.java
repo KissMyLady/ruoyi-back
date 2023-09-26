@@ -1,7 +1,8 @@
 package com.ruoyi.platform.chip.chip_user_sn.service.impl;
 
 import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
+
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.platform.chip.chip_user_sn.mapper.ChipUserSnMapper;
@@ -49,8 +50,8 @@ public class ChipUserSnServiceImpl implements IChipUserSnService {
      */
     @Override
     public int insertChipUserSn(ChipUserSn chipUserSn) {
-                chipUserSn.setCreateTime(DateUtils.getNowDate());
-            return chipUserSnMapper.insertChipUserSn(chipUserSn);
+        chipUserSn.setCreateTime(DateUtils.getNowDate());
+        return chipUserSnMapper.insertChipUserSn(chipUserSn);
     }
 
     /**
@@ -61,7 +62,7 @@ public class ChipUserSnServiceImpl implements IChipUserSnService {
      */
     @Override
     public int updateChipUserSn(ChipUserSn chipUserSn) {
-                chipUserSn.setUpdateTime(DateUtils.getNowDate());
+        chipUserSn.setUpdateTime(DateUtils.getNowDate());
         return chipUserSnMapper.updateChipUserSn(chipUserSn);
     }
 

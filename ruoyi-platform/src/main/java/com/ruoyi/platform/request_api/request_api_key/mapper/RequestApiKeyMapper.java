@@ -19,6 +19,12 @@ public interface RequestApiKeyMapper {
      */
     RequestApiKey selectRequestApiKeyById(Long id);
 
+    //字符串查询key
+    RequestApiKey selectRequestApiKeyByKey(String key);
+
+    //发送数+1
+    int addSendCount(String key);
+
     /**
      * 查询api请求-key列表
      *

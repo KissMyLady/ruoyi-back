@@ -18,57 +18,30 @@ public class ChipUserSn extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
     private Long id;
 
-    /**
-     * 关联用户
-     */
-    @Excel(name = "关联用户")
+    @Excel(name = "关联用户ID")
     private Long userId;
 
-    /**
-     * 手机
-     */
     @Excel(name = "手机")
     private String phone;
 
-    /**
-     * 昵称
-     */
     @Excel(name = "昵称")
     private String nickname;
 
-    /**
-     * sn序列号
-     */
     @Excel(name = "sn序列号")
     private String sn;
 
-    /**
-     * 产品缩略图
-     */
     @Excel(name = "产品缩略图")
     private String thumbnail;
 
-    /**
-     * 状态
-     */
     @Excel(name = "状态")
     private Integer status;
 
-    /**
-     * 到期时间
-     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "到期时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date expiredTime;
 
-    /**
-     * 删除标记
-     */
     @Excel(name = "删除标记")
     private Integer isDelete;
 
