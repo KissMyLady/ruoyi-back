@@ -16,6 +16,10 @@ server:
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 100
 
+# 开放接口
+openApi:
+  # 是否校需要验md5
+  hasCheckMd5: true
 
 # 项目相关配置
 ruoyi:

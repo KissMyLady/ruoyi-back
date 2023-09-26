@@ -17,4 +17,7 @@ public interface IChipUserSnOpenApiServer {
 
     public ResultVo<?> editData(ChipUserSn dto);
 
+    //校验md5
+    public String verificationMd5(ChipUserSn dto);
+
 }

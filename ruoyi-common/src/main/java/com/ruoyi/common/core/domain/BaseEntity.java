@@ -56,11 +56,22 @@ public class BaseEntity implements Serializable {
     //md5校验值
     private String md5;
 
+    //时间戳
+    private String timeStamp;
+
     /**
      * 请求参数
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public String getKey() {
         return key;

@@ -35,6 +35,12 @@ ruoyi:
   captchaType: math
 
 
+# 开放接口
+openApi:
+  # 是否校需要验md5
+  hasCheckMd5: true
+
+
 # 用户配置
 user:
   password:

@@ -67,6 +67,7 @@ public class ChipUserSnOpenApiCtrl {
         logEntity.setReqSystem(os);
         String jsonStr = JSONUtil.toJsonStr(dto);
         logEntity.setReqParams(jsonStr);
+        logEntity.setReqKey(dto.getKey());
 
         //调用服务
         ResultVo<?> resultVo = chipUserSnOpenApiServer.pushData(dto);
@@ -108,6 +109,7 @@ public class ChipUserSnOpenApiCtrl {
         logEntity.setReqSystem(os);
         String jsonStr = JSONUtil.toJsonStr(dto);
         logEntity.setReqParams(jsonStr);
+        logEntity.setReqKey(dto.getKey());
 
         //调用服务
         ResultVo<?> resultVo = chipUserSnOpenApiServer.editData(dto);
