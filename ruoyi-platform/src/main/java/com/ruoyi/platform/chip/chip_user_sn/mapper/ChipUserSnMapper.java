@@ -43,6 +43,9 @@ public interface ChipUserSnMapper {
      */
     public int updateChipUserSn(ChipUserSn chipUserSn);
 
+    //修改, 根据sn修改(sn是唯一的)
+    public int updateChipUserSnBySn(ChipUserSn chipUserSn);
+
     /**
      * 删除用户芯片-序列号
      *

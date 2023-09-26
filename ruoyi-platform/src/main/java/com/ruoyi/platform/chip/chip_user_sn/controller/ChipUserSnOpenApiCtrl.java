@@ -54,7 +54,7 @@ public class ChipUserSnOpenApiCtrl {
         String browser = userAgent.getBrowser().toString();
         String os = userAgent.getOperatingSystem().toString();
 
-        logEntity.setLogTitle("推送数据到用户sn表");
+        logEntity.setLogTitle("api请求推送数据到用户sn表");
         String ip = IpUtils.getIpAddr();
         IpInfo ipInfo = ip2regionSearcher.memorySearch(ip);
 
@@ -86,7 +86,42 @@ public class ChipUserSnOpenApiCtrl {
     //编辑数据
     @PostMapping("/edit")
     public ResultVo<?> editData(@RequestBody ChipUserSn dto, HttpServletRequest request) {
-        return chipUserSnOpenApiServer.editData(dto);
+        RequestApiKeySendLog logEntity = new RequestApiKeySendLog();
+        long startTime = System.currentTimeMillis();
+        String methodStr = request.getMethod();
+        String userAgentStr = request.getHeader("user-agent");
+        String url = request.getRequestURI();
+        UserAgent userAgent = UserAgent.parseUserAgentString(userAgentStr);
+        String browser = userAgent.getBrowser().toString();
+        String os = userAgent.getOperatingSystem().toString();
+
+        logEntity.setLogTitle("api请求修改用户sn表");
+        String ip = IpUtils.getIpAddr();
+        IpInfo ipInfo = ip2regionSearcher.memorySearch(ip);
+
+        logEntity.setReqIp(request.getRemoteAddr());
+        logEntity.setReqAddress(ipInfo.getAddress());
+        logEntity.setReqMethod(methodStr);
+        logEntity.setReqAgent(userAgentStr);
+        logEntity.setReqUrl(url);
+        logEntity.setReqBrowser(browser);
+        logEntity.setReqSystem(os);
+        String jsonStr = JSONUtil.toJsonStr(dto);
+        logEntity.setReqParams(jsonStr);
+
+        //调用服务
+        ResultVo<?> resultVo = chipUserSnOpenApiServer.editData(dto);
+
+        //是否成功
+        Long ss = System.currentTimeMillis() - startTime;
+        logEntity.setTimeOut(ss);  //执行时间
+        logEntity.setIsSuccess(resultVo.isSuccess() ? 1 : 0);
+        logEntity.setException(resultVo.getMsg());
+        logEntity.setEffectRows(resultVo.isSuccess() ? "1" : "0");
+
+        //写入日志数据
+        requestApiKeySendLogService.insertRequestApiKeySendLog(logEntity);
+        return resultVo;
     }
 
 

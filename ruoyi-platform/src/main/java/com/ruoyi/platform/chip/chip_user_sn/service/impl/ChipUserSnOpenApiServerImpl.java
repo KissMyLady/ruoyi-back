@@ -1,22 +1,17 @@
 package com.ruoyi.platform.chip.chip_user_sn.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.domain.ResultVo;
 import com.ruoyi.platform.chip.chip_user_sn.domain.ChipUserSn;
 import com.ruoyi.platform.chip.chip_user_sn.service.IChipUserSnOpenApiServer;
 import com.ruoyi.platform.request_api.request_api_key.service.impl.RequestOpenApiServerImpl;
-import com.ruoyi.platform.request_api.request_api_key_send_log.domain.RequestApiKeySendLog;
 import com.ruoyi.platform.request_api.request_api_key_send_log.service.impl.RequestApiKeySendLogServiceImpl;
 import com.ruoyi.platform.users.platform_user.domain.PlatformSysUser;
 import com.ruoyi.platform.users.platform_user.service.impl.PlatformSysUserServiceImpl;
-import eu.bitwalker.useragentutils.UserAgent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Objects;
 
@@ -69,11 +64,10 @@ public class ChipUserSnOpenApiServerImpl implements IChipUserSnOpenApiServer {
         }
 
         //判断key是否存在, 是否有效 ?
-        String s = requestOpenApiServer.hasEffect(dto.getKey());
-        if(!Objects.equals(s, "")){
-            return ResultVo.error(s);
+        String resHasEffect = requestOpenApiServer.hasEffect(dto.getKey());
+        if(!Objects.equals(resHasEffect, "")){
+            return ResultVo.error(resHasEffect);
         }
-
         //校验md5值
 
         // 判断用户是否存在,
@@ -90,45 +84,46 @@ public class ChipUserSnOpenApiServerImpl implements IChipUserSnOpenApiServer {
         }
         catch (Exception e){
             logger.error("推送用户sn数据操作失败, 原因是: {}", ""+e);
-            return ResultVo.error("推送成功失败, 原因是: "+ e);
+            return ResultVo.error("推送失败, 原因是: "+ e);
         }
         return ResultVo.success("推送成功");
     }
 
     @Override
     public ResultVo<?> editData(ChipUserSn dto) {
-        return null;
+        //判断校验key是否存在, 是否有效 ?
+        String s = requestOpenApiServer.hasEffect(dto.getKey());
+        if(!Objects.equals(s, "")){
+            return ResultVo.error(s);
+        }
+
+        // sn是否存在
+        if(ObjectUtil.isEmpty(dto.getSn())){
+            return ResultVo.error("编辑对象sn不能为空");
+        }
+
+        //校验md5值
+
+
+        Long userId = dto.getUserId();  //关联用户id
+        // 判断用户是否存在,
+        PlatformSysUser sysUser = sysUserService.selectUserById(userId);
+        if (ObjectUtil.isEmpty(sysUser)){
+            return ResultVo.error("推送用户不存在, 请核对用户id是否正确");
+        }
+
+        //数据更新
+        try {
+            int i = chipUserSnService.updateChipUserSnBySn(dto);
+            //key计数+1
+            int addOne = requestOpenApiServer.addKeyUserCount_one(dto.getKey());
+        }
+        catch (Exception e){
+            logger.error("修改用户sn数据操作失败, 原因是: {}", ""+e);
+            return ResultVo.error("修改失败, 原因是: "+ e);
+        }
+        return ResultVo.success("修改成功");
     }
 
-    // 通用校验方法
-    public ResultVo<?> commonFuc(ChipUserSn dto, HttpServletRequest request){
-        RequestApiKeySendLog logEntity = new RequestApiKeySendLog();
-        long startTime = System.currentTimeMillis();
 
-        String methodStr = request.getMethod();
-        String userAgentStr = request.getHeader("user-agent");
-        String url = request.getRequestURI();
-        UserAgent userAgent = UserAgent.parseUserAgentString(userAgentStr);
-        String browser = userAgent.getBrowser().toString();
-        String os = userAgent.getOperatingSystem().toString();
-
-        logEntity.setReqMethod(methodStr);
-        logEntity.setReqAgent(userAgentStr);
-        logEntity.setReqUrl(url);
-        logEntity.setReqBrowser(browser);
-        logEntity.setReqSystem(os);
-        //糊涂工具包, dto转字符
-        String jsonStr = JSONUtil.toJsonStr(dto);
-        logEntity.setReqParams(jsonStr);
-
-        // 校验
-
-        // 校验通过 / 不通过
-
-        Long ss = System.currentTimeMillis() - startTime;
-        logEntity.setTimeOut(ss);  //执行时间
-        //写入日志数据
-        requestApiKeySendLogService.insertRequestApiKeySendLog(logEntity);
-        return ResultVo.success("成功");
-    }
 }

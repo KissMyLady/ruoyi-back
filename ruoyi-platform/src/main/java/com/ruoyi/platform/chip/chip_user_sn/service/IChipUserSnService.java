@@ -43,6 +43,9 @@ public interface IChipUserSnService {
      */
     public int updateChipUserSn(ChipUserSn chipUserSn);
 
+    //通过sn修改
+    public int updateChipUserSnBySn(ChipUserSn chipUserSn);
+
     /**
      * 批量删除用户芯片-序列号
      *

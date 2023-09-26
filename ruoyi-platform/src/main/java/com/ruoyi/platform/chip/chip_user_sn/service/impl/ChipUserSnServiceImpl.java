@@ -67,6 +67,15 @@ public class ChipUserSnServiceImpl implements IChipUserSnService {
     }
 
     /**
+     * 通过sn修改数据
+     */
+    @Override
+    public int updateChipUserSnBySn(ChipUserSn chipUserSn){
+        chipUserSn.setUpdateTime(DateUtils.getNowDate());
+        return chipUserSnMapper.updateChipUserSnBySn(chipUserSn);
+    }
+
+    /**
      * 批量删除用户芯片-序列号
      *
      * @param ids 需要删除的用户芯片-序列号主键

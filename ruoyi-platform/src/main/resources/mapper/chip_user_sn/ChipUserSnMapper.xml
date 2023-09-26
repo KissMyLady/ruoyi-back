@@ -101,6 +101,24 @@
         where id = #{id}
     </update>
     
+    
+    <update id="updateChipUserSnBySn" parameterType="ChipUserSn">
+        update chip_user_sn
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="sn != null">sn = #{sn},</if>
+            <if test="thumbnail != null">thumbnail = #{thumbnail},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="expiredTime != null">expired_time = #{expiredTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where sn = #{sn}
+    </update>
+    
     <delete id="deleteChipUserSnById" parameterType="Long">
         delete
         from chip_user_sn
