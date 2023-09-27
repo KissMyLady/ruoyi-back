@@ -136,7 +136,7 @@ public class LogAspect {
 
             if (e != null) {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
-                String eMsg = StringUtils.substring(e.getMessage(), 0, 2000);
+                String eMsg = e.getMessage();  //StringUtils.substring(e.getMessage(), 0, 2000);
                 operLog.setErrorMsg(eMsg);
             }
 
@@ -222,7 +222,8 @@ public class LogAspect {
                 || HttpMethod.POST.name().equals(requestMethod)))
         {
             String params = argsArrayToString(joinPoint.getArgs(), excludeParamNames);
-            operLog.setOperParam(StringUtils.substring(params, 0, 2000));
+            operLog.setOperParam(params); //StringUtils.substring(params, 0, 2000));
+
         } else {
             String jsonString = JSON.toJSONString(paramsMap, excludePropertyPreFilter(excludeParamNames));
             // String substring = StringUtils.substring(jsonString, 0, 2000);  //保留2000个字符
