@@ -1,7 +1,8 @@
 package com.ruoyi.platform.request_api.request_api_key.service.impl;
 
 import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
+
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.platform.request_api.request_api_key.mapper.RequestApiKeyMapper;
@@ -49,8 +50,8 @@ public class RequestApiKeyServiceImpl implements IRequestApiKeyService {
      */
     @Override
     public int insertRequestApiKey(RequestApiKey requestApiKey) {
-                requestApiKey.setCreateTime(DateUtils.getNowDate());
-            return requestApiKeyMapper.insertRequestApiKey(requestApiKey);
+        requestApiKey.setCreateTime(DateUtils.getNowDate());
+        return requestApiKeyMapper.insertRequestApiKey(requestApiKey);
     }
 
     /**
@@ -61,7 +62,7 @@ public class RequestApiKeyServiceImpl implements IRequestApiKeyService {
      */
     @Override
     public int updateRequestApiKey(RequestApiKey requestApiKey) {
-                requestApiKey.setUpdateTime(DateUtils.getNowDate());
+        requestApiKey.setUpdateTime(DateUtils.getNowDate());
         return requestApiKeyMapper.updateRequestApiKey(requestApiKey);
     }
 

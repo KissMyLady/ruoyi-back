@@ -11,6 +11,7 @@ import com.ruoyi.platform.request_api.request_api_key.service.impl.RequestOpenAp
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -34,6 +35,8 @@ public class ChipUserRechargeOpenServiceImpl implements IChipUserRechargeOpenSer
     @Autowired
     private ChipUserRechargeMapper chipUserRechargeMapper;
 
+    //事物回滚 参考: http://doc.ruoyi.vip/ruoyi/document/htsc.html#事物回滚
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResultVo<?> pushData(ChipUserRecharge dto) {
         //判断key是否存在, 是否有效 ?

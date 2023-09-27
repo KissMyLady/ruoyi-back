@@ -10,7 +10,10 @@
 
 
 
-
+```shell
+# 启动时指定配置文件
+java -jar ruoyi-admin.jar --spring.profiles.active=pro
+```
 
 
 

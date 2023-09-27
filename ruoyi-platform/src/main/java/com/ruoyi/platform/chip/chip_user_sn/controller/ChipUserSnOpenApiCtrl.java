@@ -11,6 +11,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
 import net.dreamlu.mica.ip2region.core.IpInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,9 @@ public class ChipUserSnOpenApiCtrl {
     @Autowired
     private ChipUserSnOpenApiServerImpl chipUserSnOpenApiServer;
 
+    @Value("${openApi.hasCheckMd5}")
+    private boolean hasCheckMd5;
+
     @GetMapping("/hello")
     public ResultVo<?> hello(HttpServletRequest request) {
         return ResultVo.success("请求成功"+ request.getHeaders("user-agent"));
@@ -54,7 +58,8 @@ public class ChipUserSnOpenApiCtrl {
         String browser = userAgent.getBrowser().toString();
         String os = userAgent.getOperatingSystem().toString();
 
-        logEntity.setLogTitle("api请求推送数据到用户sn表");
+        String title = hasCheckMd5 ? "api请求推送数据到用户sn表" : "api请求推送数据到用户sn表-[未使用md5校验接口安全性]";
+        logEntity.setLogTitle(title);
         String ip = IpUtils.getIpAddr();
         IpInfo ipInfo = ip2regionSearcher.memorySearch(ip);
 
@@ -96,7 +101,8 @@ public class ChipUserSnOpenApiCtrl {
         String browser = userAgent.getBrowser().toString();
         String os = userAgent.getOperatingSystem().toString();
 
-        logEntity.setLogTitle("api请求修改用户sn表");
+        String title = hasCheckMd5 ? "api请求修改用户sn表" : "api请求修改用户sn表-[未使用md5校验接口安全性]";
+        logEntity.setLogTitle(title);
         String ip = IpUtils.getIpAddr();
         IpInfo ipInfo = ip2regionSearcher.memorySearch(ip);
 
