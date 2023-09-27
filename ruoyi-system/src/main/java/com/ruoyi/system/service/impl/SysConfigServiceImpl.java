@@ -25,6 +25,7 @@ import com.ruoyi.system.service.ISysConfigService;
  */
 @Service
 public class SysConfigServiceImpl implements ISysConfigService {
+
     @Autowired
     private SysConfigMapper configMapper;
 

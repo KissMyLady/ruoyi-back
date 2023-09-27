@@ -38,7 +38,7 @@ import com.ruoyi.system.service.ISysUserService;
  */
 @Service
 public class SysUserServiceImpl implements ISysUserService {
-    private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
     @Autowired
     private SysUserMapper userMapper;
@@ -70,7 +70,18 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
     public List<SysUser> selectUserList(SysUser user) {
-        return userMapper.selectUserList(user);
+        List<SysUser> sysUsers = userMapper.selectUserList(user);
+        // 根据用户列表, 查询用户的角色
+        for(SysUser sysUser: sysUsers){
+            List<SysRole> roles = sysUser.getRoles();
+            logger.info("查询用户: {}, 角色: {}", sysUser, roles);
+
+            //查询当前用户的角色数据
+
+
+        }
+
+        return sysUsers;
     }
 
     /**
@@ -477,7 +488,7 @@ public class SysUserServiceImpl implements ISysUserService {
                 failureNum++;
                 String msg = "<br/>" + failureNum + "、账号 " + user.getUserName() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
-                log.error(msg, e);
+                logger.error(msg, e);
             }
         }
         if (failureNum > 0) {

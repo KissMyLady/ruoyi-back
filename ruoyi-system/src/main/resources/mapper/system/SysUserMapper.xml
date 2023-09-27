@@ -23,6 +23,7 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <result property="md5" column="md5"/>
         <association property="dept" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -83,10 +84,37 @@
     </sql>
     
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-        select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status,
-        u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user
-        u
-        left join sys_dept d on u.dept_id = d.dept_id
+        select u.user_id,
+               u.dept_id,
+               u.nick_name,
+               u.user_name,
+               u.email,
+               u.avatar,
+               u.phonenumber,
+               u.sex,
+               u.status,
+               u.del_flag,
+               u.login_ip,
+               u.login_date,
+               u.create_by,
+               u.create_time,
+               u.remark,
+               d.dept_name,
+               d.leader,
+               uurr.role_list as md5
+        from sys_user u
+                left join sys_dept d on u.dept_id = d.dept_id
+                left join (select u.user_id,
+                            group_concat(b1.role_name) as role_list
+                            from sys_user u
+                            left join (select uurr.role_id,
+                            uurr.user_id,
+                            rr.role_name
+                            from sys_user_role as uurr
+                            left join sys_role rr on rr.role_id = uurr.role_id) b1
+                            on b1.user_id = u.user_id
+                            group by u.user_id
+                           ) uurr on uurr.user_id = u.user_id
         where u.del_flag = '0'
         <if test="userId != null and userId != 0">
             AND u.user_id = #{userId}

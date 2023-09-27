@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.system.service.impl.SysUserServiceImpl;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,7 +44,7 @@ import com.ruoyi.system.service.ISysUserService;
 public class SysUserController extends BaseController {
 
     @Autowired
-    private ISysUserService userService;
+    private SysUserServiceImpl userService;
 
     @Autowired
     private ISysRoleService roleService;
@@ -62,6 +63,7 @@ public class SysUserController extends BaseController {
     public TableDataInfo list(SysUser user) {
         startPage();
         List<SysUser> list = userService.selectUserList(user);
+
         return getDataTable(list);
     }
 
