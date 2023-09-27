@@ -71,16 +71,6 @@ public class SysUserServiceImpl implements ISysUserService {
     @DataScope(deptAlias = "d", userAlias = "u")
     public List<SysUser> selectUserList(SysUser user) {
         List<SysUser> sysUsers = userMapper.selectUserList(user);
-        // 根据用户列表, 查询用户的角色
-        for(SysUser sysUser: sysUsers){
-            List<SysRole> roles = sysUser.getRoles();
-            logger.info("查询用户: {}, 角色: {}", sysUser, roles);
-
-            //查询当前用户的角色数据
-
-
-        }
-
         return sysUsers;
     }
 
