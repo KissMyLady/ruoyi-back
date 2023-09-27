@@ -137,7 +137,9 @@
             #elseif($column.list && $column.htmlType == "datetime")
               <el-table-column label="${comment}" align="center" prop="${javaField}" width="180">
                 <template slot-scope="scope">
-                  <span>{{ parseTime(scope.row.${javaField}, '{y}-{m}-{d}') }}</span>
+                  <el-tooltip class="item" effect="dark" :content="scope.row.${javaField}" placement="top">
+                    <span>{{ formatTime(scope.row.${javaField}, '{y}-{m}-{d}') }}</span>
+                  </el-tooltip>
                 </template>
               </el-table-column>
             #elseif($column.list && $column.htmlType == "imageUpload")
@@ -363,7 +365,6 @@
 
 <script>
   import { list${BusinessName}, get${BusinessName}, del${BusinessName}, add${BusinessName}, update${BusinessName} } from "@/api/${moduleName}/${businessName}";
-
   export default {
     name: "${BusinessName}",
       #if(${dicts} != '')
