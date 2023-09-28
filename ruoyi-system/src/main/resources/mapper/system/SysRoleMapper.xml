@@ -19,6 +19,8 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <result property="key" column="username"/>
+        <result property="md5" column="nickname"/>
     </resultMap>
     
     <sql id="selectRoleVo">
@@ -32,11 +34,20 @@
                         r.status,
                         r.del_flag,
                         r.create_time,
-                        r.remark
+                        r.remark,
+                        bb.username,
+                        bb.nickname
         from sys_role r
                  left join sys_user_role ur on ur.role_id = r.role_id
                  left join sys_user u on u.user_id = ur.user_id
                  left join sys_dept d on u.dept_id = d.dept_id
+                 left join (select distinct r.role_name,
+                                            group_concat(u.nick_name) as nickname,
+                                            group_concat(u.user_name) as username
+                            from sys_role r
+                                     left join sys_user_role ur on ur.role_id = r.role_id
+                                     left join sys_user u on u.user_id = ur.user_id
+                            group by r.role_name) bb on r.role_name = bb.role_name
     </sql>
     
     <select id="selectRoleList" parameterType="SysRole" resultMap="SysRoleResult">
@@ -154,7 +165,8 @@
     </delete>
     
     <delete id="deleteRoleByIds" parameterType="Long">
-        update sys_role set del_flag = '2' where role_id in
+        update sys_role set del_flag = '2'
+        where role_id in
         <foreach collection="array" item="roleId" open="(" separator="," close=")">
             #{roleId}
         </foreach>

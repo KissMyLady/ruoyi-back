@@ -59,11 +59,22 @@ public class BaseEntity implements Serializable {
     //时间戳
     private String timeStamp;
 
+    //嵌套对象
+    private AjaxResult ajaxResult;
+
     /**
      * 请求参数
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
+
+    public AjaxResult getAjaxResult() {
+        return ajaxResult;
+    }
+
+    public void setAjaxResult(AjaxResult ajaxResult) {
+        this.ajaxResult = ajaxResult;
+    }
 
     public String getTimeStamp() {
         return timeStamp;

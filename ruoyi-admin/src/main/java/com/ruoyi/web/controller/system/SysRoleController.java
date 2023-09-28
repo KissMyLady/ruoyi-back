@@ -1,8 +1,15 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.TreeSelect;
+import com.ruoyi.common.core.domain.entity.SysMenu;
+import com.ruoyi.system.service.ISysMenuService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +48,8 @@ import com.ruoyi.system.service.ISysUserService;
 @RequestMapping("/system/role")
 public class SysRoleController extends BaseController {
 
+    private static final Logger logger = LoggerFactory.getLogger(SysRoleController.class);
+
     @Autowired
     private ISysRoleService roleService;
 
@@ -56,12 +65,35 @@ public class SysRoleController extends BaseController {
     @Autowired
     private ISysDeptService deptService;
 
+    @Autowired
+    private ISysMenuService menuService;
+
+    //角色列表获取
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysRole role) {
         startPage();
-        List<SysRole> list = roleService.selectRoleList(role);
-        return getDataTable(list);
+        List<SysRole> roleList = roleService.selectRoleList(role);
+        // 新增
+        //获取角色的菜单项目
+        for(SysRole itemRole: roleList){
+            Long roleId = itemRole.getRoleId();
+            AjaxResult ajax = AjaxResult.success();
+            // 根据用户查询系统菜单列表. 超级管理员查询全部菜单
+            List<SysMenu> menus = menuService.selectMenuList(1L);
+
+            // 根据角色ID查询菜单树信息
+            List<Long> checkedKeys = menuService.selectMenuListByRoleId(roleId);
+            ajax.put("checkedKeys", checkedKeys);
+
+            // 构建前端所需要下拉树结构
+            List<TreeSelect> treeSelects = menuService.buildMenuTreeSelect(menus);
+
+            ajax.put("menus", treeSelects);
+            itemRole.setAjaxResult(ajax);
+        }
+        //分配用户
+        return getDataTable(roleList);
     }
 
     @Log(title = "export角色管理", businessType = BusinessType.EXPORT)
@@ -136,9 +168,13 @@ public class SysRoleController extends BaseController {
     @Log(title = "修改保存角色数据权限", businessType = BusinessType.UPDATE)
     @PutMapping("/dataScope")
     public AjaxResult dataScope(@RequestBody SysRole role) {
+        //不能修改超级管理员的数据权限
         roleService.checkRoleAllowed(role);
+        //校验角色是否有数据权限
         roleService.checkRoleDataScope(role.getRoleId());
-        return toAjax(roleService.authDataScope(role));
+        //修改
+        int i = roleService.authDataScope(role);
+        return toAjax(i);
     }
 
     /**

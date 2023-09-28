@@ -255,7 +255,8 @@ public class SysRoleServiceImpl implements ISysRoleService {
         // 删除角色与部门关联
         roleDeptMapper.deleteRoleDeptByRoleId(role.getRoleId());
         // 新增角色和部门信息（数据权限）
-        return insertRoleDept(role);
+        int i = insertRoleDept(role);
+        return i;
     }
 
     /**
@@ -295,6 +296,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
             list.add(rd);
         }
         if (list.size() > 0) {
+            // 批量新增角色部门信息
             rows = roleDeptMapper.batchRoleDept(list);
         }
         return rows;
@@ -337,6 +339,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
         roleMenuMapper.deleteRoleMenu(roleIds);
         // 删除角色与部门关联
         roleDeptMapper.deleteRoleDept(roleIds);
+        //删除角色, 逻辑删除. 字段: del_flag
         return roleMapper.deleteRoleByIds(roleIds);
     }
 
