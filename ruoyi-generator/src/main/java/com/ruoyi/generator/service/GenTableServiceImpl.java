@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
@@ -43,6 +45,7 @@ import com.ruoyi.generator.util.VelocityUtils;
  *
  * @author ruoyi
  */
+@DataSource(value = DataSourceType.slaveZblog)
 @Service
 public class GenTableServiceImpl implements IGenTableService {
     private static final Logger log = LoggerFactory.getLogger(GenTableServiceImpl.class);

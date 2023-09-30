@@ -10,6 +10,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -32,6 +34,10 @@ import com.ruoyi.framework.datasource.DynamicDataSource;
  */
 @Configuration
 public class DruidConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(DruidConfig.class);
+
+    //主
     @Bean
     @ConfigurationProperties("spring.datasource.druid.master")
     public DataSource masterDataSource(DruidProperties druidProperties) {
@@ -39,21 +45,26 @@ public class DruidConfig {
         return druidProperties.dataSource(dataSource);
     }
 
+    //从库mydoc
     @Bean
-    @ConfigurationProperties("spring.datasource.druid.slave")
-    @ConditionalOnProperty(prefix = "spring.datasource.druid.slave", name = "enabled", havingValue = "true")
-    public DataSource slaveDataSource(DruidProperties druidProperties) {
+    @ConfigurationProperties("spring.datasource.druid.slavemydoc")
+    @ConditionalOnProperty(prefix = "spring.datasource.druid.slavemydoc", name = "enabled", havingValue = "true")
+    public DataSource slaveMyDoc(DruidProperties druidProperties) {
+        //在DruidConfig配置读取slave数据源
         DruidDataSource dataSource = DruidDataSourceBuilder.create().build();
+        logger.info("在DruidConfig配置读取 从库 mydoc 数据源 ... 配置从数据库 ...");
         return druidProperties.dataSource(dataSource);
     }
 
-    @Bean(name = "dynamicDataSource")
-    @Primary
-    public DynamicDataSource dataSource(DataSource masterDataSource) {
-        Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(DataSourceType.MASTER.name(), masterDataSource);
-        setDataSource(targetDataSources, DataSourceType.SLAVE.name(), "slaveDataSource");
-        return new DynamicDataSource(masterDataSource, targetDataSources);
+    //从库Zblog
+    @Bean
+    @ConfigurationProperties("spring.datasource.druid.slavezblog")
+    @ConditionalOnProperty(prefix = "spring.datasource.druid.slavezblog", name = "enabled", havingValue = "true")
+    public DataSource slaveZblog(DruidProperties druidProperties) {
+        //在DruidConfig配置读取slave数据源
+        DruidDataSource dataSource = DruidDataSourceBuilder.create().build();
+        logger.info("在DruidConfig配置读取 从库 Zblog 数据源 ... 配置从数据库 ...");
+        return druidProperties.dataSource(dataSource);
     }
 
     /**
@@ -63,12 +74,37 @@ public class DruidConfig {
      * @param sourceName        数据源名称
      * @param beanName          bean名称
      */
-    public void setDataSource(Map<Object, Object> targetDataSources, String sourceName, String beanName) {
+    public void setDataSource(Map<Object, Object> targetDataSources,
+                              String sourceName,
+                              String beanName
+    ) {
         try {
             DataSource dataSource = SpringUtils.getBean(beanName);
             targetDataSources.put(sourceName, dataSource);
         } catch (Exception e) {
+            logger.warn("设置数据源错误1: {}", e.getMessage());
         }
+    }
+
+    //主要数据源
+    @Bean(name = "dynamicDataSource")
+    @Primary
+    public DynamicDataSource dataSource(DataSource masterDataSource) {
+        Map<Object, Object> targetDataSources = new HashMap<>();
+
+        //ry_vue
+        String ryVueName = DataSourceType.MASTER.name();
+        targetDataSources.put(ryVueName, masterDataSource);
+
+        //mydoc
+        String slaveName = DataSourceType.slaveMyDoc.name();
+        setDataSource(targetDataSources, slaveName, "slaveMyDoc");
+
+        //zblog
+        String zlogName = DataSourceType.slaveZblog.name();
+        setDataSource(targetDataSources, zlogName, "slaveZblog");
+
+        return new DynamicDataSource(masterDataSource, targetDataSources);
     }
 
     /**

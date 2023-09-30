@@ -88,17 +88,23 @@ spring:
     druid:
       # 主库数据源
       master:
-        # url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-        url: jdbc:mysql://localhost:3306/ry_vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        url: jdbc:mysql://localhost:3306/my_ry_vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         username: root
         password: YING123ZZ
       # 从库数据源
-      slave:
+      slavemydoc:
         # 从数据源开关/默认关闭
-        enabled: false
-        url:
-        username:
-        password:
+        enabled: true
+        url: jdbc:mysql://localhost:3306/mydoc?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: root
+        password: YING123ZZ
+      slavezblog:
+        # 从数据源开关/默认关闭
+        enabled: true
+        url: jdbc:mysql://localhost:3306/zblog?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: root
+        password: YING123ZZ
+
       # 初始连接数
       initialSize: 5
       # 最小连接池数量

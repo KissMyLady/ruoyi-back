@@ -32,7 +32,7 @@ ruoyi:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: /home/ubuntu/code/java/ruoyi/ruoyi_files/uploadPath
+  profile: /home/mylady/code/java/ruoyi/ruoyi_files/uploadPath
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数字计算 char 字符验证
@@ -87,16 +87,22 @@ spring:
       # 主库数据源
       master:
         # url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-        url: jdbc:mysql://127.0.0.1:3306/ry_vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        url: jdbc:mysql://127.0.0.1:3306/my_ry_vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         username: root
-        password: b0c2ad110fbeed99
+        password: YING123ZZ
       # 从库数据源
       slave:
         # 从数据源开关/默认关闭
-        enabled: false
-        url:
-        username:
-        password:
+        enabled: true
+        url: jdbc:mysql://localhost:3306/mydoc?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: root
+        password: YING123ZZ
+      slaveZblog:
+        # 从数据源开关/默认关闭
+        enabled: true
+        url: jdbc:mysql://localhost:3306/zblog?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: root
+        password: YING123ZZ
       # 初始连接数
       initialSize: 5
       # 最小连接池数量

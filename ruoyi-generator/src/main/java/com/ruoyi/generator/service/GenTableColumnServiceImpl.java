@@ -2,6 +2,8 @@ package com.ruoyi.generator.service;
 
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.core.text.Convert;
@@ -13,6 +15,8 @@ import com.ruoyi.generator.mapper.GenTableColumnMapper;
  *
  * @author ruoyi
  */
+
+@DataSource(value = DataSourceType.slaveZblog)
 @Service
 public class GenTableColumnServiceImpl implements IGenTableColumnService {
     @Autowired
