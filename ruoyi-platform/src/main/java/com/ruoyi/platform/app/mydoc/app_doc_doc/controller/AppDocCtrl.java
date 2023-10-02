@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.ruoyi.platform.app.mydoc.app_doc_doc.domain.AppDocDoc;
 import com.ruoyi.platform.app.mydoc.app_doc_doc.service.impl.AppDocDocServiceImpl;
@@ -45,7 +46,7 @@ public class AppDocCtrl extends BaseController {
     private UserDeptRoleServerImpl userDeptRoleServer;
 
     @PreAuthorize("@ss.hasPermi('app_doc_doc:app_doc_doc:list')")
-    @GetMapping("/list2")
+    @PostMapping("/list2")
     public TableDataInfo list2(@RequestBody AppDocDoc appDocDoc) {
         startPage();
         //查询当前用户的权限
@@ -62,6 +63,7 @@ public class AppDocCtrl extends BaseController {
 
         // logger.info("查询当前用户 {} 的部门权限list: {}", user.getUserName(), auth_dept_set);
         List<Map<String, Object>> list = appDocDocAuthorityServer.selectAppDocDocList(appDocDoc);
+        logger.info("查询到的数据返回: {}", list);
         return getDataTable(list);
     }
 

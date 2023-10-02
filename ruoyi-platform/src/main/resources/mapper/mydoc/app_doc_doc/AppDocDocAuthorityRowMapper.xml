@@ -48,25 +48,27 @@
          select doc.id,
                 doc.name,
                 doc.content,
-                doc.pre_content,
-                doc.top_doc,
-                doc.create_user_id,
-                doc.parent_doc,
+                doc.pre_content as preContent,
+                doc.top_doc as topDoc,
+                doc.create_user_id as createUserId,
+                doc.parent_doc as parentDoc,
                 doc.sort,
                 doc.status,
-                doc.editor_mode,
-                doc.open_children,
-                doc.show_children,
+                doc.editor_mode as editorMode,
+                doc.open_children as openChildren,
+                doc.show_children as showChildren,
                 doc.visitor,
-                doc.create_time,
-                doc.modify_time,
-                COALESCE(auth.need_dept_id, 0) as dept_auth
+                DATE_FORMAT(doc.create_time, '%Y-%m-%d %H:%i:%S') createTime,
+                DATE_FORMAT(doc.modify_time, '%Y-%m-%d %H:%i:%S') modifyTime,
+                COALESCE(auth.need_dept_id, 0) as deptAuth,
+                COALESCE(sd.dept_name, 0)      as deptName
             from app_doc_doc doc
             left join (select id, table_name, db_id_name, db_id, need_dept_id
                         from sys_table_authority_row auth
                         where auth.table_name = 'app_doc_doc'
                         and auth.db_id_name = 'id'
                        ) auth on auth.db_id = doc.id
+            left join sys_dept sd on sd.dept_id = auth.need_dept_id
         <where>
             COALESCE(auth.need_dept_id, 0) in
             <foreach item="dept_id" collection="deptAuthList" open="(" separator="," close=")">

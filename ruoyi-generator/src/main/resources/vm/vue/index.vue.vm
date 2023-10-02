@@ -465,6 +465,10 @@
           this.${businessName}List = response.rows;
           this.total = response.total;
           this.loading = false;
+        }).catch((err) => {
+          this.loading = false
+          //Message({ message: ""+err, type: 'error' })
+          console.log("请求错误: ", err);
         });
       },
       // 取消按钮
