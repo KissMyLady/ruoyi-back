@@ -3,6 +3,7 @@ package com.ruoyi.common.core.domain;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -62,11 +63,22 @@ public class BaseEntity implements Serializable {
     //嵌套对象
     private AjaxResult ajaxResult;
 
+    //数据行的权限
+    private List<Integer> deptAuthList;
+
     /**
      * 请求参数
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
+
+    public List<Integer> getDeptAuthList() {
+        return deptAuthList;
+    }
+
+    public void setDeptAuthList(List<Integer> deptAuthList) {
+        this.deptAuthList = deptAuthList;
+    }
 
     public AjaxResult getAjaxResult() {
         return ajaxResult;

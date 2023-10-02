@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.mydoc.app_doc_doc.mapper.AppDocDocAuthorityRowMapper">
+    
+    <resultMap type="AppDocDoc" id="AppDocDocResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="content" column="content"/>
+        <result property="preContent" column="pre_content"/>
+        <result property="topDoc" column="top_doc"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="parentDoc" column="parent_doc"/>
+        <result property="sort" column="sort"/>
+        <result property="status" column="status"/>
+        <result property="editorMode" column="editor_mode"/>
+        <result property="openChildren" column="open_children"/>
+        <result property="showChildren" column="show_children"/>
+        <result property="visitor" column="visitor"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifyTime" column="modify_time"/>
+        <result property="deptAuth" column="dept_auth"/>
+    </resultMap>
+    
+    <sql id="selectAppDocDocVo">
+        select id,
+               name,
+               content,
+               pre_content,
+               top_doc,
+               create_user_id,
+               parent_doc,
+               sort,
+               status,
+               editor_mode,
+               open_children,
+               show_children,
+               visitor,
+               create_time,
+               modify_time
+        from app_doc_doc
+    </sql>
+    
+    <select id="selectAppDocDocList"
+            parameterType="AppDocDoc"
+            resultType="java.util.Map">
+         select doc.id,
+                doc.name,
+                doc.content,
+                doc.pre_content,
+                doc.top_doc,
+                doc.create_user_id,
+                doc.parent_doc,
+                doc.sort,
+                doc.status,
+                doc.editor_mode,
+                doc.open_children,
+                doc.show_children,
+                doc.visitor,
+                doc.create_time,
+                doc.modify_time,
+                COALESCE(auth.need_dept_id, 0) as dept_auth
+            from app_doc_doc doc
+            left join (select id, table_name, db_id_name, db_id, need_dept_id
+                        from sys_table_authority_row auth
+                        where auth.table_name = 'app_doc_doc'
+                        and auth.db_id_name = 'id'
+                       ) auth on auth.db_id = doc.id
+        <where>
+            COALESCE(auth.need_dept_id, 0) in
+            <foreach item="dept_id" collection="deptAuthList" open="(" separator="," close=")">
+                #{dept_id}
+            </foreach>
+            
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="content != null  and content != ''">and content like '%${content}%'</if>
+            <if test="preContent != null  and preContent != ''">and pre_content like '%${preContent}%'</if>
+            <if test="topDoc != null ">and top_doc like '%${topDoc}%'</if>
+            <if test="createUserId != null ">and create_user_id like '%${createUserId}%'</if>
+            <if test="parentDoc != null ">and parent_doc like '%${parentDoc}%'</if>
+            <if test="sort != null ">and sort like '%${sort}%'</if>
+            <if test="status != null ">and status like '%${status}%'</if>
+            <if test="editorMode != null ">and editor_mode like '%${editorMode}%'</if>
+            <if test="openChildren != null ">and open_children like '%${openChildren}%'</if>
+            <if test="showChildren != null ">and show_children like '%${showChildren}%'</if>
+            <if test="visitor != null ">and visitor like '%${visitor}%'</if>
+            <if test="modifyTime != null ">and DATE_FORMAT(modify_time, '%Y-%m-%d') = DATE_FORMAT(#{modifyTime}, '%Y-%m-%d')</if>
+        </where>
+    </select>
+    
+    <select id="selectAppDocDocById"
+            parameterType="Long"
+            resultMap="AppDocDocResult">
+        <include refid="selectAppDocDocVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertAppDocDoc" parameterType="AppDocDoc" useGeneratedKeys="true" keyProperty="id">
+        insert into app_doc_doc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="content != null">content,</if>
+            <if test="preContent != null">pre_content,</if>
+            <if test="topDoc != null">top_doc,</if>
+            <if test="createUserId != null">create_user_id,</if>
+            <if test="parentDoc != null">parent_doc,</if>
+            <if test="sort != null">sort,</if>
+            <if test="status != null">status,</if>
+            <if test="editorMode != null">editor_mode,</if>
+            <if test="openChildren != null">open_children,</if>
+            <if test="showChildren != null">show_children,</if>
+            <if test="visitor != null">visitor,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="modifyTime != null">modify_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="content != null">#{content},</if>
+            <if test="preContent != null">#{preContent},</if>
+            <if test="topDoc != null">#{topDoc},</if>
+            <if test="createUserId != null">#{createUserId},</if>
+            <if test="parentDoc != null">#{parentDoc},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="status != null">#{status},</if>
+            <if test="editorMode != null">#{editorMode},</if>
+            <if test="openChildren != null">#{openChildren},</if>
+            <if test="showChildren != null">#{showChildren},</if>
+            <if test="visitor != null">#{visitor},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="modifyTime != null">#{modifyTime},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateAppDocDoc" parameterType="AppDocDoc">
+        update app_doc_doc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="preContent != null">pre_content = #{preContent},</if>
+            <if test="topDoc != null">top_doc = #{topDoc},</if>
+            <if test="createUserId != null">create_user_id = #{createUserId},</if>
+            <if test="parentDoc != null">parent_doc = #{parentDoc},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="editorMode != null">editor_mode = #{editorMode},</if>
+            <if test="openChildren != null">open_children = #{openChildren},</if>
+            <if test="showChildren != null">show_children = #{showChildren},</if>
+            <if test="visitor != null">visitor = #{visitor},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="modifyTime != null">modify_time = #{modifyTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteAppDocDocById" parameterType="Long">
+        delete
+        from app_doc_doc
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteAppDocDocByIds" parameterType="String">
+        delete from app_doc_doc where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

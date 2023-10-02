@@ -60,4 +60,5 @@ public interface AppDocDocMapper {
      * @return 结果
      */
     int deleteAppDocDocByIds(Long[] ids);
+
 }

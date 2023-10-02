@@ -15,6 +15,7 @@ spring:
 # 忽略鉴权url
 ignored:
   urls: /hi/**, /hello/**, /openApi/**
+  # urls: /hi/**, /hello/**, /openApi/**, /app_doc_doc/**
 
 
 # 配置包路径日志级别
