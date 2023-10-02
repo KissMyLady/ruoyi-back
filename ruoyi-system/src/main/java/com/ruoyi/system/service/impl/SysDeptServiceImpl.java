@@ -47,6 +47,11 @@ public class SysDeptServiceImpl implements ISysDeptService {
         return deptMapper.selectDeptList(dept);
     }
 
+    @Override
+    public List<Long> selectDeptIdsList(SysDept dept) {
+        return deptMapper.selectDeptIdsList(dept);
+    }
+
     /**
      * 查询部门树结构信息
      *
@@ -104,6 +109,11 @@ public class SysDeptServiceImpl implements ISysDeptService {
     public List<Long> selectDeptListByRoleId(Long roleId) {
         SysRole role = roleMapper.selectRoleById(roleId);
         return deptMapper.selectDeptListByRoleId(roleId, role.isDeptCheckStrictly());
+    }
+
+    @Override
+    public List<Long> selectDeptListByRole(SysRole role) {
+        return deptMapper.selectDeptListByRoleId(role.getRoleId(), role.isDeptCheckStrictly());
     }
 
     /**

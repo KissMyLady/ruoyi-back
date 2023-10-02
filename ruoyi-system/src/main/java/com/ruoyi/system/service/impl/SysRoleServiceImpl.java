@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,9 @@ import com.ruoyi.system.service.ISysRoleService;
  */
 @Service
 public class SysRoleServiceImpl implements ISysRoleService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SysRoleServiceImpl.class);
+
     @Autowired
     private SysRoleMapper roleMapper;
 
@@ -289,12 +294,14 @@ public class SysRoleServiceImpl implements ISysRoleService {
         int rows = 1;
         // 新增角色与部门（数据权限）管理
         List<SysRoleDept> list = new ArrayList<SysRoleDept>();
+
         for (Long deptId : role.getDeptIds()) {
             SysRoleDept rd = new SysRoleDept();
             rd.setRoleId(role.getRoleId());
             rd.setDeptId(deptId);
             list.add(rd);
         }
+        // logger.info("新增角色部门信息(数据权限) : {}", list);
         if (list.size() > 0) {
             // 批量新增角色部门信息
             rows = roleDeptMapper.batchRoleDept(list);

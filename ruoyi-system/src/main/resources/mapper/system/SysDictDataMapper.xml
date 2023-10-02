@@ -49,7 +49,7 @@
                 AND status = #{status}
             </if>
         </where>
-        order by dict_sort asc
+        order by dict_sort desc
     </select>
     
     <select id="selectDictDataByType" parameterType="SysDictData" resultMap="SysDictDataResult">

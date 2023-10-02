@@ -39,10 +39,12 @@
                 and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
         </where>
+        order by create_time desc
     </select>
     
     <select id="selectDictTypeAll" resultMap="SysDictTypeResult">
         <include refid="selectDictTypeVo"/>
+        order by create_time desc
     </select>
     
     <select id="selectDictTypeById" parameterType="Long" resultMap="SysDictTypeResult">

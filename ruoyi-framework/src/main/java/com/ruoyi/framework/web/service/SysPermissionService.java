@@ -4,6 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ruoyi.common.core.domain.TreeSelect;
+import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.service.ISysDeptService;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +29,9 @@ public class SysPermissionService {
 
     @Autowired
     private ISysMenuService menuService;
+
+    @Autowired
+    private ISysDeptService deptService;
 
     /**
      * 获取角色数据权限
@@ -67,5 +75,32 @@ public class SysPermissionService {
             }
         }
         return perms;
+    }
+
+    /**
+     * 获取部门菜单
+     */
+    public Set<Long> getDeptPermission(SysUser user){
+        Set<Long> deptIds = new HashSet<Long>();
+        //0是通用权限logger.info("新增角色部门信息(数据权限) : {}", list);
+        deptIds.add(0L);
+
+        // 管理员拥有所有权限
+        if (user.isAdmin()) {
+            //查询全部的部门ids
+            List<Long> deptList = deptService.selectDeptIdsList(new SysDept());
+            deptIds.addAll(deptList);
+        } else {
+            List<SysRole> roles = user.getRoles();
+            if (!CollectionUtils.isEmpty(roles)) {
+                // 多角色的部门id
+                for (SysRole role : roles) {
+                    role.setDeptCheckStrictly(true);
+                    List<Long> longs = deptService.selectDeptListByRole(role);
+                    deptIds.addAll(longs);
+                }
+            }
+        }
+        return deptIds;
     }
 }

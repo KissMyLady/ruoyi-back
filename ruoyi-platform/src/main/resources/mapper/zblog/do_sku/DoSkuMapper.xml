@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.do_sku.mapper.DoSkuMapper">
+    
+    <resultMap type="DoSku" id="DoSkuResult">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="isSuperuser" column="is_superuser"/>
+        <result property="isLoginView" column="is_login_view"/>
+        <result property="blogTitle" column="blog_title"/>
+        <result property="blogAuth" column="blog_auth"/>
+        <result property="blogSummary" column="blog_summary"/>
+        <result property="imageStaticUrl" column="image_static_url"/>
+        <result property="comArticleTinymce" column="com_article_tinymce"/>
+        <result property="comBody" column="com_body"/>
+        <result property="articleStatic" column="article_static"/>
+        <result property="indexNum" column="index_num"/>
+        <result property="isTop" column="is_top"/>
+        <result property="seeCount" column="seeCount"/>
+        <result property="likeCount" column="likeCount"/>
+        <result property="forCategoryId" column="for_category_id"/>
+        <result property="pid" column="pid"/>
+        <result property="sort" column="sort"/>
+        <result property="modifyModel" column="modify_model"/>
+    </resultMap>
+    
+    <sql id="selectDoSkuVo">
+        select id,
+               create_time,
+               update_time,
+               is_delete,
+               is_superuser,
+               is_login_view,
+               blog_title,
+               blog_auth,
+               blog_summary,
+               image_static_url,
+               com_article_tinymce,
+               com_body,
+               article_static,
+               index_num,
+               is_top,
+               seeCount,
+               likeCount,
+               for_category_id,
+               pid,
+               sort,
+               modify_model
+        from do_sku
+    </sql>
+    
+    <select id="selectDoSkuList"
+            parameterType="DoSku"
+            resultMap="DoSkuResult">
+        <include refid="selectDoSkuVo"/>
+        <where>
+            <if test="isDelete != null ">and is_delete like '%${isDelete}%'</if>
+            <if test="isSuperuser != null ">and is_superuser like '%${isSuperuser}%'</if>
+            <if test="isLoginView != null ">and is_login_view like '%${isLoginView}%'</if>
+            <if test="blogTitle != null  and blogTitle != ''">and blog_title like '%${blogTitle}%'</if>
+            <if test="blogAuth != null  and blogAuth != ''">and blog_auth like '%${blogAuth}%'</if>
+            <if test="blogSummary != null  and blogSummary != ''">and blog_summary like '%${blogSummary}%'</if>
+            <if test="imageStaticUrl != null  and imageStaticUrl != ''">and image_static_url like '%${imageStaticUrl}%'</if>
+            <if test="comArticleTinymce != null  and comArticleTinymce != ''">and com_article_tinymce like '%${comArticleTinymce}%'</if>
+            <if test="comBody != null  and comBody != ''">and com_body like '%${comBody}%'</if>
+            <if test="articleStatic != null  and articleStatic != ''">and article_static like '%${articleStatic}%'</if>
+            <if test="indexNum != null ">and index_num like '%${indexNum}%'</if>
+            <if test="isTop != null ">and is_top like '%${isTop}%'</if>
+            <if test="seeCount != null ">and seeCount like '%${seeCount}%'</if>
+            <if test="likeCount != null ">and likeCount like '%${likeCount}%'</if>
+            <if test="forCategoryId != null ">and for_category_id like '%${forCategoryId}%'</if>
+            <if test="pid != null ">and pid like '%${pid}%'</if>
+            <if test="sort != null ">and sort like '%${sort}%'</if>
+            <if test="modifyModel != null  and modifyModel != ''">and modify_model like '%${modifyModel}%'</if>
+        </where>
+    </select>
+    
+    <select id="selectDoSkuById"
+            parameterType="Long"
+            resultMap="DoSkuResult">
+        <include refid="selectDoSkuVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertDoSku" parameterType="DoSku" useGeneratedKeys="true" keyProperty="id">
+        insert into do_sku
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="isSuperuser != null">is_superuser,</if>
+            <if test="isLoginView != null">is_login_view,</if>
+            <if test="blogTitle != null">blog_title,</if>
+            <if test="blogAuth != null">blog_auth,</if>
+            <if test="blogSummary != null">blog_summary,</if>
+            <if test="imageStaticUrl != null">image_static_url,</if>
+            <if test="comArticleTinymce != null">com_article_tinymce,</if>
+            <if test="comBody != null">com_body,</if>
+            <if test="articleStatic != null">article_static,</if>
+            <if test="indexNum != null">index_num,</if>
+            <if test="isTop != null">is_top,</if>
+            <if test="seeCount != null">seeCount,</if>
+            <if test="likeCount != null">likeCount,</if>
+            <if test="forCategoryId != null">for_category_id,</if>
+            <if test="pid != null">pid,</if>
+            <if test="sort != null">sort,</if>
+            <if test="modifyModel != null">modify_model,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="isSuperuser != null">#{isSuperuser},</if>
+            <if test="isLoginView != null">#{isLoginView},</if>
+            <if test="blogTitle != null">#{blogTitle},</if>
+            <if test="blogAuth != null">#{blogAuth},</if>
+            <if test="blogSummary != null">#{blogSummary},</if>
+            <if test="imageStaticUrl != null">#{imageStaticUrl},</if>
+            <if test="comArticleTinymce != null">#{comArticleTinymce},</if>
+            <if test="comBody != null">#{comBody},</if>
+            <if test="articleStatic != null">#{articleStatic},</if>
+            <if test="indexNum != null">#{indexNum},</if>
+            <if test="isTop != null">#{isTop},</if>
+            <if test="seeCount != null">#{seeCount},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="forCategoryId != null">#{forCategoryId},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="modifyModel != null">#{modifyModel},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateDoSku" parameterType="DoSku">
+        update do_sku
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="isSuperuser != null">is_superuser = #{isSuperuser},</if>
+            <if test="isLoginView != null">is_login_view = #{isLoginView},</if>
+            <if test="blogTitle != null">blog_title = #{blogTitle},</if>
+            <if test="blogAuth != null">blog_auth = #{blogAuth},</if>
+            <if test="blogSummary != null">blog_summary = #{blogSummary},</if>
+            <if test="imageStaticUrl != null">image_static_url = #{imageStaticUrl},</if>
+            <if test="comArticleTinymce != null">com_article_tinymce = #{comArticleTinymce},</if>
+            <if test="comBody != null">com_body = #{comBody},</if>
+            <if test="articleStatic != null">article_static = #{articleStatic},</if>
+            <if test="indexNum != null">index_num = #{indexNum},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="seeCount != null">seeCount = #{seeCount},</if>
+            <if test="likeCount != null">likeCount = #{likeCount},</if>
+            <if test="forCategoryId != null">for_category_id = #{forCategoryId},</if>
+            <if test="pid != null">pid = #{pid},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="modifyModel != null">modify_model = #{modifyModel},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteDoSkuById" parameterType="Long">
+        delete
+        from do_sku
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteDoSkuByIds" parameterType="String">
+        delete from do_sku where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

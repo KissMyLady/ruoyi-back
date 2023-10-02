@@ -74,9 +74,10 @@ public class SysRoleController extends BaseController {
     public TableDataInfo list(SysRole role) {
         startPage();
         List<SysRole> roleList = roleService.selectRoleList(role);
+
         // 新增
-        //获取角色的菜单项目
         for(SysRole itemRole: roleList){
+            //获取角色的菜单项目
             Long roleId = itemRole.getRoleId();
             AjaxResult ajax = AjaxResult.success();
             // 根据用户查询系统菜单列表. 超级管理员查询全部菜单
@@ -88,8 +89,17 @@ public class SysRoleController extends BaseController {
 
             // 构建前端所需要下拉树结构
             List<TreeSelect> treeSelects = menuService.buildMenuTreeSelect(menus);
-
             ajax.put("menus", treeSelects);
+
+            //
+            // 获取角色数据权限
+            //
+            //查询当前用户的部门选中id
+            ajax.put("dept_checkedKeys", deptService.selectDeptListByRoleId(roleId));
+            //查询部门结构树
+            ajax.put("depts", deptService.selectDeptTreeList(new SysDept()));
+
+            //写入对象
             itemRole.setAjaxResult(ajax);
         }
         //分配用户

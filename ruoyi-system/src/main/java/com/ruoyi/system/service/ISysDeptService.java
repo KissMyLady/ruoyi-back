@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.TreeSelect;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.SysRole;
 
 /**
  * 部门管理 服务层
@@ -18,6 +19,11 @@ public interface ISysDeptService {
      * @return 部门信息集合
      */
     public List<SysDept> selectDeptList(SysDept dept);
+
+    /**
+     * 查询全部部门ids
+     */
+    public List<Long> selectDeptIdsList(SysDept dept);
 
     /**
      * 查询部门树结构信息
@@ -50,6 +56,11 @@ public interface ISysDeptService {
      * @return 选中部门列表
      */
     public List<Long> selectDeptListByRoleId(Long roleId);
+
+    /**
+     * 根据角色查询部门信息 v2
+     */
+    public List<Long> selectDeptListByRole(SysRole role);
 
     /**
      * 根据部门ID查询信息

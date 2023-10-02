@@ -20,13 +20,19 @@ public interface SysDeptMapper {
     public List<SysDept> selectDeptList(SysDept dept);
 
     /**
+     * 查询部门ids
+     */
+    public List<Long> selectDeptIdsList(SysDept dept);
+
+    /**
      * 根据角色ID查询部门树信息
      *
      * @param roleId            角色ID
      * @param deptCheckStrictly 部门树选择项是否关联显示
      * @return 选中部门列表
      */
-    public List<Long> selectDeptListByRoleId(@Param("roleId") Long roleId, @Param("deptCheckStrictly") boolean deptCheckStrictly);
+    public List<Long> selectDeptListByRoleId(@Param("roleId") Long roleId,
+                                             @Param("deptCheckStrictly") boolean deptCheckStrictly);
 
     /**
      * 根据部门ID查询信息

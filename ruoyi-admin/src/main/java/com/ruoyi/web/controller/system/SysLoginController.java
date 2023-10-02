@@ -67,10 +67,16 @@ public class SysLoginController {
         Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合
         Set<String> permissions = permissionService.getMenuPermission(user);
+
+        //新增
+        //部门数据权限集合
+        Set<Long> deptPermission = permissionService.getDeptPermission(user);
+
         AjaxResult ajax = AjaxResult.success();
         ajax.put("user", user);
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);
+        ajax.put("deptPermission", deptPermission);
         return ajax;
     }
 
