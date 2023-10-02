@@ -1,60 +1,60 @@
-package com.ruoyi.platform.app.mydoc.doc_project.service;
+package com.ruoyi.platform.app.mydoc.app_doc_project.service;
 
 import java.util.List;
 
-import com.ruoyi.platform.app.mydoc.doc_project.domain.AppDocProject;
+import com.ruoyi.platform.app.mydoc.app_doc_project.domain.AppDocProject;
 
 /**
- * doc_projectService接口
+ * 文集Service接口
  *
  * @author mylady
- * @date 2023-09-30
+ * @date 2023-10-02
  */
 public interface IAppDocProjectService {
     /**
-     * 查询doc_project
+     * 查询文集
      *
-     * @param id doc_project主键
-     * @return doc_project
+     * @param id 文集主键
+     * @return 文集
      */
     public AppDocProject selectAppDocProjectById(Long id);
 
     /**
-     * 查询doc_project列表
+     * 查询文集列表
      *
-     * @param appDocProject doc_project
-     * @return doc_project集合
+     * @param appDocProject 文集
+     * @return 文集集合
      */
     public List<AppDocProject> selectAppDocProjectList(AppDocProject appDocProject);
 
     /**
-     * 新增doc_project
+     * 新增文集
      *
-     * @param appDocProject doc_project
+     * @param appDocProject 文集
      * @return 结果
      */
     public int insertAppDocProject(AppDocProject appDocProject);
 
     /**
-     * 修改doc_project
+     * 修改文集
      *
-     * @param appDocProject doc_project
+     * @param appDocProject 文集
      * @return 结果
      */
     public int updateAppDocProject(AppDocProject appDocProject);
 
     /**
-     * 批量删除doc_project
+     * 批量删除文集
      *
-     * @param ids 需要删除的doc_project主键集合
+     * @param ids 需要删除的文集主键集合
      * @return 结果
      */
     public int deleteAppDocProjectByIds(Long[] ids);
 
     /**
-     * 删除doc_project信息
+     * 删除文集信息
      *
-     * @param id doc_project主键
+     * @param id 文集主键
      * @return 结果
      */
     public int deleteAppDocProjectById(Long id);

@@ -6,18 +6,16 @@
 导出表结构
 
 ```sh
-mysqldump ry_vue -urootb0c2ad110fbeed99 -p > ry_vue_925_910_2023.sql
-
-mysqldump -umylady -p my_ry_vue > my_ry_vue_0925_1742.sql
-
-
-mysqldump -uroot -p my_ry_vue > my_ry_vue_0925_1742.sql
-
+mysqldump -uroot -p my_ry_vue > my_ry_vue_102_1315.sql
+mysqldump -uroot -p zblog > zblog_102_1315.sql
+mysqldump -uroot -p mydoc > mydoc_1315.sql
 ```
 
 导入表结构
 ```shell
-mysql -uroot -p --default-character-set=utf8mb4 my_ry_vue < my_ry_vue_925_910_2023.sql
+mysql -uroot -pYING123ZZ --default-character-set=utf8mb4 my_ry_vue < my_ry_vue_102_1315.sql
+mysql -uroot -pYING123ZZ --default-character-set=utf8mb4 zblog < zblog_102_1315.sql
+mysql -uroot -pYING123ZZ --default-character-set=utf8mb4 mydoc < mydoc_102_1315.sql
 
 mysql -umylady -p --default-character-set=utf8mb4 my_ry_vue < my_ry_vue_925_910_2023.sql
 ```

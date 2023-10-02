@@ -1,18 +1,18 @@
-package com.ruoyi.platform.app.mydoc.doc_project.service.impl;
+package com.ruoyi.platform.app.mydoc.app_doc_project.service.impl;
 
 import java.util.List;
         import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.platform.app.mydoc.doc_project.mapper.AppDocProjectMapper;
-import com.ruoyi.platform.app.mydoc.doc_project.domain.AppDocProject;
-import com.ruoyi.platform.app.mydoc.doc_project.service.IAppDocProjectService;
+import com.ruoyi.platform.app.mydoc.app_doc_project.mapper.AppDocProjectMapper;
+import com.ruoyi.platform.app.mydoc.app_doc_project.domain.AppDocProject;
+import com.ruoyi.platform.app.mydoc.app_doc_project.service.IAppDocProjectService;
 
 /**
- * doc_projectService业务层处理
+ * 文集Service业务层处理
  *
  * @author mylady
- * @date 2023-09-30
+ * @date 2023-10-02
  */
 @Service
 public class AppDocProjectServiceImpl implements IAppDocProjectService {
@@ -20,10 +20,10 @@ public class AppDocProjectServiceImpl implements IAppDocProjectService {
     private AppDocProjectMapper appDocProjectMapper;
 
     /**
-     * 查询doc_project
+     * 查询文集
      *
-     * @param id doc_project主键
-     * @return doc_project
+     * @param id 文集主键
+     * @return 文集
      */
     @Override
     public AppDocProject selectAppDocProjectById(Long id) {
@@ -31,10 +31,10 @@ public class AppDocProjectServiceImpl implements IAppDocProjectService {
     }
 
     /**
-     * 查询doc_project列表
+     * 查询文集列表
      *
-     * @param appDocProject doc_project
-     * @return doc_project
+     * @param appDocProject 文集
+     * @return 文集
      */
     @Override
     public List<AppDocProject> selectAppDocProjectList(AppDocProject appDocProject) {
@@ -42,9 +42,9 @@ public class AppDocProjectServiceImpl implements IAppDocProjectService {
     }
 
     /**
-     * 新增doc_project
+     * 新增文集
      *
-     * @param appDocProject doc_project
+     * @param appDocProject 文集
      * @return 结果
      */
     @Override
@@ -54,9 +54,9 @@ public class AppDocProjectServiceImpl implements IAppDocProjectService {
     }
 
     /**
-     * 修改doc_project
+     * 修改文集
      *
-     * @param appDocProject doc_project
+     * @param appDocProject 文集
      * @return 结果
      */
     @Override
@@ -65,9 +65,9 @@ public class AppDocProjectServiceImpl implements IAppDocProjectService {
     }
 
     /**
-     * 批量删除doc_project
+     * 批量删除文集
      *
-     * @param ids 需要删除的doc_project主键
+     * @param ids 需要删除的文集主键
      * @return 结果
      */
     @Override
@@ -76,9 +76,9 @@ public class AppDocProjectServiceImpl implements IAppDocProjectService {
     }
 
     /**
-     * 删除doc_project信息
+     * 删除文集信息
      *
-     * @param id doc_project主键
+     * @param id 文集主键
      * @return 结果
      */
     @Override

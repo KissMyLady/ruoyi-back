@@ -29,6 +29,7 @@
         select#foreach($column in $columns) $column.columnName#if($foreach.count != $columns.size()),#end#end from ${tableName}
     </sql>
 
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
     <select id="select${ClassName}List"
             parameterType="${ClassName}"
             resultMap="${ClassName}Result">
