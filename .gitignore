@@ -29,6 +29,9 @@ application-ms.yml
 # Vscode
 .vscode
 
+# Mac
+*.DS_Store
+
 ### JRebel ###
 rebel.xml
 
