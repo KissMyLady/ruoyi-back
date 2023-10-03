@@ -36,4 +36,11 @@ public class UserDeptMapperImpl implements IUserDeptMapper {
     public List<Integer> selectDeptIdsList(SysDept dept) {
         return userDeptMapper.selectDeptIdsList(dept);
     }
+
+    /**
+     * 查询部门管理数据
+     */
+    public List<SysDept> selectDeptList(SysDept dept){
+        return userDeptMapper.selectDeptList(dept);
+    }
 }

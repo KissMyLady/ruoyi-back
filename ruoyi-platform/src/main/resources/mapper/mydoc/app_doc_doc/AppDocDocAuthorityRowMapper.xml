@@ -45,49 +45,56 @@
     <select id="selectAppDocDocList"
             parameterType="AppDocDoc"
             resultType="java.util.Map">
-         select doc.id,
-                doc.name,
-                doc.content,
-                doc.pre_content as preContent,
-                doc.top_doc as topDoc,
-                doc.create_user_id as createUserId,
-                doc.parent_doc as parentDoc,
-                doc.sort,
-                doc.status,
-                doc.editor_mode as editorMode,
-                doc.open_children as openChildren,
-                doc.show_children as showChildren,
-                doc.visitor,
-                DATE_FORMAT(doc.create_time, '%Y-%m-%d %H:%i:%S') createTime,
-                DATE_FORMAT(doc.modify_time, '%Y-%m-%d %H:%i:%S') modifyTime,
-                COALESCE(auth.need_dept_id, 0) as deptAuth,
-                COALESCE(sd.dept_name, 0)      as deptName
-            from app_doc_doc doc
-            left join (select id, table_name, db_id_name, db_id, need_dept_id
-                        from sys_table_authority_row auth
-                        where auth.table_name = 'app_doc_doc'
-                        and auth.db_id_name = 'id'
-                       ) auth on auth.db_id = doc.id
-            left join sys_dept sd on sd.dept_id = auth.need_dept_id
+        select *
+        from (
+             select doc.id,
+                    doc.name,
+                    doc.content,
+                    doc.pre_content as preContent,
+                    doc.top_doc as topDoc,
+                    doc.create_user_id as createUserId,
+                    doc.parent_doc as parentDoc,
+                    doc.sort,
+                    doc.status,
+                    doc.editor_mode as editorMode,
+                    doc.open_children as openChildren,
+                    doc.show_children as showChildren,
+                    doc.visitor,
+                    DATE_FORMAT(doc.create_time, '%Y-%m-%d %H:%i:%S') createTime,
+                    DATE_FORMAT(doc.modify_time, '%Y-%m-%d %H:%i:%S') modifyTime,
+                    COALESCE(auth.need_dept_id, '')                                   as deptAuth,
+                    (SELECT group_concat(dept_name)
+                    FROM sys_dept
+                    WHERE FIND_IN_SET(dept_id, COALESCE(auth.need_dept_id, '')) > 0)  as deptName
+                from app_doc_doc doc
+                left join (select db_id,
+                                  need_dept_id
+                            from sys_table_authority_row auth
+                            where auth.table_name = 'app_doc_doc'
+                            and auth.db_id_name = 'id'
+                            and auth.is_delete = 0
+                           ) auth on auth.db_id = doc.id
+                <where>
+                    FIND_IN_SET('0', COALESCE(auth.need_dept_id, '0')) >= 1
+                    <foreach item="dept_id" collection="deptAuthList">
+                        or FIND_IN_SET(#{dept_id}, COALESCE(auth.need_dept_id, '0')) >= 1
+                    </foreach>
+                </where>
+        ) res
         <where>
-            COALESCE(auth.need_dept_id, 0) in
-            <foreach item="dept_id" collection="deptAuthList" open="(" separator="," close=")">
-                #{dept_id}
-            </foreach>
-            
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
-            <if test="content != null  and content != ''">and content like '%${content}%'</if>
-            <if test="preContent != null  and preContent != ''">and pre_content like '%${preContent}%'</if>
-            <if test="topDoc != null ">and top_doc like '%${topDoc}%'</if>
-            <if test="createUserId != null ">and create_user_id like '%${createUserId}%'</if>
-            <if test="parentDoc != null ">and parent_doc like '%${parentDoc}%'</if>
-            <if test="sort != null ">and sort like '%${sort}%'</if>
-            <if test="status != null ">and status like '%${status}%'</if>
-            <if test="editorMode != null ">and editor_mode like '%${editorMode}%'</if>
-            <if test="openChildren != null ">and open_children like '%${openChildren}%'</if>
-            <if test="showChildren != null ">and show_children like '%${showChildren}%'</if>
-            <if test="visitor != null ">and visitor like '%${visitor}%'</if>
-            <if test="modifyTime != null ">and DATE_FORMAT(modify_time, '%Y-%m-%d') = DATE_FORMAT(#{modifyTime}, '%Y-%m-%d')</if>
+            <if test="name != null  and name != ''">and res.name like concat('%', #{name}, '%')</if>
+            <if test="content != null  and content != ''">and res.content like '%${content}%'</if>
+            <if test="preContent != null  and preContent != ''">and res.preContent like '%${preContent}%'</if>
+            <if test="topDoc != null ">and res.topDoc like '%${topDoc}%'</if>
+            <if test="createUserId != null ">and res.createUserId like '%${createUserId}%'</if>
+            <if test="parentDoc != null ">and res.parentDoc like '%${parentDoc}%'</if>
+            <if test="sort != null ">and res.sort like '%${sort}%'</if>
+            <if test="status != null ">and res.status like '%${status}%'</if>
+            <if test="editorMode != null ">and res.editorMode like '%${editorMode}%'</if>
+            <if test="openChildren != null ">and res.openChildren like '%${openChildren}%'</if>
+            <if test="showChildren != null ">and res.showChildren like '%${showChildren}%'</if>
+            <if test="visitor != null ">and res.visitor like '%${visitor}%'</if>
+            <if test="modifyTime != null ">and DATE_FORMAT(res.modifyTime, '%Y-%m-%d') = DATE_FORMAT(#{modifyTime}, '%Y-%m-%d')</if>
         </where>
     </select>
     

@@ -63,7 +63,7 @@ public class AppDocCtrl extends BaseController {
 
         // logger.info("查询当前用户 {} 的部门权限list: {}", user.getUserName(), auth_dept_set);
         List<Map<String, Object>> list = appDocDocAuthorityServer.selectAppDocDocList(appDocDoc);
-        logger.info("查询到的数据返回: {}", list);
+        // logger.info("查询到的数据返回: {}", list);
         return getDataTable(list);
     }
 

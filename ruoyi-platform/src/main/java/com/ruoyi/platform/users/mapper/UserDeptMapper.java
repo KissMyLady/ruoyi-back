@@ -23,4 +23,9 @@ public interface UserDeptMapper {
      */
     public List<Integer> selectDeptIdsList(SysDept dept);
 
+    /**
+     * 查询部门管理数据
+     */
+    List<SysDept> selectDeptList(SysDept dept);
+
 }

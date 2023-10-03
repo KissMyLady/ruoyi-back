@@ -65,12 +65,21 @@ public class BaseEntity implements Serializable {
 
     //数据行的权限
     private List<Integer> deptAuthList;
+    private List<Integer> ids;
 
     /**
      * 请求参数
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
+
+    public List<Integer> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Integer> ids) {
+        this.ids = ids;
+    }
 
     public List<Integer> getDeptAuthList() {
         return deptAuthList;
