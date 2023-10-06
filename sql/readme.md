@@ -11,6 +11,10 @@ mysqldump -uroot -p zblog > zblog_102_1315.sql
 mysqldump -uroot -p mydoc > mydoc_1315.sql
 ```
 
+-- 表结构导出
+mysqldump -h localhost -d ry_django_admin -uroot -pYING123ZZ >　ry_django_admin_105_table_struct.sql
+
+
 导入表结构
 ```shell
 mysql -uroot -pYING123ZZ --default-character-set=utf8mb4 my_ry_vue < my_ry_vue_102_1315.sql

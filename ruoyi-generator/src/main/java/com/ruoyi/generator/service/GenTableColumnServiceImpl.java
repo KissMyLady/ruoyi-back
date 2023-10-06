@@ -16,7 +16,7 @@ import com.ruoyi.generator.mapper.GenTableColumnMapper;
  * @author ruoyi
  */
 
-//@DataSource(value = DataSourceType.slaveZblog)
+@DataSource(value = DataSourceType.slaveZblog)
 @Service
 public class GenTableColumnServiceImpl implements IGenTableColumnService {
     @Autowired

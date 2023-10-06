@@ -45,7 +45,7 @@ import com.ruoyi.generator.util.VelocityUtils;
  *
  * @author ruoyi
  */
-//@DataSource(value = DataSourceType.slaveZblog)
+@DataSource(value = DataSourceType.slaveZblog)
 @Service
 public class GenTableServiceImpl implements IGenTableService {
     private static final Logger log = LoggerFactory.getLogger(GenTableServiceImpl.class);
