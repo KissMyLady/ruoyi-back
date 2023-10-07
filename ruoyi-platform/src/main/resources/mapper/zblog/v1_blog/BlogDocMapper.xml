@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.v1_blog.blog_doc.mapper.BlogDocMapper">
+    
+    <resultMap type="BlogDoc" id="BlogDocResult">
+        <result property="id" column="id"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="parentDoc" column="parent_doc"/>
+        <result property="name" column="name"/>
+        <result property="editorMode" column="editor_mode"/>
+        <result property="content" column="content"/>
+        <result property="preContent" column="pre_content"/>
+        <result property="sort" column="sort"/>
+        <result property="status" column="status"/>
+        <result property="openChildren" column="open_children"/>
+        <result property="showChildren" column="show_children"/>
+        <result property="dataRowAuth" column="data_row_auth"/>
+        <result property="isWatermark" column="is_watermark"/>
+        <result property="watermarkType" column="watermark_type"/>
+        <result property="watermarkValue" column="watermark_value"/>
+        <result property="visitor" column="visitor"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+    
+    <sql id="selectBlogDocVo">
+        select id,
+               create_user_id,
+               project_id,
+               parent_doc,
+               name,
+               editor_mode,
+               content,
+               pre_content,
+               sort,
+               status,
+               open_children,
+               show_children,
+               data_row_auth,
+               is_watermark,
+               watermark_type,
+               watermark_value,
+               visitor,
+               is_delete,
+               create_time,
+               modify_time
+        from blog_doc
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectBlogDocList"
+            parameterType="BlogDoc"
+            resultMap="BlogDocResult">
+        <include refid="selectBlogDocVo"/>
+        <where>
+            <if test="createUserId != null ">and create_user_id like '%${createUserId}%'</if>
+            <if test="projectId != null ">and project_id like '%${projectId}%'</if>
+            <if test="parentDoc != null ">and parent_doc like '%${parentDoc}%'</if>
+            <if test="name != null  and name != ''">and name like '%${name}%'</if>
+            <if test="editorMode != null ">and editor_mode like '%${editorMode}%'</if>
+            <if test="content != null  and content != ''">and content like '%${content}%'</if>
+            <if test="preContent != null  and preContent != ''">and pre_content like '%${preContent}%'</if>
+            <if test="sort != null ">and sort like '%${sort}%'</if>
+            <if test="status != null ">and status like '%${status}%'</if>
+            <if test="openChildren != null ">and open_children like '%${openChildren}%'</if>
+            <if test="showChildren != null ">and show_children like '%${showChildren}%'</if>
+            <if test="dataRowAuth != null ">and data_row_auth like '%${dataRowAuth}%'</if>
+            <if test="isWatermark != null ">and is_watermark like '%${isWatermark}%'</if>
+            <if test="watermarkType != null ">and watermark_type like '%${watermarkType}%'</if>
+            <if test="watermarkValue != null  and watermarkValue != ''">and watermark_value like '%${watermarkValue}%'
+            </if>
+            <if test="visitor != null ">and visitor like '%${visitor}%'</if>
+            <if test="isDelete != null ">and is_delete like '%${isDelete}%'</if>
+            <if test="modifyTime != null ">and modify_time like '%${modifyTime}%'</if>
+        </where>
+    </select>
+    
+    <select id="selectBlogDocById"
+            parameterType="Long"
+            resultMap="BlogDocResult">
+        <include refid="selectBlogDocVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertBlogDoc" parameterType="BlogDoc" useGeneratedKeys="true" keyProperty="id">
+        insert into blog_doc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createUserId != null">create_user_id,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="parentDoc != null">parent_doc,</if>
+            <if test="name != null">name,</if>
+            <if test="editorMode != null">editor_mode,</if>
+            <if test="content != null">content,</if>
+            <if test="preContent != null">pre_content,</if>
+            <if test="sort != null">sort,</if>
+            <if test="status != null">status,</if>
+            <if test="openChildren != null">open_children,</if>
+            <if test="showChildren != null">show_children,</if>
+            <if test="dataRowAuth != null">data_row_auth,</if>
+            <if test="isWatermark != null">is_watermark,</if>
+            <if test="watermarkType != null">watermark_type,</if>
+            <if test="watermarkValue != null">watermark_value,</if>
+            <if test="visitor != null">visitor,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="modifyTime != null">modify_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createUserId != null">#{createUserId},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="parentDoc != null">#{parentDoc},</if>
+            <if test="name != null">#{name},</if>
+            <if test="editorMode != null">#{editorMode},</if>
+            <if test="content != null">#{content},</if>
+            <if test="preContent != null">#{preContent},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="status != null">#{status},</if>
+            <if test="openChildren != null">#{openChildren},</if>
+            <if test="showChildren != null">#{showChildren},</if>
+            <if test="dataRowAuth != null">#{dataRowAuth},</if>
+            <if test="isWatermark != null">#{isWatermark},</if>
+            <if test="watermarkType != null">#{watermarkType},</if>
+            <if test="watermarkValue != null">#{watermarkValue},</if>
+            <if test="visitor != null">#{visitor},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="modifyTime != null">#{modifyTime},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateBlogDoc" parameterType="BlogDoc">
+        update blog_doc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createUserId != null">create_user_id = #{createUserId},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="parentDoc != null">parent_doc = #{parentDoc},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="editorMode != null">editor_mode = #{editorMode},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="preContent != null">pre_content = #{preContent},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="openChildren != null">open_children = #{openChildren},</if>
+            <if test="showChildren != null">show_children = #{showChildren},</if>
+            <if test="dataRowAuth != null">data_row_auth = #{dataRowAuth},</if>
+            <if test="isWatermark != null">is_watermark = #{isWatermark},</if>
+            <if test="watermarkType != null">watermark_type = #{watermarkType},</if>
+            <if test="watermarkValue != null">watermark_value = #{watermarkValue},</if>
+            <if test="visitor != null">visitor = #{visitor},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="modifyTime != null">modify_time = #{modifyTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteBlogDocById" parameterType="Long">
+        delete
+        from blog_doc
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteBlogDocByIds" parameterType="String">
+        delete from blog_doc where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
