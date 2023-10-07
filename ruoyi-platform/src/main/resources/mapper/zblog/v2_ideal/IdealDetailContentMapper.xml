@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.v2_ideal.ideal_detail_content.mapper.IdealDetailContentMapper">
+    
+    <resultMap type="IdealDetailContent" id="IdealDetailContentResult">
+        <result property="id" column="id"/>
+        <result property="uuid" column="uuid"/>
+        <result property="forIdealCategoryId" column="for_ideal_category_id"/>
+        <result property="parentDoc" column="parent_doc"/>
+        <result property="title" column="title"/>
+        <result property="descNote" column="desc_note"/>
+        <result property="editorMode" column="editor_mode"/>
+        <result property="content" column="content"/>
+        <result property="preContent" column="pre_content"/>
+        <result property="role" column="role"/>
+        <result property="roleValue" column="role_value"/>
+        <result property="indexImgStatic" column="index_img_static"/>
+        <result property="dtlMusic" column="dtl_music"/>
+        <result property="visitor" column="visitor"/>
+        <result property="allowComment" column="allow_comment"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectIdealDetailContentVo">
+        select id,
+               uuid,
+               for_ideal_category_id,
+               parent_doc,
+               title,
+               desc_note,
+               editor_mode,
+               content,
+               pre_content,
+               role,
+               role_value,
+               index_img_static,
+               dtl_music,
+               visitor,
+               allow_comment,
+               is_delete,
+               create_time,
+               update_time
+        from ideal_detail_content
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectIdealDetailContentList"
+            parameterType="IdealDetailContent"
+            resultMap="IdealDetailContentResult">
+        <include refid="selectIdealDetailContentVo"/>
+        <where>
+            <if test="uuid != null  and uuid != ''">and uuid like '%${uuid}%'</if>
+            <if test="forIdealCategoryId != null ">and for_ideal_category_id like '%${forIdealCategoryId}%'</if>
+            <if test="parentDoc != null ">and parent_doc like '%${parentDoc}%'</if>
+            <if test="title != null  and title != ''">and title like '%${title}%'</if>
+            <if test="descNote != null  and descNote != ''">and desc_note like '%${descNote}%'</if>
+            <if test="editorMode != null ">and editor_mode like '%${editorMode}%'</if>
+            <if test="content != null  and content != ''">and content like '%${content}%'</if>
+            <if test="preContent != null  and preContent != ''">and pre_content like '%${preContent}%'</if>
+            <if test="role != null ">and role like '%${role}%'</if>
+            <if test="roleValue != null  and roleValue != ''">and role_value like '%${roleValue}%'</if>
+            <if test="indexImgStatic != null  and indexImgStatic != ''">and index_img_static like
+                '%${indexImgStatic}%'
+            </if>
+            <if test="dtlMusic != null  and dtlMusic != ''">and dtl_music like '%${dtlMusic}%'</if>
+            <if test="visitor != null ">and visitor like '%${visitor}%'</if>
+            <if test="allowComment != null ">and allow_comment like '%${allowComment}%'</if>
+            <if test="isDelete != null ">and is_delete like '%${isDelete}%'</if>
+        </where>
+    </select>
+    
+    <select id="selectIdealDetailContentById"
+            parameterType="Long"
+            resultMap="IdealDetailContentResult">
+        <include refid="selectIdealDetailContentVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertIdealDetailContent" parameterType="IdealDetailContent" useGeneratedKeys="true" keyProperty="id">
+        insert into ideal_detail_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">uuid,</if>
+            <if test="forIdealCategoryId != null">for_ideal_category_id,</if>
+            <if test="parentDoc != null">parent_doc,</if>
+            <if test="title != null">title,</if>
+            <if test="descNote != null">desc_note,</if>
+            <if test="editorMode != null">editor_mode,</if>
+            <if test="content != null">content,</if>
+            <if test="preContent != null">pre_content,</if>
+            <if test="role != null">role,</if>
+            <if test="roleValue != null">role_value,</if>
+            <if test="indexImgStatic != null">index_img_static,</if>
+            <if test="dtlMusic != null">dtl_music,</if>
+            <if test="visitor != null">visitor,</if>
+            <if test="allowComment != null">allow_comment,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">#{uuid},</if>
+            <if test="forIdealCategoryId != null">#{forIdealCategoryId},</if>
+            <if test="parentDoc != null">#{parentDoc},</if>
+            <if test="title != null">#{title},</if>
+            <if test="descNote != null">#{descNote},</if>
+            <if test="editorMode != null">#{editorMode},</if>
+            <if test="content != null">#{content},</if>
+            <if test="preContent != null">#{preContent},</if>
+            <if test="role != null">#{role},</if>
+            <if test="roleValue != null">#{roleValue},</if>
+            <if test="indexImgStatic != null">#{indexImgStatic},</if>
+            <if test="dtlMusic != null">#{dtlMusic},</if>
+            <if test="visitor != null">#{visitor},</if>
+            <if test="allowComment != null">#{allowComment},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateIdealDetailContent" parameterType="IdealDetailContent">
+        update ideal_detail_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uuid != null">uuid = #{uuid},</if>
+            <if test="forIdealCategoryId != null">for_ideal_category_id = #{forIdealCategoryId},</if>
+            <if test="parentDoc != null">parent_doc = #{parentDoc},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="descNote != null">desc_note = #{descNote},</if>
+            <if test="editorMode != null">editor_mode = #{editorMode},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="preContent != null">pre_content = #{preContent},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="roleValue != null">role_value = #{roleValue},</if>
+            <if test="indexImgStatic != null">index_img_static = #{indexImgStatic},</if>
+            <if test="dtlMusic != null">dtl_music = #{dtlMusic},</if>
+            <if test="visitor != null">visitor = #{visitor},</if>
+            <if test="allowComment != null">allow_comment = #{allowComment},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteIdealDetailContentById" parameterType="Long">
+        delete
+        from ideal_detail_content
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteIdealDetailContentByIds" parameterType="String">
+        delete from ideal_detail_content where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

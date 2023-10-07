@@ -69,7 +69,7 @@
             <if test="comBody != null  and comBody != ''">and com_body like '%${comBody}%'</if>
             <if test="articleStatic != null  and articleStatic != ''">and article_static like '%${articleStatic}%'</if>
             <if test="indexNum != null ">and index_num like '%${indexNum}%'</if>
-            <if test="isTop != null ">and is_top like '%${isTop}%'</if>
+            <if test="isTop != null ">and is_top = '${isTop}'</if>
             <if test="seeCount != null ">and seeCount like '%${seeCount}%'</if>
             <if test="likeCount != null ">and likeCount like '%${likeCount}%'</if>
             <if test="forCategoryId != null ">and for_category_id like '%${forCategoryId}%'</if>

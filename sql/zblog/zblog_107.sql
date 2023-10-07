@@ -2,7 +2,7 @@
 create table blog_doc
 (
     id              int auto_increment comment '主键' primary key,
-    create_user_id  int null comment '创建用户id',
+    create_user_id  null comment '创建用户id',
     project_id      int      default 0 null comment '所属文集id',
     parent_doc      int      default 0 null comment '父级文档',
     name            varchar(128) null comment '标题',
@@ -18,6 +18,7 @@ create table blog_doc
     watermark_type  int null comment '水印类型 1表示文字水印 2表示图片水印',
     watermark_value varchar(250) null comment '水印内容',
     visitor         int      default 1 null comment '浏览次数',
+    is_delete       tinyint(1) default 0 null comment '逻辑删除',
     create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
     modify_time     datetime default CURRENT_TIMESTAMP null comment '更新时间'
 ) comment '文档表';
