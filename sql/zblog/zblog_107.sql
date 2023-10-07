@@ -2,7 +2,7 @@
 create table blog_doc
 (
     id              int auto_increment comment '主键' primary key,
-    create_user_id  null comment '创建用户id',
+    create_user_id  int null comment '创建用户id',
     project_id      int      default 0 null comment '所属文集id',
     parent_doc      int      default 0 null comment '父级文档',
     name            varchar(128) null comment '标题',
