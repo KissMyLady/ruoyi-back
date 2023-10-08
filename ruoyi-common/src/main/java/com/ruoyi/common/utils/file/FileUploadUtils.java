@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
@@ -22,15 +24,17 @@ import com.ruoyi.common.utils.uuid.Seq;
  * @author ruoyi
  */
 public class FileUploadUtils {
+    private static final Logger logger = LoggerFactory.getLogger(FileUploadUtils.class);
+
     /**
      * 默认大小 50M
      */
-    public static final long DEFAULT_MAX_SIZE = 50 * 1024 * 1024;
+    public static final long DEFAULT_MAX_SIZE = 200 * 1024 * 1024;
 
     /**
      * 默认的文件名最大长度 100
      */
-    public static final int DEFAULT_FILE_NAME_LENGTH = 100;
+    public static final int DEFAULT_FILE_NAME_LENGTH = 200;
 
     /**
      * 默认上传的地址
@@ -91,8 +95,8 @@ public class FileUploadUtils {
      */
     public static String upload(String baseDir,
                                 MultipartFile file,
-                                String[] allowedExtension)
-            throws FileSizeLimitExceededException,
+                                String[] allowedExtension
+    ) throws FileSizeLimitExceededException,
             IOException,
             FileNameLengthLimitExceededException,
             InvalidExtensionException
@@ -126,13 +130,23 @@ public class FileUploadUtils {
      * 编码文件名
      */
     public static String extractFilename(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+
+        logger.info("编码文件名 获取的文件名: {}", originalFilename);
+//        String format = StringUtils.format(
+//                "{}/{}_{}.{}",
+//                DateUtils.datePath(),
+//                FilenameUtils.getBaseName(originalFilename),
+//                Seq.getId(Seq.uploadSeqType),  //机器id
+//                getExtension(file)  //后缀
+//        );
         String format = StringUtils.format(
-                "{}/{}_{}.{}",
+                "{}/{}.{}",
                 DateUtils.datePath(),
-                FilenameUtils.getBaseName(file.getOriginalFilename()),
-                Seq.getId(Seq.uploadSeqType),
-                getExtension(file)
+                FilenameUtils.getBaseName(originalFilename),
+                getExtension(file)  //后缀
         );
+
         return format;
     }
 

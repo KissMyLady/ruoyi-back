@@ -10,6 +10,11 @@ import io.jsonwebtoken.Claims;
 public class Constants {
 
     /**
+     * 资源映射路径 前缀
+     */
+    public static final String RESOURCE_PREFIX = "/media";
+
+    /**
      * UTF-8 字符集
      */
     public static final String UTF8 = "UTF-8";
@@ -109,10 +114,6 @@ public class Constants {
      */
     public static final String JWT_AUTHORITIES = "authorities";
 
-    /**
-     * 资源映射路径 前缀
-     */
-    public static final String RESOURCE_PREFIX = "/profile";
 
     /**
      * RMI 远程方法调用

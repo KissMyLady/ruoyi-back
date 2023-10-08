@@ -45,8 +45,14 @@ public class CommonController {
      * @param delete   是否删除
      */
     @GetMapping("/download")
-    public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request) {
+    public void fileDownload(String fileName,
+                             Boolean delete,
+                             HttpServletResponse response,
+                             HttpServletRequest request
+    ) {
         try {
+            //查询下载
+            // E:/data/uploadPath/download/2023-10-04_231220_20231008164348A001.png
             if (!FileUtils.checkAllowDownload(fileName)) {
                 throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
             }

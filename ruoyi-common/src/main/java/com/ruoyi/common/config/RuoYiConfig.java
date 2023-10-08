@@ -127,6 +127,9 @@ public class RuoYiConfig {
      * 获取上传路径
      */
     public static String getUploadPath() {
+        //在yml配置的路径. 结果就是 绝对路径
+        //wind:  E:/data/uploadPath/upload
+        //linux: /home/mylady/files/web_file/ruoyi_files/uploadPath/
         return getProfile() + "/upload";
     }
 }

@@ -38,6 +38,9 @@ public class FileAttachment extends BaseEntity {
     @Excel(name = "文件路径")
     private String filePath;
 
+    @Excel(name = "上传方式")
+    private String upMethod;
+
     /**
      * 文件名
      */
@@ -56,6 +59,7 @@ public class FileAttachment extends BaseEntity {
     @Excel(name = "文件后缀")
     private String fileSuffix;
 
+
     /**
      * md5校验值
      */
@@ -67,6 +71,14 @@ public class FileAttachment extends BaseEntity {
      */
     @Excel(name = "逻辑删除")
     private Integer isDelete;
+
+    public String getUpMethod() {
+        return upMethod;
+    }
+
+    public void setUpMethod(String upMethod) {
+        this.upMethod = upMethod;
+    }
 
     public void setId(Long id) {
         this.id = id;

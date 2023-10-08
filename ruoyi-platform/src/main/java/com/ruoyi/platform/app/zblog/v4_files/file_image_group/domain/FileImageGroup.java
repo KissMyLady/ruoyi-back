@@ -26,6 +26,9 @@ public class FileImageGroup extends BaseEntity {
     @Excel(name = "创建用户id")
     private Long userId;
 
+    @Excel(name = "图片组id")
+    private Long groupId;
+
     /**
      * 图片组名
      */
@@ -52,6 +55,14 @@ public class FileImageGroup extends BaseEntity {
 
     public Long getUserId() {
         return userId;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public void setGroupName(String groupName) {
