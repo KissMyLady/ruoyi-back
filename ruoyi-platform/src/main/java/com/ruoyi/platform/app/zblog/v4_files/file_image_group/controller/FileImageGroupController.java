@@ -1,8 +1,14 @@
 package com.ruoyi.platform.app.zblog.v4_files.file_image_group.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.ruoyi.platform.app.zblog.v4_files.file_image.domain.FileImage;
+import com.ruoyi.platform.app.zblog.v4_files.file_image.mapper.FileImageMapper;
+import com.ruoyi.platform.app.zblog.v4_files.file_image_group.mapper.FileImageGroupMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +42,12 @@ public class FileImageGroupController extends BaseController {
     @Autowired
     private FileImageGroupServiceImpl fileImageGroupService;
     //private IFileImageGroupService fileImageGroupService;
+
+    @Autowired
+    private FileImageMapper fileImageMapper;
+
+    @Autowired
+    private FileImageGroupMapper fileImageGroupMapper;
 
     /**
      * 查询file_image_group列表
@@ -85,8 +97,41 @@ public class FileImageGroupController extends BaseController {
     @PreAuthorize("@ss.hasPermi('file_image_group:file_image_group:edit')")
     @Log(title = "修改file_image_group", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody FileImageGroup fileImageGroup) {
-        return toAjax(fileImageGroupService.updateFileImageGroup(fileImageGroup));
+    public AjaxResult edit(@RequestBody FileImageGroup dto) {
+        logger.info("路由, 传递dto对象打印: {}", dto);
+
+        AjaxResult ajax = new AjaxResult();
+
+        String msg = "";
+        //检测是否允许修改,
+        //查询图片list, 是否有使用的group_id
+        Long groupId = dto.getGroupId();
+        if(ObjectUtil.isNotEmpty(groupId)){
+            //先查询原先老旧数据
+            FileImageGroup fileImageGroup = fileImageGroupMapper.selectFileImageGroupById(dto.getId());
+
+            logger.info("查询fileImage: {}", fileImageGroup);
+
+            //但旧数据group_id 与 新数据不一致
+            if (!Objects.equals(fileImageGroup.getGroupId(), groupId)){
+                //查询当前要修改数据的 group_id 是否存在图片
+                List<FileImage> fileImages = fileImageMapper.selectFileImageList_v2(fileImageGroup.getGroupId());
+                int countNum = fileImages.size();
+
+                logger.info("查询数量: {}", countNum);
+                if(countNum >= 1){
+                    // return AjaxResult.error("当前组id存在使用图片, 不允许修改");
+                    dto.setGroupId(null);
+                    //
+                    msg += "当前组id存在使用图片,不允许修改,";
+                }
+            }
+        }
+        int i = fileImageGroupService.updateFileImageGroup(dto);
+
+        msg += "修字段成功"+i;
+        ajax.put("msg", msg);
+        return ajax;
     }
 
     /**

@@ -2,7 +2,10 @@ package com.ruoyi.platform.app.zblog.v4_files.file_image_group.service.impl;
 
 import java.util.List;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.platform.app.zblog.v4_files.file_image.domain.FileImage;
+import com.ruoyi.platform.app.zblog.v4_files.file_image.mapper.FileImageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.platform.app.zblog.v4_files.file_image_group.mapper.FileImageGroupMapper;
@@ -19,6 +22,9 @@ import com.ruoyi.platform.app.zblog.v4_files.file_image_group.service.IFileImage
 public class FileImageGroupServiceImpl implements IFileImageGroupService {
     @Autowired
     private FileImageGroupMapper fileImageGroupMapper;
+
+    @Autowired
+    private FileImageMapper imageMapper;
 
     /**
      * 查询file_image_group

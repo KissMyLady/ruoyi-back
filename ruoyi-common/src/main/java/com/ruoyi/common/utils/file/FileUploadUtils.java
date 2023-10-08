@@ -231,4 +231,23 @@ public class FileUploadUtils {
         }
         return extension;
     }
+
+    /**
+     * 传入路径, 移除本地文件
+     * 1: 成功
+     * 0: 失败
+     */
+    public static String deleteToLocal(String path){
+        try {
+            File pathFile = new File(path);
+            if (pathFile.exists()) {
+                pathFile.delete();
+            }
+            return "1";
+        } catch (Exception e) {
+            logger.error("传入路径移除本地文件, 操作失败, 原因是: {}", e +"");
+            return "0";
+        }
+
+    }
 }

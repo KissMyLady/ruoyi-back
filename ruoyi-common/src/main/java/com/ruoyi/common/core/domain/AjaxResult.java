@@ -33,7 +33,7 @@ public class AjaxResult extends HashMap<String, Object> {
      */
     public AjaxResult() {
         super.put(CODE_TAG, 200);
-        super.put(MSG_TAG, "成功");
+        // super.put(MSG_TAG, "成功");
     }
 
     /**

@@ -17,5 +17,9 @@ public interface FileImageUploadService {
      */
     AjaxResult imageUploadFile(HttpServletRequest request, MultipartFile file);
 
+    /**
+     * 图片删除
+     */
+    AjaxResult deleteImage(Long[] ids);
 
 }

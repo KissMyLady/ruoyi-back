@@ -1,10 +1,14 @@
 package com.ruoyi.platform.app.zblog.v4_files.file_image.mapper;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import com.ruoyi.platform.app.zblog.v4_files.file_image.domain.FileImage;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
+import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 素材图片Mapper接口
@@ -29,6 +33,9 @@ public interface FileImageMapper {
      * @return 素材图片集合
      */
     List<FileImage> selectFileImageList(FileImage fileImage);
+
+    List<FileImage> selectFileImageList_v2(@Param("group_id") long group_id);
+
 
     /**
      * 新增素材图片

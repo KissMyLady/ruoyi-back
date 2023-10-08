@@ -40,7 +40,7 @@
         <include refid="selectFileImageVo"/>
         <where>
             <if test="userId != null ">and user_id like '%${userId}%'</if>
-            <if test="groupId != null ">and group_id like '%${groupId}%'</if>
+            <if test="groupId != null ">and group_id = '#{groupId}' </if>
             <if test="title != null  and title != ''">and title like '%${title}%'</if>
             <if test="fileName != null  and fileName != ''">and file_name like '%${fileName}%'</if>
             <if test="filePath != null  and filePath != ''">and file_path like '%${filePath}%'</if>
@@ -48,6 +48,22 @@
             <if test="fileSuffix != null  and fileSuffix != ''">and file_suffix like '%${fileSuffix}%'</if>
             <if test="isDelete != null ">and is_delete like '%${isDelete}%'</if>
         </where>
+    </select>
+    
+    <select id="selectFileImageList_v2" resultMap="FileImageResult" parameterType="long" >
+        select id,
+               user_id,
+               group_id,
+               title,
+               file_name,
+               file_path,
+               md5,
+               file_suffix,
+               is_delete,
+               create_time,
+               update_time
+        from file_image
+        where group_id = ${group_id}
     </select>
     
     <select id="selectFileImageById"

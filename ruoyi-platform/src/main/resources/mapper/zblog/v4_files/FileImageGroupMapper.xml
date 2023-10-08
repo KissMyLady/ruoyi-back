@@ -7,6 +7,7 @@
     <resultMap type="FileImageGroup" id="FileImageGroupResult">
         <result property="id" column="id"/>
         <result property="userId" column="user_id"/>
+        <result property="groupId" column="group_id"/>
         <result property="groupName" column="group_name"/>
         <result property="isDelete" column="is_delete"/>
         <result property="createTime" column="create_time"/>
@@ -31,6 +32,7 @@
         <include refid="selectFileImageGroupVo"/>
         <where>
             <if test="userId != null ">and user_id like '%${userId}%'</if>
+            <if test="groupId != null ">and group_id = #{group_id} </if>
             <if test="groupName != null  and groupName != ''">and group_name like '%${groupName}%'</if>
             <if test="isDelete != null ">and is_delete like '%${isDelete}%'</if>
         </where>
@@ -41,6 +43,18 @@
             resultMap="FileImageGroupResult">
         <include refid="selectFileImageGroupVo"/>
         where id = #{id}
+    </select>
+    
+    <select id="queryGroupIdExist" parameterType="string" resultType="map">
+        select id,
+               user_id,
+               group_id,
+               group_name,
+               is_delete,
+               create_time,
+               update_time
+        from file_image_group
+        where group_id = #{group_id}
     </select>
     
     <insert id="insertFileImageGroup" parameterType="FileImageGroup" useGeneratedKeys="true" keyProperty="id">
@@ -67,7 +81,7 @@
         update file_image_group
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
-            <if test="groupId != null">user_id = #{groupId},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
             <if test="groupName != null">group_name = #{groupName},</if>
             <if test="isDelete != null">is_delete = #{isDelete},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

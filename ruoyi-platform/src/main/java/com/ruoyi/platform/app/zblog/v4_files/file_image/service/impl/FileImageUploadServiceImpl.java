@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @Author: KissMyLady
@@ -44,15 +47,9 @@ public class FileImageUploadServiceImpl implements FileImageUploadService {
             return AjaxResult.error("图片组组id不能为空");
         }
         String groupId = request.getHeader("group_id");
-        long groupIdLong = 1L;
-        try {
-            groupIdLong = Long.parseLong(groupId);
-        } catch (Exception e) {
-            return AjaxResult.error("图片组groupId不是数字, 请检查类型是否正确");
-        }
         //查询组是否存在
-        FileImageGroup fileImageGroup = fileImageGroupMapper.selectFileImageGroupById(groupIdLong);
-        if(ObjectUtil.isEmpty(fileImageGroup)){
+        List<Map<String, Objects>> maps = fileImageGroupMapper.queryGroupIdExist(groupId);
+        if(ObjectUtil.isEmpty(maps)){
             return AjaxResult.error("图片组groupId不存在, 请检查组id是否正确");
         }
 
@@ -107,4 +104,31 @@ public class FileImageUploadServiceImpl implements FileImageUploadService {
 
     }
 
+    /**
+     * 图片删除
+     */
+    @Override
+    public AjaxResult deleteImage(Long[] ids) {
+        AjaxResult ajax = new AjaxResult();
+        for (Long fileId : ids) {
+            //查询文件
+            FileImage dto = fileImageMapper.selectFileImageById(fileId);
+            if (ObjectUtil.isEmpty(dto)){
+                logger.warn("图片id: {} 查询不存在.跳过", fileId);
+                continue;
+            }
+            String upload_path = RuoYiConfig.getUploadPath();
+
+            String filePath = dto.getFilePath();
+            // 路径格式: /media/upload/2023/10/08/2023-03-12_120556.png
+            String replacePath = filePath.replace("/media/upload", "");
+
+            String newPath = upload_path + replacePath;
+            logger.info("执行图片删除操作.删除文件路径: {}", newPath);
+            //移除文件
+            String s = FileUploadUtils.deleteToLocal(newPath);
+            ajax.put("id:"+fileId, "文件删除成功:"+s);
+        }
+        return ajax;
+    }
 }

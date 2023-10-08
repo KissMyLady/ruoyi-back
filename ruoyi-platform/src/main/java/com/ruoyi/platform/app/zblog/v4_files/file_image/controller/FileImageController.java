@@ -3,6 +3,7 @@ package com.ruoyi.platform.app.zblog.v4_files.file_image.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.platform.app.zblog.v4_files.file_image.service.impl.FileImageUploadServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,9 @@ public class FileImageController extends BaseController {
     @Autowired
     private FileImageServiceImpl fileImageService;
     //private IFileImageService fileImageService;
+
+    @Autowired
+    private FileImageUploadServiceImpl fileImageUploadService;
 
     /**
      * 查询素材图片列表
@@ -96,7 +100,14 @@ public class FileImageController extends BaseController {
     @Log(title = "删除素材图片", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(fileImageService.deleteFileImageByIds(ids));
+        //删除操作
+        AjaxResult ajax = fileImageUploadService.deleteImage(ids);
+
+        //数据删除
+        int i = fileImageService.deleteFileImageByIds(ids);
+
+        ajax.put("数据删除", "i"+ i);
+        return ajax;
     }
 
 }
