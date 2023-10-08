@@ -27,9 +27,9 @@ public class FileUploadUtils {
     private static final Logger logger = LoggerFactory.getLogger(FileUploadUtils.class);
 
     /**
-     * 默认大小 50M
+     * 默认大小 50M 1G
      */
-    public static final long DEFAULT_MAX_SIZE = 200 * 1024 * 1024;
+    public static final long DEFAULT_MAX_SIZE = 1024 * 1024 * 1024;
 
     /**
      * 默认的文件名最大长度 100
@@ -176,28 +176,30 @@ public class FileUploadUtils {
      * @throws InvalidExtensionException
      */
     public static void assertAllowed(MultipartFile file, String[] allowedExtension)
-            throws FileSizeLimitExceededException, InvalidExtensionException {
+            throws FileSizeLimitExceededException, InvalidExtensionException
+    {
         long size = file.getSize();
         if (size > DEFAULT_MAX_SIZE) {
             throw new FileSizeLimitExceededException(DEFAULT_MAX_SIZE / 1024 / 1024);
         }
 
-        String fileName = file.getOriginalFilename();
-        String extension = getExtension(file);
+        //类型判断
+//        String fileName = file.getOriginalFilename();
+//        String extension = getExtension(file);
 
-        if (allowedExtension != null && !isAllowedExtension(extension, allowedExtension)) {
-            if (allowedExtension == MimeTypeUtils.IMAGE_EXTENSION) {
-                throw new InvalidExtensionException.InvalidImageExtensionException(allowedExtension, extension, fileName);
-            } else if (allowedExtension == MimeTypeUtils.FLASH_EXTENSION) {
-                throw new InvalidExtensionException.InvalidFlashExtensionException(allowedExtension, extension, fileName);
-            } else if (allowedExtension == MimeTypeUtils.MEDIA_EXTENSION) {
-                throw new InvalidExtensionException.InvalidMediaExtensionException(allowedExtension, extension, fileName);
-            } else if (allowedExtension == MimeTypeUtils.VIDEO_EXTENSION) {
-                throw new InvalidExtensionException.InvalidVideoExtensionException(allowedExtension, extension, fileName);
-            } else {
-                throw new InvalidExtensionException(allowedExtension, extension, fileName);
-            }
-        }
+//        if (allowedExtension != null && !isAllowedExtension(extension, allowedExtension)) {
+//            if (allowedExtension == MimeTypeUtils.IMAGE_EXTENSION) {
+//                throw new InvalidExtensionException.InvalidImageExtensionException(allowedExtension, extension, fileName);
+//            } else if (allowedExtension == MimeTypeUtils.FLASH_EXTENSION) {
+//                throw new InvalidExtensionException.InvalidFlashExtensionException(allowedExtension, extension, fileName);
+//            } else if (allowedExtension == MimeTypeUtils.MEDIA_EXTENSION) {
+//                throw new InvalidExtensionException.InvalidMediaExtensionException(allowedExtension, extension, fileName);
+//            } else if (allowedExtension == MimeTypeUtils.VIDEO_EXTENSION) {
+//                throw new InvalidExtensionException.InvalidVideoExtensionException(allowedExtension, extension, fileName);
+//            } else {
+//                throw new InvalidExtensionException(allowedExtension, extension, fileName);
+//            }
+//        }
     }
 
     /**
