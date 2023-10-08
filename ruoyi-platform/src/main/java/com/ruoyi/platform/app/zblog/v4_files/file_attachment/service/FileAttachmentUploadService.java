@@ -25,4 +25,10 @@ public interface FileAttachmentUploadService {
      */
     AjaxResult uploadFiles(List<MultipartFile> files);
 
+
+    /**
+     * 文件删除
+     */
+    AjaxResult deleteFile(Long[] ids);
+
 }

@@ -2,10 +2,13 @@ package com.ruoyi.platform.app.zblog.v4_files.file_attachment.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.platform.app.zblog.v4_files.file_attachment.domain.FileAttachment;
 import com.ruoyi.platform.app.zblog.v4_files.file_attachment.mapper.FileAttachmentMapper;
 import com.ruoyi.platform.app.zblog.v4_files.file_attachment.service.IFileAttachmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FileAttachmentServiceImpl implements IFileAttachmentService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileAttachmentServiceImpl.class);
+
     @Autowired
     private FileAttachmentMapper fileAttachmentMapper;
 

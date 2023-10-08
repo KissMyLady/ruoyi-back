@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.platform.app.zblog.v4_files.file_attachment.domain.FileAttachment;
 import com.ruoyi.platform.app.zblog.v4_files.file_attachment.service.impl.FileAttachmentServiceImpl;
+import com.ruoyi.platform.app.zblog.v4_files.file_attachment.service.impl.FileAttachmentUploadServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,9 @@ public class FileAttachmentController extends BaseController {
     private FileAttachmentServiceImpl fileAttachmentService;
     //private IFileAttachmentService fileAttachmentService;
 
+    @Autowired
+    private FileAttachmentUploadServiceImpl fileAttachmentUploadService;
+
     /**
      * 查询file_attachment列表
      */
@@ -52,7 +56,7 @@ public class FileAttachmentController extends BaseController {
      * 导出file_attachment列表
      */
     @PreAuthorize("@ss.hasPermi('file_attachment:file_attachment:export')")
-    @Log(title = "导出file_attachment", businessType = BusinessType.EXPORT)
+    @Log(title = "导出附件列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, FileAttachment fileAttachment) {
         List<FileAttachment> list = fileAttachmentService.selectFileAttachmentList(fileAttachment);
@@ -73,7 +77,7 @@ public class FileAttachmentController extends BaseController {
      * 新增file_attachment
      */
     @PreAuthorize("@ss.hasPermi('file_attachment:file_attachment:add')")
-    @Log(title = "新增file_attachment", businessType = BusinessType.INSERT)
+    @Log(title = "新增附件", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody FileAttachment fileAttachment) {
         return toAjax(fileAttachmentService.insertFileAttachment(fileAttachment));
@@ -83,7 +87,7 @@ public class FileAttachmentController extends BaseController {
      * 修改file_attachment
      */
     @PreAuthorize("@ss.hasPermi('file_attachment:file_attachment:edit')")
-    @Log(title = "修改file_attachment", businessType = BusinessType.UPDATE)
+    @Log(title = "修改附件", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody FileAttachment fileAttachment) {
         return toAjax(fileAttachmentService.updateFileAttachment(fileAttachment));
@@ -93,10 +97,14 @@ public class FileAttachmentController extends BaseController {
      * 删除file_attachment
      */
     @PreAuthorize("@ss.hasPermi('file_attachment:file_attachment:remove')")
-    @Log(title = "删除file_attachment", businessType = BusinessType.DELETE)
+    @Log(title = "删除附件", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(fileAttachmentService.deleteFileAttachmentByIds(ids));
+        //执行删除
+        AjaxResult ajaxResult = fileAttachmentUploadService.deleteFile(ids);
+        int i = fileAttachmentService.deleteFileAttachmentByIds(ids);
+        ajaxResult.put("数据删除", ""+i);
+        return ajaxResult;
     }
 
 }

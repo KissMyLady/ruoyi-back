@@ -130,6 +130,7 @@ public class RuoYiConfig {
         //在yml配置的路径. 结果就是 绝对路径
         //wind:  E:/data/uploadPath/upload
         //linux: /home/mylady/files/web_file/ruoyi_files/uploadPath/
+        //linux: /home/mylady/g100/django/zblog/media/upload
         return getProfile() + "/upload";
     }
 }
