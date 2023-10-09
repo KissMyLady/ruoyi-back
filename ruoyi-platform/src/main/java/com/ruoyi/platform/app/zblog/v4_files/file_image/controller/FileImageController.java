@@ -1,8 +1,11 @@
 package com.ruoyi.platform.app.zblog.v4_files.file_image.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.platform.app.zblog.v4_files.file_image.mapper.FileImageMapper;
 import com.ruoyi.platform.app.zblog.v4_files.file_image.service.impl.FileImageUploadServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,9 @@ public class FileImageController extends BaseController {
     @Autowired
     private FileImageUploadServiceImpl fileImageUploadService;
 
+    @Autowired
+    private FileImageMapper fileImageMapper;
+
     /**
      * 查询素材图片列表
      */
@@ -48,8 +54,9 @@ public class FileImageController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(FileImage fileImage) {
         startPage();
-        List<FileImage> list = fileImageService.selectFileImageList(fileImage);
-        return getDataTable(list);
+        //List<FileImage> list = fileImageService.selectFileImageList(fileImage);
+        List<Map<String, Objects>> maps = fileImageMapper.query_image_list(fileImage);
+        return getDataTable(maps);
     }
 
     /**
@@ -101,13 +108,10 @@ public class FileImageController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         //删除操作
-        AjaxResult ajax = fileImageUploadService.deleteImage(ids);
-
+        String sb = fileImageUploadService.deleteImage(ids);
         //数据删除
         int i = fileImageService.deleteFileImageByIds(ids);
-
-        ajax.put("数据删除", "i"+ i);
-        return ajax;
+        return AjaxResult.success(sb+"数据删除: "+ i);
     }
 
 }

@@ -39,14 +39,54 @@
             resultMap="FileImageResult">
         <include refid="selectFileImageVo"/>
         <where>
-            <if test="userId != null ">and user_id like '%${userId}%'</if>
+            <if test="userId != null ">and user_id = '${userId}'</if>
             <if test="groupId != null ">and group_id = '#{groupId}' </if>
             <if test="title != null  and title != ''">and title like '%${title}%'</if>
             <if test="fileName != null  and fileName != ''">and file_name like '%${fileName}%'</if>
             <if test="filePath != null  and filePath != ''">and file_path like '%${filePath}%'</if>
             <if test="md5 != null  and md5 != ''">and md5 like '%${md5}%'</if>
-            <if test="fileSuffix != null  and fileSuffix != ''">and file_suffix like '%${fileSuffix}%'</if>
-            <if test="isDelete != null ">and is_delete like '%${isDelete}%'</if>
+            <if test="fileSuffix != null  and fileSuffix != ''">and file_suffix = '${fileSuffix}'</if>
+            <if test="isDelete != null ">and is_delete = '${isDelete}'</if>
+        </where>
+    </select>
+    
+    <select id="query_image_list"
+            parameterType="FileImage"
+            resultType="map">
+        select id,
+               user_id     as userId,
+               (
+                   select username
+                   from df_user uu
+                   where uu.id = img.user_id
+               )           as username,
+               (
+                   select first_name
+                   from df_user uu
+                   where uu.id = img.user_id
+               )           as nickName,
+               group_id    as groupId,
+               (
+                   select group_name from file_image_group gg where gg.group_id = img.group_id
+               )           as groupName,
+               title,
+               file_name   as fileName,
+               file_path   as filePath,
+               md5,
+               file_suffix as fileSuffix,
+               is_delete   as isDelete,
+               create_time as createTime,
+               update_time as updateTime
+        from file_image img
+        <where>
+            <if test="userId != null ">and user_id = '${userId}'</if>
+            <if test="groupId != null ">and group_id = '#{groupId}' </if>
+            <if test="title != null  and title != ''">and title like '%${title}%'</if>
+            <if test="fileName != null  and fileName != ''">and file_name like '%${fileName}%'</if>
+            <if test="filePath != null  and filePath != ''">and file_path like '%${filePath}%'</if>
+            <if test="md5 != null  and md5 != ''">and md5 like '%${md5}%'</if>
+            <if test="fileSuffix != null  and fileSuffix != ''">and file_suffix = '${fileSuffix}'</if>
+            <if test="isDelete != null ">and is_delete = '${isDelete}'</if>
         </where>
     </select>
     

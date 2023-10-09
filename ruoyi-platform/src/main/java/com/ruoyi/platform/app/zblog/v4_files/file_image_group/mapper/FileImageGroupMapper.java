@@ -35,6 +35,12 @@ public interface FileImageGroupMapper {
     List<FileImageGroup> selectFileImageGroupList(FileImageGroup fileImageGroup);
 
     /**
+     * 查询列表 + 额外字段
+     */
+    @MapKey("id")
+    List<Map<String, Objects>> query_file_group_list(FileImageGroup fileImageGroup);
+
+    /**
      * 新增file_image_group
      *
      * @param fileImageGroup file_image_group

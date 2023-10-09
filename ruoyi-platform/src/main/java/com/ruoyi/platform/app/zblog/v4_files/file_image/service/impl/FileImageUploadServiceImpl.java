@@ -108,13 +108,15 @@ public class FileImageUploadServiceImpl implements FileImageUploadService {
      * 图片删除
      */
     @Override
-    public AjaxResult deleteImage(Long[] ids) {
-        AjaxResult ajax = new AjaxResult();
+    public String deleteImage(Long[] ids) {
+        StringBuilder sb = new StringBuilder();
         for (Long fileId : ids) {
             //查询文件
             FileImage dto = fileImageMapper.selectFileImageById(fileId);
             if (ObjectUtil.isEmpty(dto)){
-                logger.warn("图片id: {} 查询不存在.跳过", fileId);
+                sb.append("图片id");
+                sb.append(fileId);
+                sb.append("查询不存在.跳过. ");
                 continue;
             }
             String upload_path = RuoYiConfig.getUploadPath();
@@ -124,11 +126,13 @@ public class FileImageUploadServiceImpl implements FileImageUploadService {
             String replacePath = filePath.replace("/media/upload", "");
 
             String newPath = upload_path + replacePath;
-            logger.info("执行图片删除操作.删除文件路径: {}", newPath);
             //移除文件
             String s = FileUploadUtils.deleteToLocal(newPath);
-            ajax.put("id:"+fileId, "文件删除成功:"+s);
+
+            sb.append("执行图片删除操作.删除文件路径:").append(newPath);
+            sb.append("id:").append(fileId);
+            sb.append("文件删除成功:").append(s);
         }
-        return ajax;
+        return sb.toString();
     }
 }

@@ -38,6 +38,40 @@
         </where>
     </select>
     
+    <select id="query_file_group_list"
+            parameterType="FileImageGroup"
+            resultType="map">
+        select id,
+               user_id as userId,
+               (
+                   select username
+                   from df_user uu
+                   where uu.id = gg.user_id
+               ) as userName,
+               (
+                   select first_name
+                   from df_user uu
+                   where uu.id = gg.user_id
+               ) as nickName,
+               group_id as groupId,
+               (
+                   select count(1)
+                   from file_image img
+                   where img.group_id = gg.group_id
+               ) as sumCount,
+               group_name  as groupName,
+               is_delete   as isDelete,
+               create_time as createTime,
+               update_time as updateTime
+        from file_image_group as gg
+        <where>
+            <if test="userId != null ">and gg.user_id = '${userId}'</if>
+            <if test="groupId != null ">and gg.group_id = #{group_id} </if>
+            <if test="groupName != null  and groupName != ''">and gg.group_name like '%${groupName}%'</if>
+            <if test="isDelete != null ">and gg.is_delete = '${isDelete}'</if>
+        </where>
+    </select>
+    
     <select id="selectFileImageGroupById"
             parameterType="Long"
             resultMap="FileImageGroupResult">

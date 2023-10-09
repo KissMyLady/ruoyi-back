@@ -56,8 +56,9 @@ public class FileImageGroupController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(FileImageGroup fileImageGroup) {
         startPage();
-        List<FileImageGroup> list = fileImageGroupService.selectFileImageGroupList(fileImageGroup);
-        return getDataTable(list);
+        // List<FileImageGroup> list = fileImageGroupService.selectFileImageGroupList(fileImageGroup);
+        List<Map<String, Objects>> maps = fileImageGroupMapper.query_file_group_list(fileImageGroup);
+        return getDataTable(maps);
     }
 
     /**
@@ -98,20 +99,17 @@ public class FileImageGroupController extends BaseController {
     @Log(title = "修改file_image_group", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody FileImageGroup dto) {
-        logger.info("路由, 传递dto对象打印: {}", dto);
-
+        // logger.info("路由, 传递dto对象打印: {}", dto);
         AjaxResult ajax = new AjaxResult();
 
-        String msg = "";
+        StringBuilder sb = new StringBuilder();
         //检测是否允许修改,
         //查询图片list, 是否有使用的group_id
         Long groupId = dto.getGroupId();
         if(ObjectUtil.isNotEmpty(groupId)){
             //先查询原先老旧数据
             FileImageGroup fileImageGroup = fileImageGroupMapper.selectFileImageGroupById(dto.getId());
-
-            logger.info("查询fileImage: {}", fileImageGroup);
-
+            // logger.info("查询fileImage: {}", fileImageGroup);
             //但旧数据group_id 与 新数据不一致
             if (!Objects.equals(fileImageGroup.getGroupId(), groupId)){
                 //查询当前要修改数据的 group_id 是否存在图片
@@ -122,15 +120,14 @@ public class FileImageGroupController extends BaseController {
                 if(countNum >= 1){
                     // return AjaxResult.error("当前组id存在使用图片, 不允许修改");
                     dto.setGroupId(null);
-                    //
-                    msg += "当前组id存在使用图片,不允许修改,";
+                    sb.append("当前组id存在使用图片,不允许修改,");
                 }
             }
         }
         int i = fileImageGroupService.updateFileImageGroup(dto);
 
-        msg += "修字段成功"+i;
-        ajax.put("msg", msg);
+        sb.append("修字段成功").append(i);
+        ajax.put("msg", sb.toString());
         return ajax;
     }
 
@@ -141,6 +138,18 @@ public class FileImageGroupController extends BaseController {
     @Log(title = "删除file_image_group", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
+        //删除检查
+        for(long db_id : ids){
+            //查询当前对象
+            FileImageGroup groupDao = fileImageGroupMapper.selectFileImageGroupById(db_id);
+            List<FileImage> maps = fileImageMapper.selectFileImageList_v2(groupDao.getGroupId());
+
+            logger.info("图片组大小: {}", maps.size());
+            if (ObjectUtil.isNotEmpty(maps) && maps.size() >= 1) {
+                return AjaxResult.error("当前图片组存在文件数据, 不允许删除.");
+            }
+        }
+
         return toAjax(fileImageGroupService.deleteFileImageGroupByIds(ids));
     }
 

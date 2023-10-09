@@ -20,6 +20,6 @@ public interface FileImageUploadService {
     /**
      * 图片删除
      */
-    AjaxResult deleteImage(Long[] ids);
+    String deleteImage(Long[] ids);
 
 }

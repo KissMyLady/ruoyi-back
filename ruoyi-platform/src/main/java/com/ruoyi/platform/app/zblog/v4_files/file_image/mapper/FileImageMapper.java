@@ -34,6 +34,16 @@ public interface FileImageMapper {
      */
     List<FileImage> selectFileImageList(FileImage fileImage);
 
+    /**
+     * 查询素材图片列表
+     */
+    @MapKey("id")
+    List<Map<String, Objects>> query_image_list(FileImage fileImage);
+
+
+    /**
+     * 通过group_id 查询图片列表
+     */
     List<FileImage> selectFileImageList_v2(@Param("group_id") long group_id);
 
 
