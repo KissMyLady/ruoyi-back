@@ -7,6 +7,8 @@ import java.util.List;
             #break
         #end
     #end
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
     #if($table.sub)
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Service;
 import ${packageName}.mapper.${ClassName}Mapper;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
-
+import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * ${functionName}Service业务层处理
  *
@@ -28,6 +30,9 @@ import ${packageName}.service.I${ClassName}Service;
  */
 @Service
 public class ${ClassName}ServiceImpl implements I${ClassName}Service {
+
+    private static final Logger logger = LoggerFactory.getLogger(${ClassName}serviceImpl.java.class);
+
     @Autowired
     private ${ClassName}Mapper ${className}Mapper;
 
@@ -51,6 +56,31 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     @Override
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className}) {
         return ${className}Mapper.select${ClassName}List(${className});
+    }
+
+    /**
+     * 查询列表, SQL分页查询
+     */
+    @Override
+    public TableDataInfo query${ClassName}List_BySQL(${ClassName} ${className}) {
+        TableDataInfo tbInfo = new TableDataInfo();
+        try {
+            //查询列表
+            List<Map<String, Object>> mapList = ${className}Mapper.query${ClassName}List_BySQL(${className});
+            //查询总数
+            long countTotal = ${className}Mapper.query${ClassName}List_count(${className});
+
+            tbInfo.setContent(mapList);  //返回数据, 如果有返回加密注解AOP, 加密后的数据将设置到 text 字段上
+            tbInfo.setTotal(countTotal);  //总条数
+            tbInfo.setCode(200);
+            tbInfo.setMsg("查询成功");
+        }
+        catch (Exception e){
+            tbInfo.setMsg("查询错误: "+ e.getMessage());
+            tbInfo.setCode(500);
+            logger.warn("sql查询表错误, 原因是: {}", e.toString();
+        }
+        return tbInfo;
     }
 
     /**

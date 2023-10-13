@@ -1,8 +1,8 @@
 package ${packageName}.service;
 
 import java.util.List;
-
 import ${packageName}.domain.${ClassName};
+import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * ${functionName}Service接口
@@ -26,6 +26,12 @@ public interface I${ClassName}Service {
      * @return ${functionName}集合
      */
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
+
+    // 查询列表, SQL分页查询
+    TableDataInfo query${ClassName}List_BySQL(${ClassName} ${className});
+
+    // 查询列表总数
+    long query${ClassName}List_count(${ClassName} ${className});
 
     /**
      * 新增${functionName}

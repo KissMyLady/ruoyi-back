@@ -51,7 +51,7 @@ public class BaseEntity implements Serializable {
      */
     private String remark;
 
-    //密钥token
+    //密钥token or 关键词查询
     private String key;
 
     //md5校验值
@@ -67,11 +67,61 @@ public class BaseEntity implements Serializable {
     private List<Integer> deptAuthList;
     private List<Integer> ids;
 
+    //分页
+    private Integer pageNum = 1;
+
+    private Integer pageSize = 20;
+
+    private Integer total = 1;
+
+    private String sortStr;  //排序
+
+    private String isAsc = "desc";  //正序-倒序 desc acs
     /**
      * 请求参数
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
+
+    public String getIsAsc() {
+        return isAsc;
+    }
+
+    public void setIsAsc(String isAsc) {
+        this.isAsc = isAsc;
+    }
+
+    public String getSortStr() {
+        return sortStr;
+    }
+
+    public void setSortStr(String sortStr) {
+        this.sortStr = sortStr;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
 
     public List<Integer> getIds() {
         return ids;

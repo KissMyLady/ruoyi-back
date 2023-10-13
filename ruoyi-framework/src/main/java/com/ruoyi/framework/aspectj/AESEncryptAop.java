@@ -14,6 +14,7 @@ import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.annotation.ReturnAESEncrypt;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.security.EncryptUtilsService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -142,7 +143,23 @@ public class AESEncryptAop {
                     // String sMsg = encryptUtilsService.aesEncryptObject(msg);
                     ret.setMessage(msg.toString());
                 }
-            } else {
+            }
+            //list sql查询分页, 返回加密
+            else if (returnValue instanceof TableDataInfo) {
+                // 重新赋值 data
+                TableDataInfo ret = (TableDataInfo) returnValue;
+                List<Map<String, Object>> content = ret.getContent();
+
+                //int code = ret.getCode();
+                //返回消息是200才加密, 错误消息不加密?
+                if (ObjectUtil.isNotEmpty(content) && content != null && !content.toString().equals("")) {
+                    String sData = encryptUtilsService.aesEncryptListMap(content);
+                    ret.setText(sData);
+                    ret.setContent(null);
+                }
+            }
+            //其他情况
+            else {
                 logger.warn("返回值不是AjaxResult类型, 直接 aesEncryptObject 对Object进行 加密");
                 //否则直接加密对象
                 returnValue = encryptUtilsService.aesEncryptObject(returnValue);

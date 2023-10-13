@@ -2,6 +2,7 @@ package com.ruoyi.common.core.page;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 表格分页数据对象
@@ -23,6 +24,11 @@ public class TableDataInfo implements Serializable {
     private List<?> rows;
 
     /**
+     * 列表数据2
+     */
+    private List<Map<String, Object>> content;
+
+    /**
      * 消息状态码
      */
     private int code;
@@ -31,6 +37,8 @@ public class TableDataInfo implements Serializable {
      * 消息内容
      */
     private String msg;
+
+    private String text;
 
     /**
      * 表格数据对象
@@ -47,6 +55,22 @@ public class TableDataInfo implements Serializable {
     public TableDataInfo(List<?> list, int total) {
         this.rows = list;
         this.total = total;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public List<Map<String, Object>> getContent() {
+        return content;
+    }
+
+    public void setContent(List<Map<String, Object>> content) {
+        this.content = content;
     }
 
     public long getTotal() {

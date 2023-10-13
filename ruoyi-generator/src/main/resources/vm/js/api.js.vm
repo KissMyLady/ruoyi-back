@@ -9,6 +9,15 @@ export function list${BusinessName}(query) {
     })
 }
 
+//查询列表, sql查询
+export function list_sql${BusinessName}(data) {
+    return request({
+        url: '/${moduleName}/${businessName}/list_sql',
+        method: 'post',
+        data: data
+    })
+}
+
 // 查询${functionName}详细
 export function get${BusinessName}(${pkColumn.javaField}) {
     return request({

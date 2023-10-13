@@ -1,10 +1,14 @@
 package ${packageName}.mapper;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import ${packageName}.domain.${ClassName};
 #if($table.sub)
 import ${packageName}.domain.${subClassName};
 #end
+import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.Param;
 //import com.ruoyi.common.annotation.DataSource;
 //import com.ruoyi.common.enums.DataSourceType;
 
@@ -31,6 +35,13 @@ public interface ${ClassName}Mapper {
      * @return ${functionName}集合
      */
     List<${ClassName}> select${ClassName}List(${ClassName} ${className});
+
+    // 查询列表, 通过sql
+    @MapKey("id")
+    List<Map<String, Object>> query${ClassName}List_BySQL(${ClassName} ${className});
+
+    //查询列表 总条数
+    long query${ClassName}List_count(${ClassName} ${className});
 
     /**
      * 新增${functionName}

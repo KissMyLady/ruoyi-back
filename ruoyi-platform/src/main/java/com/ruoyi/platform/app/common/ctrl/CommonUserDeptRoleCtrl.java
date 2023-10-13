@@ -33,7 +33,8 @@ public class CommonUserDeptRoleCtrl extends BaseController {
     @PostMapping("/tree")
     public TableDataInfo list2() {
         List<TreeSelect> treeSelects = userDeptRoleServer.selectDeptTreeList(new SysDept());
-        return getDataTable(treeSelects);
+        TableDataInfo dataTable = getDataTable(treeSelects);
+        return dataTable;
     }
 
 }
