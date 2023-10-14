@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.system.mapper.SysDictTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -35,12 +36,23 @@ public class SysDictTypeController extends BaseController {
     @Autowired
     private ISysDictTypeService dictTypeService;
 
+    @Autowired
+    SysDictTypeMapper sysDictTypeMapper;
+
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysDictType dictType) {
+    public TableDataInfo list(SysDictType dto) {
+        Integer page = dto.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = dto.getPageSize();
+        page = (page - 1) * pageSize;
+        dto.setPageNum(page);
         startPage();
-        List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
-        return getDataTable(list);
+        List<SysDictType> list = dictTypeService.selectDictTypeList(dto);
+        int i = sysDictTypeMapper.queryRwoTotal_dictType(dto);
+        return getDataTable(list, i);
     }
 
     @Log(title = "导出字典类型", businessType = BusinessType.EXPORT)

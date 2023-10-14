@@ -50,6 +50,23 @@
             </if>
         </where>
         order by dict_sort desc
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    <select id="queryRwoTotal_DictDataList" parameterType="SysDictData" resultType="int">
+        select count(1) as OK
+        from sys_dict_data
+        <where>
+            <if test="dictType != null and dictType != ''">
+                AND dict_type = #{dictType}
+            </if>
+            <if test="dictLabel != null and dictLabel != ''">
+                AND dict_label like concat('%', #{dictLabel}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
     </select>
     
     <select id="selectDictDataByType" parameterType="SysDictData" resultMap="SysDictDataResult">

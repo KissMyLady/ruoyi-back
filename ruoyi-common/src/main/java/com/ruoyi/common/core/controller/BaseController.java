@@ -50,7 +50,7 @@ public class BaseController {
      * 设置请求分页数据
      */
     protected void startPage() {
-        PageUtils.startPage();
+        // PageUtils.startPage();
     }
 
     /**

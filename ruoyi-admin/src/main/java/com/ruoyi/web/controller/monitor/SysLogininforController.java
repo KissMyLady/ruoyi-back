@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.monitor;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.system.mapper.SysLogininforMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,15 +37,30 @@ public class SysLogininforController extends BaseController {
     @Autowired
     private SysPasswordService passwordService;
 
+    @Autowired
+    private SysLogininforMapper sysLogininforMapper;
+
+    /**
+     * 登录日志列表
+     */
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysLogininfor logininfor) {
-        startPage();
-        List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
-        return getDataTable(list);
+    public TableDataInfo list(SysLogininfor dto) {
+        Integer page = dto.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = dto.getPageSize();
+        page = (page - 1) * pageSize;
+        dto.setPageNum(page);
+
+        List<SysLogininfor> list = logininforService.selectLogininforList(dto);
+        int i = sysLogininforMapper.queryRwoTotal_Logininfo(dto);
+
+        return getDataTable(list, i);
     }
 
-    @Log(title = "export登录日志", businessType = BusinessType.EXPORT)
+    @Log(title = "export登录日志" , businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:export')")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysLogininfor logininfor) {
@@ -54,14 +70,14 @@ public class SysLogininforController extends BaseController {
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
-    @Log(title = "remove登录日志", businessType = BusinessType.DELETE)
+    @Log(title = "remove登录日志" , businessType = BusinessType.DELETE)
     @DeleteMapping("/{infoIds}")
     public AjaxResult remove(@PathVariable Long[] infoIds) {
         return toAjax(logininforService.deleteLogininforByIds(infoIds));
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
-    @Log(title = "CLEAN登录日志", businessType = BusinessType.CLEAN)
+    @Log(title = "CLEAN登录日志" , businessType = BusinessType.CLEAN)
     @DeleteMapping("/clean")
     public AjaxResult clean() {
         logininforService.cleanLogininfor();
@@ -69,7 +85,7 @@ public class SysLogininforController extends BaseController {
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:unlock')")
-    @Log(title = "账户解锁", businessType = BusinessType.OTHER)
+    @Log(title = "账户解锁" , businessType = BusinessType.OTHER)
     @GetMapping("/unlock/{userName}")
     public AjaxResult unlock(@PathVariable("userName") String userName) {
         passwordService.clearLoginRecordCache(userName);

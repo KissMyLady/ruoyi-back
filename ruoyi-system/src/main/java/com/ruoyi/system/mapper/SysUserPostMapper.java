@@ -11,34 +11,22 @@ import com.ruoyi.system.domain.SysUserPost;
  */
 public interface SysUserPostMapper {
     /**
-     * 通过用户ID删除用户和岗位关联
-     *
-     * @param userId 用户ID
-     * @return 结果
+     * 通过用户ID --删除-- 用户和岗位关联
      */
-    public int deleteUserPostByUserId(Long userId);
+    int deleteUserPostByUserId(Long userId);
 
     /**
-     * 通过岗位ID查询岗位使用数量
-     *
-     * @param postId 岗位ID
-     * @return 结果
+     * 通过岗位ID 查询 岗位使用数量
      */
-    public int countUserPostById(Long postId);
+    int countUserPostById(Long postId);
 
     /**
-     * 批量删除用户和岗位关联
-     *
-     * @param ids 需要删除的数据ID
-     * @return 结果
+     * --批量删除-- 用户和岗位关联
      */
-    public int deleteUserPost(Long[] ids);
+    int deleteUserPost(Long[] ids);
 
     /**
-     * 批量新增用户岗位信息
-     *
-     * @param userPostList 用户角色列表
-     * @return 结果
+     * ++批量新增++ 用户岗位信息
      */
-    public int batchUserPost(List<SysUserPost> userPostList);
+    int batchUserPost(List<SysUserPost> userPostList);
 }

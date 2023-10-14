@@ -49,6 +49,7 @@
                 AND create_by like concat('%', #{createBy}, '%')
             </if>
         </where>
+        limit ${pageNum}, ${pageSize}
     </select>
     
     <insert id="insertNotice" parameterType="SysNotice">

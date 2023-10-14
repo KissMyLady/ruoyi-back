@@ -39,9 +39,10 @@
             <if test="note != null  and note != ''">and note like concat('%', #{note}, '%')</if>
             <if test="isDelete != null ">and is_delete = #{isDelete}</if>
         </where>
-        
-        <if test="isDelete != null ">and is_delete = #{isDelete}</if>
-        
+
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
         limit ${pageNum}, ${pageSize}
     </select>
     
@@ -62,11 +63,9 @@
             <if test="isDelete != null ">and is_delete = #{isDelete}</if>
         </where>
         
-        
-        <if test="sortStr != null ">order by sortStr
-            <if test="isAsc != null ">${isAsc}</if>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
         </if>
-    
         limit ${pageNum}, ${pageSize}
     </select>
     
@@ -77,11 +76,11 @@
         select count(1) as total
         from file_attachment_group
         <where>
-            <if test="userId != null ">and user_id like '%${userId}%'</if>
-            <if test="groupId != null ">and group_id like '%${groupId}%'</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="groupId != null ">and group_id = #{groupId}</if>
             <if test="groupName != null  and groupName != ''">and group_name like concat('%', #{groupName}, '%')</if>
             <if test="note != null  and note != ''">and note like concat('%', #{note}, '%')</if>
-            <if test="isDelete != null ">and is_delete like '%${isDelete}%'</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
         </where>
     </select>
     

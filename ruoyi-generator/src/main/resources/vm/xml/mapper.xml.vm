@@ -62,6 +62,8 @@
                 #end
             #end
         </where>
+
+        limit ${pageNum}, ${pageSize}
     </select>
 
 
@@ -78,7 +80,7 @@
                 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
                 #if($column.query)
                     #if($column.queryType == "EQ")
-                        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and $columnName like ${sqllike1}{$javaField}${sqllike2} </if>
+                        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and $columnName = #{$javaField}</if>
                     #elseif($queryType == "NE")
                         <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and $columnName != #{$javaField}</if>
                     #elseif($queryType == "GT")
@@ -98,7 +100,9 @@
             #end
         </where>
 
-        <if test="sortStr != null ">order by #{sortStr} <if test="isAsc != null "> ${isAsc} </if></if>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
         limit ${pageNum}, ${pageSize}
     </select>
 
@@ -117,7 +121,7 @@
                 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
                 #if($column.query)
                     #if($column.queryType == "EQ")
-                        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and $columnName like ${sqllike1}{$javaField}${sqllike2} </if>
+                        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and $columnName = #{$javaField}</if>
                     #elseif($queryType == "NE")
                         <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and $columnName != #{$javaField}</if>
                     #elseif($queryType == "GT")

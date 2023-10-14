@@ -43,7 +43,7 @@ public class ${ClassName}Controller extends BaseController {
     //private I${ClassName}Service ${className}Service;
 
     /**
-     * 查询${functionName}列表
+     * 查询列表
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
     @GetMapping("/list")
@@ -72,7 +72,7 @@ public class ${ClassName}Controller extends BaseController {
 
 
     /**
-     * 导出${functionName}列表
+     * 导出列表
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:export')")
     @Log(title = "导出${functionName}", businessType = BusinessType.EXPORT)
@@ -84,7 +84,7 @@ public class ${ClassName}Controller extends BaseController {
     }
 
     /**
-     * 获取${functionName}详细信息
+     * 获取详细
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:query')")
     @GetMapping(value = "/{${pkColumn.javaField}}")
@@ -93,7 +93,7 @@ public class ${ClassName}Controller extends BaseController {
     }
 
     /**
-     * 新增${functionName}
+     * 新增
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:add')")
     @Log(title = "新增${functionName}", businessType = BusinessType.INSERT)
@@ -103,7 +103,7 @@ public class ${ClassName}Controller extends BaseController {
     }
 
     /**
-     * 修改${functionName}
+     * 修改
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:edit')")
     @Log(title = "修改${functionName}", businessType = BusinessType.UPDATE)
@@ -113,7 +113,7 @@ public class ${ClassName}Controller extends BaseController {
     }
 
     /**
-     * 删除${functionName}
+     * 删除
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:remove')")
     @Log(title = "删除${functionName}", businessType = BusinessType.DELETE)

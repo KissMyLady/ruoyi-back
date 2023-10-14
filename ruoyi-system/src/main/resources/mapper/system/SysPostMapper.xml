@@ -42,6 +42,7 @@
                 AND post_name like concat('%', #{postName}, '%')
             </if>
         </where>
+        limit ${pageNum}, ${pageSize}
     </select>
     
     <select id="selectPostAll" resultMap="SysPostResult">

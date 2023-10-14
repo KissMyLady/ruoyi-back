@@ -67,7 +67,10 @@ public class FileAttachmentGroupController extends BaseController {
         }
 
         List<FileAttachmentGroup> list = fileAttachmentGroupService.selectFileAttachmentGroupList(dto);
-        return getDataTable(list);
+
+        int i = fileAttachmentGroupMapper.queryFileAttachmentGroupList_count(dto);
+
+        return getDataTable(list, i);
     }
 
     /**
@@ -80,8 +83,9 @@ public class FileAttachmentGroupController extends BaseController {
         startPage();
         List<Map<String, Objects>> mapList = fileAttachmentGroupMapper.queryFileAttachmentGroupList_BySQL(dto);
 
+        int i = fileAttachmentGroupMapper.queryFileAttachmentGroupList_count(dto);
         logger.info("查询数据打印: {}", mapList.toString());
-        return getDataTable(mapList);
+        return getDataTable(mapList, i);
     }
 
 

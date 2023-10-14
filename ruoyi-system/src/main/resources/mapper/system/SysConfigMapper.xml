@@ -45,10 +45,34 @@
     <select id="selectConfig" parameterType="SysConfig" resultMap="SysConfigResult">
         <include refid="selectConfigVo"/>
         <include refid="sqlwhereSearch"/>
+        limit ${pageNum}, ${pageSize}
     </select>
     
     <select id="selectConfigList" parameterType="SysConfig" resultMap="SysConfigResult">
         <include refid="selectConfigVo"/>
+        <where>
+            <if test="configName != null and configName != ''">
+                AND config_name like concat('%', #{configName}, '%')
+            </if>
+            <if test="configType != null and configType != ''">
+                AND config_type = #{configType}
+            </if>
+            <if test="configKey != null and configKey != ''">
+                AND config_key like concat('%', #{configKey}, '%')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    <select id="queryRwoTotal" resultType="int" parameterType="SysConfig">
+        select count(1) as OK
+        from sys_config
         <where>
             <if test="configName != null and configName != ''">
                 AND config_name like concat('%', #{configName}, '%')

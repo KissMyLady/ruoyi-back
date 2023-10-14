@@ -40,6 +40,30 @@
             </if>
         </where>
         order by create_time desc
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryRwoTotal_dictType" parameterType="SysDictType" resultType="int">
+        select count(1) as OK
+        from sys_dict_type
+        <where>
+            <if test="dictName != null and dictName != ''">
+                AND dict_name like concat('%', #{dictName}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="dictType != null and dictType != ''">
+                AND dict_type like concat('%', #{dictType}, '%')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
     </select>
     
     <select id="selectDictTypeAll" resultMap="SysDictTypeResult">

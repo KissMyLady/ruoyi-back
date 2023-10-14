@@ -61,6 +61,14 @@ public class SysUserController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysUser user) {
+        Integer page = user.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = user.getPageSize();
+        page = (page - 1) * pageSize;
+        user.setPageNum(page);
+
         startPage();
         List<SysUser> list = userService.selectUserList(user);
 

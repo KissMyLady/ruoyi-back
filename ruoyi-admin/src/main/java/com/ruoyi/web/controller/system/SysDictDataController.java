@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.system.mapper.SysDictDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -41,15 +42,30 @@ public class SysDictDataController extends BaseController {
     @Autowired
     private ISysDictTypeService dictTypeService;
 
+    @Autowired
+    SysDictDataMapper sysDictDataMapper;
+
+    /**
+     * 列表查询
+     */
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysDictData dictData) {
+    public TableDataInfo list(SysDictData dto) {
+        Integer page = dto.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = dto.getPageSize();
+        page = (page - 1) * pageSize;
+        dto.setPageNum(page);
         startPage();
-        List<SysDictData> list = dictDataService.selectDictDataList(dictData);
-        return getDataTable(list);
+        int i = sysDictDataMapper.queryRwoTotal_DictDataList(dto);
+
+        List<SysDictData> list = dictDataService.selectDictDataList(dto);
+        return getDataTable(list, i);
     }
 
-    @Log(title = "字典数据导出", businessType = BusinessType.EXPORT)
+    @Log(title = "字典数据导出" , businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysDictData dictData) {
@@ -59,7 +75,7 @@ public class SysDictDataController extends BaseController {
     }
 
     /**
-     * 查询字典数据详细
+     * 查询详细
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
     @GetMapping(value = "/{dictCode}")
@@ -80,10 +96,10 @@ public class SysDictDataController extends BaseController {
     }
 
     /**
-     * 新增字典类型
+     * 新增
      */
     @PreAuthorize("@ss.hasPermi('system:dict:add')")
-    @Log(title = "新增字典类型", businessType = BusinessType.INSERT)
+    @Log(title = "新增字典类型" , businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysDictData dict) {
         dict.setCreateBy(getUsername());
@@ -91,10 +107,10 @@ public class SysDictDataController extends BaseController {
     }
 
     /**
-     * 修改保存字典类型
+     * 修改保存
      */
     @PreAuthorize("@ss.hasPermi('system:dict:edit')")
-    @Log(title = "修改保存字典类型", businessType = BusinessType.UPDATE)
+    @Log(title = "修改保存字典类型" , businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysDictData dict) {
         dict.setUpdateBy(getUsername());
@@ -102,10 +118,10 @@ public class SysDictDataController extends BaseController {
     }
 
     /**
-     * 删除字典类型
+     * 删除
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
-    @Log(title = "删除字典类型", businessType = BusinessType.DELETE)
+    @Log(title = "删除字典类型" , businessType = BusinessType.DELETE)
     @DeleteMapping("/{dictCodes}")
     public AjaxResult remove(@PathVariable Long[] dictCodes) {
         dictDataService.deleteDictDataByIds(dictCodes);

@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.system.mapper.SysConfigMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -34,15 +35,20 @@ public class SysConfigController extends BaseController {
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    SysConfigMapper sysConfigMapper;
+
     /**
      * 获取参数配置列表
      */
     @PreAuthorize("@ss.hasPermi('system:config:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysConfig config) {
+    public TableDataInfo list(SysConfig dto) {
         startPage();
-        List<SysConfig> list = configService.selectConfigList(config);
-        return getDataTable(list);
+        List<SysConfig> list = configService.selectConfigList(dto);
+
+        int i = sysConfigMapper.queryRwoTotal(dto);
+        return getDataTable(list, i);
     }
 
     @Log(title = "导出参数管理", businessType = BusinessType.EXPORT)

@@ -12,54 +12,38 @@ import com.ruoyi.common.core.domain.AjaxResult;
  */
 public interface I${ClassName}Service {
     /**
-     * 查询${functionName}
-     *
-     * @param ${pkColumn.javaField} ${functionName}主键
-     * @return ${functionName}
+     * 查询详情
      */
-    public ${ClassName} select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField});
+    ${ClassName} select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField});
 
     /**
-     * 查询${functionName}列表
-     *
-     * @param dto ${functionName}
-     * @return ${functionName}集合
+     * 查询列表
      */
-    public List<${ClassName}> select${ClassName}List(${ClassName} dto);
+    List<${ClassName}> select${ClassName}List(${ClassName} dto);
 
-    // 查询列表, SQL分页查询
+    /**
+     * SQL查询
+     */
     AjaxResult query${ClassName}List_BySQL(${ClassName} dto);
 
+    /**
+     * ++新增++
+     */
+    int insert${ClassName}(${ClassName} dto);
 
     /**
-     * 新增${functionName}
-     *
-     * @param dto ${functionName}
-     * @return 结果
+     * 修改
      */
-    public int insert${ClassName}(${ClassName} dto);
+    int update${ClassName}(${ClassName} dto);
 
     /**
-     * 修改${functionName}
-     *
-     * @param dto ${functionName}
-     * @return 结果
+     * --批量删除--
      */
-    public int update${ClassName}(${ClassName} dto);
+    int delete${ClassName}By${pkColumn.capJavaField}s(${pkColumn.javaType}[] ${pkColumn.javaField}s);
 
     /**
-     * 批量删除${functionName}
-     *
-     * @param ${pkColumn.javaField}s 需要删除的${functionName}主键集合
-     * @return 结果
+     * -删除-
      */
-    public int delete${ClassName}By${pkColumn.capJavaField}s(${pkColumn.javaType}[] ${pkColumn.javaField}s);
+    int delete${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField});
 
-    /**
-     * 删除${functionName}信息
-     *
-     * @param ${pkColumn.javaField} ${functionName}主键
-     * @return 结果
-     */
-    public int delete${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField});
 }

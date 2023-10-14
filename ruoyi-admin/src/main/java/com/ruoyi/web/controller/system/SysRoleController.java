@@ -72,6 +72,14 @@ public class SysRoleController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysRole role) {
+        Integer page = role.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = role.getPageSize();
+        page = (page - 1) * pageSize;
+        role.setPageNum(page);
+
         startPage();
         List<SysRole> roleList = roleService.selectRoleList(role);
 

@@ -59,9 +59,7 @@
                                  req_browser,
                                  req_system,
                                  oper_param, json_result, status, error_msg,
-                                 cost_time, oper_time
-                                 
-                                 )
+                                 cost_time, oper_time)
         values (#{title}, #{businessType}, #{method}, #{requestMethod}, #{operatorType}, #{operName}, #{deptName},
                 #{operUrl}, #{operIp}, #{operLocation},
                 #{reqAgent},
@@ -100,6 +98,41 @@
             </if>
         </where>
         order by oper_id desc
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    <!-- 总数查询-->
+    <select id="queryRwoTotal_OperLogList"
+            parameterType="SysOperLog"
+            resultType="int">
+        select count(1) as OK
+        from sys_oper_log
+        <where>
+            <if test="title != null and title != ''">
+                AND title like concat('%', #{title}, '%')
+            </if>
+            <if test="businessType != null">
+                AND business_type = #{businessType}
+            </if>
+            <if test="businessTypes != null and businessTypes.length > 0">
+                AND business_type in
+                <foreach collection="businessTypes" item="businessType" open="(" separator="," close=")">
+                    #{businessType}
+                </foreach>
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="operName != null and operName != ''">
+                AND oper_name like concat('%', #{operName}, '%')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND oper_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND oper_time &lt;= #{params.endTime}
+            </if>
+        </where>
     </select>
     
     <delete id="deleteOperLogByIds" parameterType="Long">

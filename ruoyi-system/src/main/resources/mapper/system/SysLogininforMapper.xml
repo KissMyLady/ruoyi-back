@@ -41,6 +41,31 @@
             </if>
         </where>
         order by info_id desc
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    <select id="queryRwoTotal_Logininfo"
+            parameterType="SysLogininfor"
+            resultType="int">
+        select count(1) as OK
+        from sys_logininfor
+        <where>
+            <if test="ipaddr != null and ipaddr != ''">
+                AND ipaddr like concat('%', #{ipaddr}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name like concat('%', #{userName}, '%')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND login_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND login_time &lt;= #{params.endTime}
+            </if>
+        </where>
     </select>
     
     <delete id="deleteLogininforByIds" parameterType="Long">

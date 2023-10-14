@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.monitor;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.system.mapper.SysOperLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,17 +33,27 @@ public class SysOperlogController extends BaseController {
     @Autowired
     private ISysOperLogService operLogService;
 
+    @Autowired
+    private SysOperLogMapper sysOperLogMapper;
+
     //查询操作日志
     @PreAuthorize("@ss.hasPermi('monitor:operlog:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysOperLog operLog) {
-        startPage();
-        List<SysOperLog> list = operLogService.selectOperLogList(operLog);
-        TableDataInfo dataTable = getDataTable(list);
-        return dataTable;
+    public TableDataInfo list(SysOperLog dto) {
+        Integer page = dto.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = dto.getPageSize();
+        page = (page - 1) * pageSize;
+        dto.setPageNum(page);
+
+        List<SysOperLog> list = operLogService.selectOperLogList(dto);
+        int i = sysOperLogMapper.queryRwoTotal_OperLogList(dto);
+        return getDataTable(list, i);
     }
 
-    @Log(title = "导出操作日志", businessType = BusinessType.EXPORT)
+    @Log(title = "导出操作日志" , businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:export')")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysOperLog operLog) {
@@ -51,19 +62,19 @@ public class SysOperlogController extends BaseController {
         util.exportExcel(response, list, "操作日志");
     }
 
-    @Log(title = "删除操作日志", businessType = BusinessType.DELETE)
+    @Log(title = "删除操作日志" , businessType = BusinessType.DELETE)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:remove')")
     @DeleteMapping("/{operIds}")
     public AjaxResult remove(@PathVariable Long[] operIds) {
         int i = operLogService.deleteOperLogByIds(operIds);
-        if (i > 0){
+        if (i > 0) {
             return AjaxResult.success();
-        }else {
+        } else {
             return AjaxResult.error();
         }
     }
 
-    @Log(title = "清空操作日志", businessType = BusinessType.CLEAN)
+    @Log(title = "清空操作日志" , businessType = BusinessType.CLEAN)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:remove')")
     @DeleteMapping("/clean")
     public AjaxResult clean() {

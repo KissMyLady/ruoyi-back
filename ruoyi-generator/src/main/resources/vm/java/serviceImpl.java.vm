@@ -40,10 +40,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     private ${ClassName}Mapper ${className}Mapper;
 
     /**
-     * 查询${functionName}
-     *
-     * @param ${pkColumn.javaField} ${functionName}主键
-     * @return ${functionName}
+     * 查询详情
      */
     @Override
     public ${ClassName} select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField}) {
@@ -51,18 +48,15 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     }
 
     /**
-     * 查询${functionName}列表
-     *
-     * @param ${className} ${functionName}
-     * @return ${functionName}
+     * 查询列表
      */
     @Override
-    public List<${ClassName}> select${ClassName}List(${ClassName} ${className}) {
-        return ${className}Mapper.select${ClassName}List(${className});
+    public List<${ClassName}> select${ClassName}List(${ClassName} dto) {
+        return ${className}Mapper.select${ClassName}List(dto);
     }
 
     /**
-     * 查询列表, SQL分页查询
+     * SQL查询列表
      */
     @Override
     public AjaxResult query${ClassName}List_BySQL(${ClassName} dto) {
@@ -84,11 +78,13 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
         AjaxResult ajax = new AjaxResult();
         try {
             //查询列表
-            List<Map<String, Object>> mapList = fileAttachmentGroupMapper.queryFileAttachmentGroupList_BySQL(dto);
-            ajax.setContent(mapList);
+            List<Map<String, Object>> resList = ${className}Mapper.select${ClassName}List_BySQL(dto);
+            ajax.setContent(resList);
         }
         catch (Exception e){
             logger.error("查询列表失败, 原因是: {}", ""+e);
+            ajax.put("code" , 500);
+            ajax.put("msg" , "查询列表失败"+e);
         }
         try {
             //查询总数
@@ -98,8 +94,8 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
             ajax.put("code" , 200);
         }
         catch (Exception e){
-            ajax.put("msg" , "查询失败");
-            ajax.put("error" , "原因" + e.toString());
+            ajax.put("msg" , "查询总数失败");
+            ajax.put("msg2" , "原因" + e.toString());
             ajax.put("code" , 500);
             logger.warn("sql查询表错误, 原因是: {}" , e.toString());
         }
@@ -107,10 +103,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     }
 
     /**
-     * 新增${functionName}
-     *
-     * @param ${className} ${functionName}
-     * @return 结果
+     * 新增
      */
         #if($table.sub)
         @Transactional
@@ -132,10 +125,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     }
 
     /**
-     * 修改${functionName}
-     *
-     * @param ${className} ${functionName}
-     * @return 结果
+     * 修改
      */
         #if($table.sub)
         @Transactional
@@ -156,10 +146,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     }
 
     /**
-     * 批量删除${functionName}
-     *
-     * @param ${pkColumn.javaField}s 需要删除的${functionName}主键
-     * @return 结果
+     * 批量删除
      */
         #if($table.sub)
         @Transactional
@@ -173,10 +160,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     }
 
     /**
-     * 删除${functionName}信息
-     *
-     * @param ${pkColumn.javaField} ${functionName}主键
-     * @return 结果
+     * 删除
      */
         #if($table.sub)
         @Transactional
@@ -191,9 +175,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     #if($table.sub)
 
         /**
-         * 新增${subTable.functionName}信息
-         *
-         * @param ${className} ${functionName}对象
+         * 新增
          */
         public void insert${subClassName}(${ClassName} ${className}) {
             List<${subClassName}> ${subclassName}List = ${className}.get${subClassName}List();
