@@ -56,7 +56,7 @@ public class HelloWorld {
         // String s = encryptUtilsService.aesEncryptListMap(lists);
         AjaxResult ajx = new AjaxResult();
         ajx.setContent(lists);
-        ajx.setMessage("成功");
+        ajx.put("msg", "成功");
         return ajx;
     }
 
@@ -81,7 +81,7 @@ public class HelloWorld {
         // String s = encryptUtilsService.aesEncryptListMap(lists);
         AjaxResult ajx = new AjaxResult();
         ajx.setContent(lists);
-        ajx.setMessage("成功");
+        ajx.put("msg", "成功");
         return ajx;
     }
 

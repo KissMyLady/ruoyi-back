@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * @author ruoyi
  */
 public class BaseEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -82,6 +83,30 @@ public class BaseEntity implements Serializable {
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
+
+    @Override
+    public String toString() {
+        return "BaseEntity{" +
+                "searchValue='" + searchValue + '\'' +
+                ", createBy='" + createBy + '\'' +
+                ", createTime=" + createTime +
+                ", updateBy='" + updateBy + '\'' +
+                ", updateTime=" + updateTime +
+                ", remark='" + remark + '\'' +
+                ", key='" + key + '\'' +
+                ", md5='" + md5 + '\'' +
+                ", timeStamp='" + timeStamp + '\'' +
+                ", ajaxResult=" + ajaxResult +
+                ", deptAuthList=" + deptAuthList +
+                ", ids=" + ids +
+                ", pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
+                ", total=" + total +
+                ", sortStr='" + sortStr + '\'' +
+                ", isAsc='" + isAsc + '\'' +
+                ", params=" + params +
+                '}';
+    }
 
     public String getIsAsc() {
         return isAsc;

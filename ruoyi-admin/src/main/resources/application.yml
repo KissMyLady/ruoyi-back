@@ -14,7 +14,7 @@ spring:
 
 # 忽略鉴权url
 ignored:
-  urls: /hi/**, /hello/**, /openApi/**, /file_attachment/**, /file_image/**
+  urls: /hi/**, /hello/**, /openApi/**, /file_attachment_group/**
   # urls: /hi/**, /hello/**, /openApi/**, /app_doc_doc/**
 
 
@@ -25,6 +25,10 @@ logging:
     com.ruoyi: info
     org.springframework: warn
     org.apache.shiro.cache.ehcache: warn
+
+#    com.ruoyi: debug
+#    org.springframework: debug
+#    org.apache.shiro.cache.ehcache: debug
 
 # token配置
 token:

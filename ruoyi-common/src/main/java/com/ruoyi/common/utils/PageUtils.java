@@ -1,6 +1,6 @@
 package com.ruoyi.common.utils;
 
-import com.github.pagehelper.PageHelper;
+//import com.github.pagehelper.PageHelper;
 import com.ruoyi.common.core.page.PageDomain;
 import com.ruoyi.common.core.page.TableSupport;
 import com.ruoyi.common.utils.sql.SqlUtil;
@@ -10,7 +10,7 @@ import com.ruoyi.common.utils.sql.SqlUtil;
  *
  * @author ruoyi
  */
-public class PageUtils extends PageHelper {
+public class PageUtils  { //extends PageHelper {
     /**
      * 设置请求分页数据
      */
@@ -26,13 +26,14 @@ public class PageUtils extends PageHelper {
         String orderBy1 = pageDomain.getOrderBy();    // 排序
         String orderBy = SqlUtil.escapeOrderBySql(orderBy1);  //检查字符, 防止注入
         Boolean reasonable = pageDomain.getReasonable();  //分页参数合理化
-        PageHelper.startPage(pageNum, pageSize, orderBy).setReasonable(reasonable);
+        // PageHelper拦截器 开始分页
+        // PageHelper.startPage(pageNum, pageSize, orderBy).setReasonable(reasonable);
     }
 
     /**
      * 清理分页的线程变量
      */
     public static void clearPage() {
-        PageHelper.clearPage();
+        // PageHelper.clearPage();
     }
 }

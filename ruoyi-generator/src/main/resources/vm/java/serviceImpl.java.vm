@@ -1,5 +1,7 @@
 package ${packageName}.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import java.util.Map;
 import java.util.List;
     #foreach ($column in $columns)
         #if($column.javaField == 'createTime' || $column.javaField == 'updateTime')
@@ -7,6 +9,7 @@ import java.util.List;
             #break
         #end
     #end
+import com.ruoyi.common.core.domain.AjaxResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @Service
 public class ${ClassName}ServiceImpl implements I${ClassName}Service {
 
-    private static final Logger logger = LoggerFactory.getLogger(${ClassName}serviceImpl.java.class);
+    private static final Logger logger = LoggerFactory.getLogger(${ClassName}ServiceImpl.class);
 
     @Autowired
     private ${ClassName}Mapper ${className}Mapper;
@@ -62,25 +65,45 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
      * 查询列表, SQL分页查询
      */
     @Override
-    public TableDataInfo query${ClassName}List_BySQL(${ClassName} ${className}) {
-        TableDataInfo tbInfo = new TableDataInfo();
+    public AjaxResult query${ClassName}List_BySQL(${ClassName} dto) {
+        Integer page = dto.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = dto.getPageSize();
+        page = (page - 1) * pageSize;
+        dto.setPageNum(page);
+
+        //sql排序字符串
+        if (!ObjectUtil.isEmpty(dto.getSortStr())) {
+            //如果不为空, 判断字符串是否合法
+            String sortStr = dto.getSortStr();
+            logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
+        }
+
+        AjaxResult ajax = new AjaxResult();
         try {
             //查询列表
-            List<Map<String, Object>> mapList = ${className}Mapper.query${ClassName}List_BySQL(${className});
-            //查询总数
-            long countTotal = ${className}Mapper.query${ClassName}List_count(${className});
-
-            tbInfo.setContent(mapList);  //返回数据, 如果有返回加密注解AOP, 加密后的数据将设置到 text 字段上
-            tbInfo.setTotal(countTotal);  //总条数
-            tbInfo.setCode(200);
-            tbInfo.setMsg("查询成功");
+            List<Map<String, Object>> mapList = fileAttachmentGroupMapper.queryFileAttachmentGroupList_BySQL(dto);
+            ajax.setContent(mapList);
         }
         catch (Exception e){
-            tbInfo.setMsg("查询错误: "+ e.getMessage());
-            tbInfo.setCode(500);
-            logger.warn("sql查询表错误, 原因是: {}", e.toString();
+            logger.error("查询列表失败, 原因是: {}", ""+e);
         }
-        return tbInfo;
+        try {
+            //查询总数
+            int countTotal = ${className}Mapper.query${ClassName}List_count(dto);
+            ajax.put("total" , countTotal);
+            ajax.put("msg" , "查询成功");
+            ajax.put("code" , 200);
+        }
+        catch (Exception e){
+            ajax.put("msg" , "查询失败");
+            ajax.put("error" , "原因" + e.toString());
+            ajax.put("code" , 500);
+            logger.warn("sql查询表错误, 原因是: {}" , e.toString());
+        }
+        return ajax;
     }
 
     /**

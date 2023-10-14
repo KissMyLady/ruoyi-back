@@ -375,7 +375,7 @@
       del${BusinessName},
       add${BusinessName},
       update${BusinessName}
-  } from "@/api/${moduleName}/${businessName}";
+  } from "@/api/platform/${moduleName}/${businessName}";
   import TipMessage from '@/utils/myUtils/TipMessage'
 
   export default {
@@ -453,7 +453,7 @@
         //表格行
         columns: [
             #foreach ($column in $columns)
-              { key: $column.index, align: 'center', width: 'auth', label: `$column.columnComment`, prop: '$column.columnName', visible: true },
+              { key: '$column.columnName', align: 'center', width: 'auth', label: `$column.columnComment`, prop: '$column.columnName', visible: true },
             #end
         ]
       };

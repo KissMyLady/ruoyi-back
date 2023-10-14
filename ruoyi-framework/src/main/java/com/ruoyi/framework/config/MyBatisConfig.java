@@ -32,6 +32,7 @@ import com.ruoyi.common.utils.StringUtils;
  */
 @Configuration
 public class MyBatisConfig {
+
     @Autowired
     private Environment env;
 
@@ -43,32 +44,38 @@ public class MyBatisConfig {
         List<String> allResult = new ArrayList<String>();
         try {
             for (String aliasesPackage : typeAliasesPackage.split(",")) {
-                List<String> result = new ArrayList<String>();
+                List<String> result = new ArrayList<>();
                 aliasesPackage = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
-                        + ClassUtils.convertClassNameToResourcePath(aliasesPackage.trim()) + "/" + DEFAULT_RESOURCE_PATTERN;
+                        + ClassUtils.convertClassNameToResourcePath(aliasesPackage.trim())
+                        + "/" + DEFAULT_RESOURCE_PATTERN;
                 Resource[] resources = resolver.getResources(aliasesPackage);
-                if (resources != null && resources.length > 0) {
-                    MetadataReader metadataReader = null;
-                    for (Resource resource : resources) {
-                        if (resource.isReadable()) {
-                            metadataReader = metadataReaderFactory.getMetadataReader(resource);
-                            try {
-                                result.add(Class.forName(metadataReader.getClassMetadata().getClassName()).getPackage().getName());
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                if (resources == null || resources.length <= 0) {
+                    continue;
+                }
+                MetadataReader metadataReader = null;
+                for (Resource resource : resources) {
+                    if (!resource.isReadable()) {
+                        continue;
+                    }
+                    metadataReader = metadataReaderFactory.getMetadataReader(resource);
+                    try {
+                        result.add(Class.forName(metadataReader.getClassMetadata().getClassName()).getPackage().getName());
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
+
                 if (result.size() > 0) {
                     HashSet<String> hashResult = new HashSet<String>(result);
                     allResult.addAll(hashResult);
                 }
             }
             if (allResult.size() > 0) {
-                typeAliasesPackage = String.join(",", (String[]) allResult.toArray(new String[0]));
+                typeAliasesPackage = String.join("," , (String[]) allResult.toArray(new String[0]));
             } else {
-                throw new RuntimeException("mybatis typeAliasesPackage 路径扫描错误,参数typeAliasesPackage:" + typeAliasesPackage + "未找到任何包");
+                throw new RuntimeException("mybatis typeAliasesPackage 路径扫描错误,参数typeAliasesPackage:"
+                        + typeAliasesPackage
+                        + "未找到任何包");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,6 +104,7 @@ public class MyBatisConfig {
         String typeAliasesPackage = env.getProperty("mybatis.typeAliasesPackage");
         String mapperLocations = env.getProperty("mybatis.mapperLocations");
         String configLocation = env.getProperty("mybatis.configLocation");
+
         typeAliasesPackage = setTypeAliasesPackage(typeAliasesPackage);
         VFS.addImplClass(SpringBootVFS.class);
 

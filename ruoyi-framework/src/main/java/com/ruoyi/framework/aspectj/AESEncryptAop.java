@@ -128,36 +128,29 @@ public class AESEncryptAop {
             if (returnValue instanceof AjaxResult) {
                 // 重新赋值 data
                 AjaxResult ret = (AjaxResult) returnValue;
-
                 //调用加密 Object 对象
                 List<Map<String, Object>> content = ret.getContent();
-                Object msg = ret.getMessage();
 
                 if (ObjectUtil.isNotEmpty(content) && content != null && !content.toString().equals("")) {
                     String sData = encryptUtilsService.aesEncryptListMap(content);
                     ret.put("content", sData);
                     ret.setContent(null);
                 }
-                //返回消息不加密
-                if (ObjectUtil.isNotEmpty(msg) && msg != null && !msg.toString().equals("")) {
-                    // String sMsg = encryptUtilsService.aesEncryptObject(msg);
-                    ret.setMessage(msg.toString());
-                }
             }
-            //list sql查询分页, 返回加密
-            else if (returnValue instanceof TableDataInfo) {
-                // 重新赋值 data
-                TableDataInfo ret = (TableDataInfo) returnValue;
-                List<Map<String, Object>> content = ret.getContent();
-
-                //int code = ret.getCode();
-                //返回消息是200才加密, 错误消息不加密?
-                if (ObjectUtil.isNotEmpty(content) && content != null && !content.toString().equals("")) {
-                    String sData = encryptUtilsService.aesEncryptListMap(content);
-                    ret.setText(sData);
-                    ret.setContent(null);
-                }
-            }
+//            //list sql查询分页, 返回加密
+//            else if (returnValue instanceof TableDataInfo) {
+//                // 重新赋值 data
+//                TableDataInfo ret = (TableDataInfo) returnValue;
+//                List<Map<String, Object>> content = ret.getContent();
+//
+//                //int code = ret.getCode();
+//                //返回消息是200才加密, 错误消息不加密?
+//                if (ObjectUtil.isNotEmpty(content) && content != null && !content.toString().equals("")) {
+//                    String sData = encryptUtilsService.aesEncryptListMap(content);
+//                    ret.setText(sData);
+//                    ret.setContent(null);
+//                }
+//            }
             //其他情况
             else {
                 logger.warn("返回值不是AjaxResult类型, 直接 aesEncryptObject 对Object进行 加密");

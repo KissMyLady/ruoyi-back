@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,9 @@ import com.ruoyi.framework.interceptor.RepeatSubmitInterceptor;
  */
 @Component
 public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
+
+    private static final Logger logger = LoggerFactory.getLogger(SameUrlDataInterceptor.class);
+
     public final String REPEAT_PARAMS = "repeatParams";
 
     public final String REPEAT_TIME = "repeatTime";
@@ -49,7 +54,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
         if (StringUtils.isEmpty(nowParams)) {
             nowParams = JSON.toJSONString(request.getParameterMap());
         }
-        Map<String, Object> nowDataMap = new HashMap<String, Object>();
+        Map<String, Object> nowDataMap = new HashMap<>();
         nowDataMap.put(REPEAT_PARAMS, nowParams);
         nowDataMap.put(REPEAT_TIME, System.currentTimeMillis());
 

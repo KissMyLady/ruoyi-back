@@ -29,23 +29,11 @@ public class AjaxResult extends HashMap<String, Object> {
      * 数据对象
      */
     public static final String DATA_TAG = "data";
-    /**
-     * 存放返回消息
-     */
-    private String message;
 
     /**
      * 存放要加密的数据
      */
     private List<Map<String, Object>> content;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public List<Map<String, Object>> getContent() {
         return content;
@@ -59,7 +47,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * 初始化一个新创建的 AjaxResult 对象，使其表示一个空消息。
      */
     public AjaxResult() {
-        super.put(CODE_TAG, 200);
+        // super.put(CODE_TAG, 200);
         // super.put(MSG_TAG, "成功");
     }
 

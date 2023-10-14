@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface RepeatSubmit {
     /**
-     * 间隔时间(ms)，小于此时间视为重复提交
+     * 间隔时间(ms)，小于此时间视为重复提交 默认5秒
      */
     public int interval() default 5000;
 

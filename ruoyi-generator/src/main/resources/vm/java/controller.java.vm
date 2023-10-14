@@ -48,14 +48,14 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
     @GetMapping("/list")
     #if($table.crud || $table.sub)
-    public TableDataInfo list(${ClassName} ${className}) {
+    public TableDataInfo list(${ClassName} dto) {
         startPage();
-        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+        List<${ClassName}> list = ${className}Service.select${ClassName}List(dto);
         return getDataTable(list);
     }
     #elseif($table.tree)
-        public AjaxResult list(${ClassName} ${className}) {
-            List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+        public AjaxResult list(${ClassName} dto) {
+            List<${ClassName}> list = ${className}Service.select${ClassName}List(dto);
             return success(list);
         }
     #end
@@ -66,8 +66,8 @@ public class ${ClassName}Controller extends BaseController {
     @ReturnAESEncrypt()
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
     @PostMapping("/list_sql")
-    public TableDataInfo list(${ClassName} ${className}) {
-        return ${className}Service.query${ClassName}List_BySQL(${className})
+    public TableDataInfo list_sql(@RequestBody ${ClassName} dto) {
+        return ${className}Service.query${ClassName}List_BySQL(dto);
     }
 
 
@@ -77,8 +77,8 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:export')")
     @Log(title = "导出${functionName}", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ${ClassName} ${className}) {
-        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+    public void export(HttpServletResponse response, ${ClassName} dto) {
+        List<${ClassName}> list = ${className}Service.select${ClassName}List(dto);
         ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
         util.exportExcel(response, list, "${functionName}数据");
     }
@@ -98,8 +98,8 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:add')")
     @Log(title = "新增${functionName}", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ${ClassName} ${className}) {
-        return toAjax(${className}Service.insert${ClassName}(${className}));
+    public AjaxResult add(@RequestBody ${ClassName} dto) {
+        return toAjax(${className}Service.insert${ClassName}(dto));
     }
 
     /**
@@ -108,8 +108,8 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:edit')")
     @Log(title = "修改${functionName}", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ${ClassName} ${className}) {
-        return toAjax(${className}Service.update${ClassName}(${className}));
+    public AjaxResult edit(@RequestBody ${ClassName} dto) {
+        return toAjax(${className}Service.update${ClassName}(dto));
     }
 
     /**

@@ -31,33 +31,33 @@ public interface ${ClassName}Mapper {
     /**
      * 查询${functionName}列表
      *
-     * @param ${className} ${functionName}
+     * @param dto ${functionName}
      * @return ${functionName}集合
      */
-    List<${ClassName}> select${ClassName}List(${ClassName} ${className});
+    List<${ClassName}> select${ClassName}List(${ClassName} dto);
 
     // 查询列表, 通过sql
     @MapKey("id")
-    List<Map<String, Object>> query${ClassName}List_BySQL(${ClassName} ${className});
+    List<Map<String, Object>> query${ClassName}List_BySQL(${ClassName} dto);
 
     //查询列表 总条数
-    long query${ClassName}List_count(${ClassName} ${className});
+    long query${ClassName}List_count(${ClassName} dto);
 
     /**
      * 新增${functionName}
      *
-     * @param ${className} ${functionName}
+     * @param dto ${functionName}
      * @return 结果
      */
-    int insert${ClassName}(${ClassName} ${className});
+    int insert${ClassName}(${ClassName} dto);
 
     /**
      * 修改${functionName}
      *
-     * @param ${className} ${functionName}
+     * @param dto ${functionName}
      * @return 结果
      */
-    int update${ClassName}(${ClassName} ${className});
+    int update${ClassName}(${ClassName} dto);
 
     /**
      * 删除${functionName}

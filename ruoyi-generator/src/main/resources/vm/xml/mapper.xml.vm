@@ -43,7 +43,7 @@
                 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
                 #if($column.query)
                     #if($column.queryType == "EQ")
-                        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and $columnName like ${sqllike1}{$javaField}${sqllike2} </if>
+                        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and $columnName = #{$javaField} </if>
                     #elseif($queryType == "NE")
                         <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and $columnName != #{$javaField}</if>
                     #elseif($queryType == "GT")
@@ -98,19 +98,16 @@
             #end
         </where>
 
-        <if test="sort != null ">order by #{sortStr} <if test="isAsc != null "> ${isAsc} </if></if>
+        <if test="sortStr != null ">order by #{sortStr} <if test="isAsc != null "> ${isAsc} </if></if>
         limit ${pageNum}, ${pageSize}
     </select>
 
 
     <select id="query${ClassName}List_count"
             parameterType="${ClassName}"
-            resultType="long">
-
+            resultType="int">
         select count(1) as total
-
         from ${tableName}
-
         <where>
             #foreach($column in $columns)
                 #set($queryType=$column.queryType)
