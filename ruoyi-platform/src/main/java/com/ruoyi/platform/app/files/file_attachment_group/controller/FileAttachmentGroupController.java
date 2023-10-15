@@ -90,13 +90,7 @@ public class FileAttachmentGroupController extends BaseController {
     @ReturnAESEncrypt()
     @PreAuthorize("@ss.hasPermi('file_attachment_group:file_attachment_group:list')")
     @PostMapping("/list_sql")
-    public TableDataInfo list_sql(@RequestBody EncryptDto enDto) {
-        logger.info("入参打印: {}", enDto);
-        EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
-        // json对象转Bean FileAttachmentGroup
-        FileAttachmentGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileAttachmentGroup.class);
-        logger.info("解密后的 FileAttachmentGroup 对象表单打印: {}", dto);
-
+    public TableDataInfo list_sql(@RequestBody FileAttachmentGroup dto) {
         //startPage();
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
@@ -168,7 +162,12 @@ public class FileAttachmentGroupController extends BaseController {
     @PreAuthorize("@ss.hasPermi('file_attachment_group:file_attachment_group:add')")
     @Log(title = "新增附件分组", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody FileAttachmentGroup dto) {
+    public AjaxResult add(@RequestBody EncryptDto enDto) {
+        EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
+        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+            return AjaxResult.error(encryptDto.getE());
+        }
+        FileAttachmentGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileAttachmentGroup.class);
         return toAjax(fileAttachmentGroupService.insertFileAttachmentGroup(dto));
     }
 
@@ -178,7 +177,13 @@ public class FileAttachmentGroupController extends BaseController {
     @PreAuthorize("@ss.hasPermi('file_attachment_group:file_attachment_group:edit')")
     @Log(title = "修改附件分组", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody FileAttachmentGroup dto) {
+    public AjaxResult edit(@RequestBody EncryptDto enDto) {
+        //传入值解密 FileAttachmentGroup
+        EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
+        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+            return AjaxResult.error(encryptDto.getE());
+        }
+        FileAttachmentGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileAttachmentGroup.class);
         return toAjax(fileAttachmentGroupService.updateFileAttachmentGroup(dto));
     }
 

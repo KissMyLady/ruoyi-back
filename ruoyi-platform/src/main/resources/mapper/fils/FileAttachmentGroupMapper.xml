@@ -51,13 +51,13 @@
             parameterType="FileAttachmentGroup"
             resultType="map">
         select id,
-               user_id,
-               group_id,
-               group_name,
+               user_id as userId,
+               group_id as groupId,
+               group_name as groupName,
                note,
-               is_delete,
-                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') create_time,
-                DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') update_time
+               is_delete as isDelete,
+                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+                DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
         from file_attachment_group
         <where>
             <if test="userId != null ">and user_id = #{userId}</if>
