@@ -60,7 +60,6 @@
             </if>
         </where>
         order by parent_id, order_num
-        limit ${pageNum}, ${pageSize}
     </select>
     
     <select id="selectMenuTreeAll" resultMap="SysMenuResult">

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.constant.Constants;
@@ -33,6 +35,9 @@ import com.ruoyi.system.service.ISysMenuService;
  */
 @Service
 public class SysMenuServiceImpl implements ISysMenuService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SysMenuServiceImpl.class);
+
     public static final String PREMISSION_STRING = "perms[\"{0}\"]";
 
     @Autowired
@@ -63,14 +68,18 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     @Override
     public List<SysMenu> selectMenuList(SysMenu menu, Long userId) {
+        logger.info("打印菜单列表: {}", menu);
         List<SysMenu> menuList = null;
         // 管理员显示所有菜单信息
         if (SysUser.isAdmin(userId)) {
             menuList = menuMapper.selectMenuList(menu);
+            logger.info("管理员菜单查询结果打印: {}", menuList);
         } else {
             menu.getParams().put("userId", userId);
             menuList = menuMapper.selectMenuListByUserId(menu);
+            logger.info("普通用户菜单查询结果打印: {}", menuList);
         }
+
         return menuList;
     }
 

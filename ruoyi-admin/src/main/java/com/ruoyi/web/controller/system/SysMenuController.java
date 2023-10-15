@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 
+import com.ruoyi.system.service.impl.SysMenuServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +33,7 @@ import com.ruoyi.system.service.ISysMenuService;
 public class SysMenuController extends BaseController {
 
     @Autowired
-    private ISysMenuService menuService;
+    private SysMenuServiceImpl menuService;
 
     /**
      * 获取菜单列表
