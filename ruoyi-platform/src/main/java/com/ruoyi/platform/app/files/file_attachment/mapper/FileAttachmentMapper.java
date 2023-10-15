@@ -20,7 +20,6 @@ public interface FileAttachmentMapper {
     /**
      * 查询详情
      */
-    @MapKey("id")
     Map<String, Object> selectFileAttachmentById(Long id);
 
     /**

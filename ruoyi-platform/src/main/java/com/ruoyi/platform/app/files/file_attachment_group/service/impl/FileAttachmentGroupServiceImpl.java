@@ -38,7 +38,7 @@ public class FileAttachmentGroupServiceImpl implements IFileAttachmentGroupServi
      * @return 附件分组
      */
     @Override
-    public FileAttachmentGroup selectFileAttachmentGroupById(Long id) {
+    public Map<String, Object> selectFileAttachmentGroupById(Long id) {
         return fileAttachmentGroupMapper.selectFileAttachmentGroupById(id);
     }
 

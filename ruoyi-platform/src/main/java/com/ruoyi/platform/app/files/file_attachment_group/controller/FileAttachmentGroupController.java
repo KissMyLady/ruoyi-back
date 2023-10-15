@@ -105,8 +105,8 @@ public class FileAttachmentGroupController extends BaseController {
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         //返回值加密
-        FileAttachmentGroup fileAttachmentGroup = fileAttachmentGroupService.selectFileAttachmentGroupById(id);
-        return AjaxResult.success_ok(fileAttachmentGroup, "操作成功");
+        Map<String, Object> res = fileAttachmentGroupService.selectFileAttachmentGroupById(id);
+        return AjaxResult.success_ok(res, "操作成功");
     }
 
     /**

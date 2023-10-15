@@ -23,7 +23,8 @@ public interface ${ClassName}Mapper {
     /**
      * 查询详情
      */
-    ${ClassName} select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField});
+    @MapKey("id")
+    Map<String, Object> select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField});
 
     /**
      * 查询列表

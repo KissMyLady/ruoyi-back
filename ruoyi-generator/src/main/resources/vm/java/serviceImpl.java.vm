@@ -44,7 +44,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
      * 查询详情
      */
     @Override
-    public ${ClassName} select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField}) {
+    public Map<String, Object> select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField}) {
         return ${className}Mapper.select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaField});
     }
 

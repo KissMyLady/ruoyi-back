@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.platform.app.files.file_attachment_group.mapper.FileAttachmentGroupMapper">
+<mapper namespace="com.ruoyi.platform.app.files.file_image_group.mapper.FileImageGroupMapper">
     
-    <resultMap type="FileAttachmentGroup" id="FileAttachmentGroupResult">
+    <resultMap type="FileImageGroup" id="FileImageGroupResult">
         <result property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="groupId" column="group_id"/>
@@ -15,23 +15,23 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
     
-    <sql id="selectFileAttachmentGroupVo">
+    <sql id="selectFileImageGroupVo">
         select id,
-               user_id,
-               group_id,
-               group_name,
-               note,
-               is_delete,
-               create_time,
-               update_time
-        from file_attachment_group
+               user_id as userId,
+               group_id as groupId,
+               group_name as groupName,
+               note ,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from file_image_group
     </sql>
     
     <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
-    <select id="selectFileAttachmentGroupList"
-            parameterType="FileAttachmentGroup"
-            resultMap="FileAttachmentGroupResult">
-        <include refid="selectFileAttachmentGroupVo"/>
+    <select id="selectFileImageGroupList"
+            parameterType="FileImageGroup"
+            resultMap="FileImageGroupResult">
+        <include refid="selectFileImageGroupVo"/>
         <where>
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="groupId != null ">and group_id = #{groupId}</if>
@@ -39,7 +39,6 @@
             <if test="note != null  and note != ''">and note like concat('%', #{note}, '%')</if>
             <if test="isDelete != null ">and is_delete = #{isDelete}</if>
         </where>
-
         <if test="sortStr != null ">
             <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
         </if>
@@ -47,18 +46,10 @@
     </select>
     
     
-    <select id="queryFileAttachmentGroupList_BySQL"
-            parameterType="FileAttachmentGroup"
+    <select id="queryFileImageGroupList_BySQL"
+            parameterType="FileImageGroup"
             resultType="map">
-        select id,
-               user_id as userId,
-               group_id as groupId,
-               group_name as groupName,
-               note,
-               is_delete as isDelete,
-                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-                DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
-        from file_attachment_group
+        <include refid="selectFileImageGroupVo"/>
         <where>
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="groupId != null ">and group_id = #{groupId}</if>
@@ -74,11 +65,11 @@
     </select>
     
     
-    <select id="queryFileAttachmentGroupList_count"
-            parameterType="FileAttachmentGroup"
+    <select id="queryFileImageGroupList_count"
+            parameterType="FileImageGroup"
             resultType="int">
         select count(1) as total
-        from file_attachment_group
+        from file_image_group
         <where>
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="groupId != null ">and group_id = #{groupId}</if>
@@ -88,15 +79,15 @@
         </where>
     </select>
     
-    <select id="selectFileAttachmentGroupById"
+    <select id="selectFileImageGroupById"
             parameterType="Long"
             resultType="map">
-        <include refid="selectFileAttachmentGroupVo"/>
+        <include refid="selectFileImageGroupVo"/>
         where id = #{id}
     </select>
     
-    <insert id="insertFileAttachmentGroup" parameterType="FileAttachmentGroup" useGeneratedKeys="true" keyProperty="id">
-        insert into file_attachment_group
+    <insert id="insertFileImageGroup" parameterType="FileImageGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into file_image_group
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
             <if test="groupId != null">group_id,</if>
@@ -117,8 +108,8 @@
         </trim>
     </insert>
     
-    <update id="updateFileAttachmentGroup" parameterType="FileAttachmentGroup">
-        update file_attachment_group
+    <update id="updateFileImageGroup" parameterType="FileImageGroup">
+        update file_image_group
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
             <if test="groupId != null">group_id = #{groupId},</if>
@@ -131,14 +122,14 @@
         where id = #{id}
     </update>
     
-    <delete id="deleteFileAttachmentGroupById" parameterType="Long">
+    <delete id="deleteFileImageGroupById" parameterType="Long">
         delete
-        from file_attachment_group
+        from file_image_group
         where id = #{id}
     </delete>
     
-    <delete id="deleteFileAttachmentGroupByIds" parameterType="String">
-        delete from file_attachment_group where id in
+    <delete id="deleteFileImageGroupByIds" parameterType="String">
+        delete from file_image_group where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

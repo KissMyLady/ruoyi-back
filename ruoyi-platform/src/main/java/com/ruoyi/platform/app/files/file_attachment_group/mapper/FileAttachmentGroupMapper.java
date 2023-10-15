@@ -23,7 +23,7 @@ public interface FileAttachmentGroupMapper {
      * @param id 附件分组主键
      * @return 附件分组
      */
-    FileAttachmentGroup selectFileAttachmentGroupById(Long id);
+    Map<String, Object> selectFileAttachmentGroupById(Long id);
 
     /**
      * 查询附件分组列表
@@ -34,7 +34,6 @@ public interface FileAttachmentGroupMapper {
     List<FileAttachmentGroup> selectFileAttachmentGroupList(FileAttachmentGroup dto);
 
     // 查询列表, 通过sql
-    @MapKey("id")
     List<Map<String, Object>> queryFileAttachmentGroupList_BySQL(FileAttachmentGroup dto);
 
     //查询列表 总条数

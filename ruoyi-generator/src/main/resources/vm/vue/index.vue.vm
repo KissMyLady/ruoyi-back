@@ -552,7 +552,7 @@
         get${BusinessName}(${pkColumn.javaField}).then(response => {
           let privateObj = response.text;
           let jsonData = aesDecrypt2Json(privateObj);
-          console.log("修改按钮操作.查询结果打印: ", publicObj);
+          console.log("修改按钮操作.查询结果打印: ", jsonData);
           this.form = jsonData;
           //this.form = response.data;
             #foreach ($column in $columns)

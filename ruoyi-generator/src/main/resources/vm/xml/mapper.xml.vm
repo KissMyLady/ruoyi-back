@@ -146,7 +146,7 @@
 
     <select id="select${ClassName}By${pkColumn.capJavaField}"
             parameterType="${pkColumn.javaType}"
-            resultMap="#if($table.sub)${ClassName}${subClassName}Result#else${ClassName}Result#end">
+            resultType="map">
         #if($table.crud || $table.tree)
             <include refid="select${ClassName}Vo"/>
             where ${pkColumn.columnName} = #{${pkColumn.javaField}}
