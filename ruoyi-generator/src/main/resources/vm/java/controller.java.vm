@@ -20,10 +20,14 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.EncryptDto;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.annotation.ReturnAESEncrypt;
+import com.ruoyi.common.security.EncryptUtilsService;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONUtil;
 import ${packageName}.domain.${ClassName};
 //import ${packageName}.service.I${ClassName}Service;
 import ${packageName}.service.impl.${ClassName}ServiceImpl;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import ${packageName}.mapper.${ClassName}Mapper;
 #if($table.crud || $table.sub)
 import com.ruoyi.common.core.page.TableDataInfo;
 #elseif($table.tree)
@@ -43,16 +47,37 @@ public class ${ClassName}Controller extends BaseController {
     private ${ClassName}ServiceImpl ${className}Service;
     //private I${ClassName}Service ${className}Service;
 
+    @Autowired
+    private ${ClassName}Mapper ${className}Mapper;
+
+    @Autowired
+    private EncryptUtilsService encryptUtilsService;
+
     /**
      * 查询列表
      */
+    @ReturnAESEncrypt()
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
-    @GetMapping("/list")
+    @PostMapping("/list")
     #if($table.crud || $table.sub)
-    public TableDataInfo list(${ClassName} dto) {
-        startPage();
-        List<${ClassName}> list = ${className}Service.select${ClassName}List(dto);
-        return getDataTable(list);
+    public TableDataInfo list(@RequestBody ${ClassName} dto) {
+        Integer page = dto.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = dto.getPageSize();
+        page = (page - 1) * pageSize;
+        dto.setPageNum(page);
+        //sql排序字符串
+        if (!ObjectUtil.isEmpty(dto.getSortStr())) {
+            //如果不为空, 判断字符串是否合法
+            String sortStr = dto.getSortStr();
+            // logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
+        }
+        //List<${ClassName}> list = ${className}Service.select${ClassName}List(dto);
+        List<Map<String, Object>> mapList = ${className}Mapper.query${ClassName}List_BySQL(dto);
+        int i = ${className}Mapper.query${ClassName}List_count(dto);
+        return getDataTable_v2(mapList, i);
     }
     #elseif($table.tree)
         public AjaxResult list(${ClassName} dto) {
@@ -60,17 +85,6 @@ public class ${ClassName}Controller extends BaseController {
             return success(list);
         }
     #end
-
-    /**
-     * 查询列表, SQL分页查询
-     */
-    @ReturnAESEncrypt()
-    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
-    @PostMapping("/list_sql")
-    public TableDataInfo list_sql(@RequestBody ${ClassName} dto) {
-        return ${className}Service.query${ClassName}List_BySQL(dto);
-    }
-
 
     /**
      * 导出列表
@@ -85,21 +99,33 @@ public class ${ClassName}Controller extends BaseController {
     }
 
     /**
-     * 获取详细
+     * 获取详细信息
      */
+    @ReturnAESEncrypt()
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:query')")
     @GetMapping(value = "/{${pkColumn.javaField}}")
     public AjaxResult getInfo(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}) {
-        return success(${className}Service.select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaField}));
+        ${ClassName} res = ${className}Service.select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaField});
+        //return success(${className}Service.select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaField}));
+        //返回值加密
+        return AjaxResult.success_ok(res, "操作成功");
     }
 
     /**
      * 新增
+     * ${ClassName} dto
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:add')")
     @Log(title = "新增${functionName}", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ${ClassName} dto) {
+    public AjaxResult add(@RequestBody EncryptDto enDto) {
+        //传递值解密
+        EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
+        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+            return AjaxResult.error(encryptDto.getE());
+        }
+
+        ${ClassName} dto = JSONUtil.toBean(encryptDto.getJsonObject(), ${ClassName}.class);
         return toAjax(${className}Service.insert${ClassName}(dto));
     }
 
@@ -109,7 +135,14 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:edit')")
     @Log(title = "修改${functionName}", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ${ClassName} dto) {
+    public AjaxResult edit(@RequestBody EncryptDto enDto) {
+        //传递值解密
+        EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
+        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+            return AjaxResult.error(encryptDto.getE());
+        }
+
+        ${ClassName} dto = JSONUtil.toBean(encryptDto.getJsonObject(), ${ClassName}.class);
         return toAjax(${className}Service.update${ClassName}(dto));
     }
 

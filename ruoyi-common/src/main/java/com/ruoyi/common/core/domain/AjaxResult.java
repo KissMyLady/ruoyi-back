@@ -35,12 +35,22 @@ public class AjaxResult extends HashMap<String, Object> {
      */
     private List<Map<String, Object>> content;
 
+    private Object data;
+
     public List<Map<String, Object>> getContent() {
         return content;
     }
 
     public void setContent(List<Map<String, Object>> content) {
         this.content = content;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 
     /**
@@ -95,6 +105,13 @@ public class AjaxResult extends HashMap<String, Object> {
         return AjaxResult.success("操作成功", data);
     }
 
+    public static AjaxResult success_ok(Object data, String msg) {
+        AjaxResult ajax = new AjaxResult();
+        ajax.setData(data);
+        ajax.put("code", 200);
+        ajax.put("msg", msg);
+        return ajax;
+    }
     /**
      * 返回成功消息
      *

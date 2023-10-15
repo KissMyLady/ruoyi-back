@@ -1,24 +1,19 @@
 import request from '@/utils/request'
 
-// 查询${functionName}列表
-export function list${BusinessName}(query) {
+//
+// ${functionName} Api
+//
+
+// 查询列表
+export function list${BusinessName}(data) {
     return request({
         url: '/${moduleName}/${businessName}/list',
-        method: 'get',
-        params: query
-    })
-}
-
-//查询列表, sql查询
-export function list_sql${BusinessName}(data) {
-    return request({
-        url: '/${moduleName}/${businessName}/list_sql',
         method: 'post',
         data: data
     })
 }
 
-// 查询${functionName}详细
+// 详细
 export function get${BusinessName}(${pkColumn.javaField}) {
     return request({
         url: '/${moduleName}/${businessName}/' + ${pkColumn.javaField},
@@ -26,7 +21,7 @@ export function get${BusinessName}(${pkColumn.javaField}) {
     })
 }
 
-// 新增${functionName}
+// ++新增++
 export function add${BusinessName}(data) {
     return request({
         url: '/${moduleName}/${businessName}',
@@ -35,7 +30,7 @@ export function add${BusinessName}(data) {
     })
 }
 
-// 修改${functionName}
+// +修改+
 export function update${BusinessName}(data) {
     return request({
         url: '/${moduleName}/${businessName}',
@@ -44,7 +39,7 @@ export function update${BusinessName}(data) {
     })
 }
 
-// 删除${functionName}
+// --删除--
 export function del${BusinessName}(${pkColumn.javaField}) {
     return request({
         url: '/${moduleName}/${businessName}/' + ${pkColumn.javaField},

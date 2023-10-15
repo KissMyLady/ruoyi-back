@@ -22,11 +22,6 @@ public interface I${ClassName}Service {
     List<${ClassName}> select${ClassName}List(${ClassName} dto);
 
     /**
-     * SQL查询
-     */
-    AjaxResult query${ClassName}List_BySQL(${ClassName} dto);
-
-    /**
      * ++新增++
      */
     int insert${ClassName}(${ClassName} dto);

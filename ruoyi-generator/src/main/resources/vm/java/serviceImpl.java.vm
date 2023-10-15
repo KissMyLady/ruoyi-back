@@ -57,42 +57,6 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     }
 
     /**
-     * SQL查询列表
-     */
-    @Override
-    public AjaxResult query${ClassName}List_BySQL(${ClassName} dto) {
-        Integer page = dto.getPageNum();
-        if (page <= 0 || page == null) {
-            page = 1;
-        }
-        Integer pageSize = dto.getPageSize();
-        page = (page - 1) * pageSize;
-        dto.setPageNum(page);
-        //sql排序字符串
-        if (!ObjectUtil.isEmpty(dto.getSortStr())) {
-            //如果不为空, 判断字符串是否合法
-            String sortStr = dto.getSortStr();
-            logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
-        }
-
-        AjaxResult ajax = new AjaxResult();
-        try {
-            //查询列表
-            List<Map<String, Object>> resList = ${className}Mapper.select${ClassName}List_BySQL(dto);
-            //查询总数
-            int countTotal = ${className}Mapper.query${ClassName}List_count(dto);
-            ajax.put("total" , countTotal);
-            ajax.setContent(resList);
-        }
-        catch (Exception e){
-            logger.error("查询列表失败, 原因是: {}", ""+e);
-            ajax.put("code" , 500);
-            ajax.put("msg" , "查询列表失败"+e);
-        }
-        return ajax;
-    }
-
-    /**
      * 新增
      */
         #if($table.sub)

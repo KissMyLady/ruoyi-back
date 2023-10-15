@@ -62,7 +62,9 @@
                 #end
             #end
         </where>
-
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
         limit ${pageNum}, ${pageSize}
     </select>
 

@@ -370,7 +370,6 @@
 <script>
   import {
       list${BusinessName},
-      list_sql${BusinessName},
       get${BusinessName},
       del${BusinessName},
       add${BusinessName},
@@ -378,7 +377,7 @@
   } from "@/api/platform/${moduleName}/${businessName}";
   import TipMessage from '@/utils/myUtils/TipMessage'
   import { changeDictToString } from '@/utils/myUtils/changeSomething'
-  import { aesEncrypt, aesDecrypt } from '@/utils/encrypt/encryption'
+  import { aesEncrypt, aesDecrypt, aesDecrypt2Json} from '@/utils/encrypt/encryption'
   export default {
     //dicts: ['is_delete'],
     name: "${BusinessName}",
@@ -482,12 +481,13 @@
               #end
           #end
         list${BusinessName}(this.queryParams).then(response => {
-          // let privateObj = response.text;
-          // let publicObj = aesDecrypt(privateObj);
-          // let jsonData = JSON.parse(publicObj);
-          // this.${businessName}List = jsonData;
-          this.${businessName}List = response.rows;
-
+          let privateObj = response.text;
+          //let publicObj = aesDecrypt(privateObj);
+          //let jsonData = JSON.parse(publicObj);
+          let jsonData = aesDecrypt2Json(privateObj)
+          console.log("list数据查询结果", jsonData)
+          this.${businessName}List = jsonData;
+          //this.${businessName}List = response.rows;
           this.total = response.total;
           this.loading = false;
         }).catch((err) => {
@@ -550,13 +550,11 @@
         this.reset();
         const ${pkColumn.javaField} = row.${pkColumn.javaField} || this.ids
         get${BusinessName}(${pkColumn.javaField}).then(response => {
-
-          // let privateObj = response.text;
-          // let publicObj = aesDecrypt(privateObj);
-          // let jsonData = JSON.parse(publicObj);
-          // this.form = jsonData;
-          this.form = response.data;
-
+          let privateObj = response.text;
+          let jsonData = aesDecrypt2Json(privateObj);
+          console.log("修改按钮操作.查询结果打印: ", publicObj);
+          this.form = jsonData;
+          //this.form = response.data;
             #foreach ($column in $columns)
                 #if($column.htmlType == "checkbox")
                   this.form.$column.javaField = this.form.${column.javaField}.split(",");
@@ -573,9 +571,11 @@
       submitForm() {
         this.#[[$]]#refs["form"].validate(valid => {
           if (valid) {
+            //对表单加密
+            let dict2String = changeDictToString(this.form);
             let sendData = {
               "a": aesEncrypt("1024"),
-              "b": aesEncrypt(this.form.${pkColumn.javaField),
+              "b": aesEncrypt(dict2String),
               "c": aesEncrypt("Hello World !")
             }
 
@@ -589,8 +589,7 @@
             #end
             //发送内容加密
             if (this.form.${pkColumn.javaField} != null) {
-              //update${sendData).then(response => {
-              update${BusinessName}(this.form).then(response => {
+              update${BusinessName}(sendData).then(response => {
 
                 // let privateObj = response.text;
                 // let publicObj = aesDecrypt(privateObj);
@@ -602,8 +601,7 @@
                 this.getList();
               });
             } else {
-              //add${BusinessName}(sendData).then(response => {
-              add${BusinessName}(this.form).then(response => {
+              add${BusinessName}(sendData).then(response => {
                 // let privateObj = response.text;
                 // let publicObj = aesDecrypt(privateObj);
                 // let jsonData = JSON.parse(publicObj);

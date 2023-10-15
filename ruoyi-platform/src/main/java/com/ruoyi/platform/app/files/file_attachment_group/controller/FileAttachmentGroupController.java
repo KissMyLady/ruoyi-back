@@ -1,5 +1,7 @@
 package com.ruoyi.platform.app.files.file_attachment_group.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -59,32 +61,6 @@ public class FileAttachmentGroupController extends BaseController {
     private EncryptUtilsService encryptUtilsService;
 
     /**
-     * 查询附件分组列表
-     */
-    @PreAuthorize("@ss.hasPermi('file_attachment_group:file_attachment_group:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(FileAttachmentGroup dto) {
-        //startPage();
-        Integer page = dto.getPageNum();
-        if (page <= 0 || page == null) {
-            page = 1;
-        }
-        Integer pageSize = dto.getPageSize();
-        page = (page - 1) * pageSize;
-        dto.setPageNum(page);
-
-        //sql排序字符串
-        if (!ObjectUtil.isEmpty(dto.getSortStr())) {
-            //如果不为空, 判断字符串是否合法
-            String sortStr = dto.getSortStr();
-            logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
-        }
-        List<FileAttachmentGroup> list = fileAttachmentGroupService.selectFileAttachmentGroupList(dto);
-        int i = fileAttachmentGroupMapper.queryFileAttachmentGroupList_count(dto);
-        return getDataTable_v2(list, i);
-    }
-
-    /**
      * 查询列表, SQL分页查询
      */
     @ReturnAESEncrypt()
@@ -102,37 +78,11 @@ public class FileAttachmentGroupController extends BaseController {
         //sql排序字符串
         if (!ObjectUtil.isEmpty(dto.getSortStr())) {
             //如果不为空, 判断字符串是否合法
-            String sortStr = dto.getSortStr();
-            logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
         }
         List<Map<String, Object>> mapList = fileAttachmentGroupMapper.queryFileAttachmentGroupList_BySQL(dto);
         int i = fileAttachmentGroupMapper.queryFileAttachmentGroupList_count(dto);
-        logger.info("查询数据打印: {}", mapList.toString());
+        // logger.info("查询数据打印: {}", mapList.toString());
         return getDataTable_v2(mapList, i);
-    }
-
-    @ReturnAESEncrypt()
-    @PreAuthorize("@ss.hasPermi('file_attachment_group:file_attachment_group:list')")
-    @PostMapping("/list_sql_v3")
-    public ResultVo<?> list_sql_v3(@RequestBody FileAttachmentGroup dto) {
-        //startPage();
-        Integer page = dto.getPageNum();
-        if (page <= 0 || page == null) {
-            page = 1;
-        }
-        Integer pageSize = dto.getPageSize();
-        page = (page - 1) * pageSize;
-        dto.setPageNum(page);
-        //sql排序字符串
-        if (!ObjectUtil.isEmpty(dto.getSortStr())) {
-            //如果不为空, 判断字符串是否合法
-            String sortStr = dto.getSortStr();
-            logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
-        }
-        List<Map<String, Object>> mapList = fileAttachmentGroupMapper.queryFileAttachmentGroupList_BySQL(dto);
-        int i = fileAttachmentGroupMapper.queryFileAttachmentGroupList_count(dto);
-        logger.info("查询数据打印: {}", mapList.toString());
-        return ResultVo.success(mapList, i);
     }
 
     /**
@@ -150,10 +100,13 @@ public class FileAttachmentGroupController extends BaseController {
     /**
      * 获取附件分组详细信息
      */
+    @ReturnAESEncrypt()
     @PreAuthorize("@ss.hasPermi('file_attachment_group:file_attachment_group:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return success(fileAttachmentGroupService.selectFileAttachmentGroupById(id));
+        //返回值加密
+        FileAttachmentGroup fileAttachmentGroup = fileAttachmentGroupService.selectFileAttachmentGroupById(id);
+        return AjaxResult.success_ok(fileAttachmentGroup, "操作成功");
     }
 
     /**
@@ -163,6 +116,7 @@ public class FileAttachmentGroupController extends BaseController {
     @Log(title = "新增附件分组", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EncryptDto enDto) {
+        //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
         if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
             return AjaxResult.error(encryptDto.getE());
@@ -178,7 +132,7 @@ public class FileAttachmentGroupController extends BaseController {
     @Log(title = "修改附件分组", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EncryptDto enDto) {
-        //传入值解密 FileAttachmentGroup
+        //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
         if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
             return AjaxResult.error(encryptDto.getE());

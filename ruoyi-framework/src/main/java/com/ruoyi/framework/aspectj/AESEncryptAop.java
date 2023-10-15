@@ -127,8 +127,16 @@ public class AESEncryptAop {
                 AjaxResult ret = (AjaxResult) returnValue;
                 //调用加密 Object 对象
                 List<Map<String, Object>> content = ret.getContent();
+                Object data = ret.getData();
 
-                if (ObjectUtil.isNotEmpty(content) && content != null && !content.toString().equals("")) {
+                //优先加密 data
+                if(ObjectUtil.isNotEmpty(data) && data != null && !data.toString().equals("")){
+                    String sData = encryptUtilsService.aesEncryptObject(data);
+                    ret.put("text", sData);
+                    ret.setContent(null);
+                }
+                // if (ObjectUtil.isNotEmpty(content) && content != null && !content.toString().equals(""))
+                else {
                     String sData = encryptUtilsService.aesEncryptListMap(content);
                     ret.put("text", sData);
                     ret.setContent(null);

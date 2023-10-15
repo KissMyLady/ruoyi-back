@@ -37,7 +37,7 @@ public interface ${ClassName}Mapper {
     List<Map<String, Object>> query${ClassName}List_BySQL(${ClassName} dto);
 
     //查询列表 总条数
-    long query${ClassName}List_count(${ClassName} dto);
+    int query${ClassName}List_count(${ClassName} dto);
 
     /**
      * ++新增++
