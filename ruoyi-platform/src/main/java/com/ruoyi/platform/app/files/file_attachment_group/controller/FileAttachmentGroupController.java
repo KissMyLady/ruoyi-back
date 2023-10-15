@@ -5,9 +5,16 @@ import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Result;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONUtil;
+import com.ruoyi.common.core.domain.ResultVo;
+import com.ruoyi.common.core.domain.EncryptDto;
+import com.ruoyi.common.security.EncryptUtilsService;
 import com.ruoyi.platform.app.files.file_attachment_group.mapper.FileAttachmentGroupMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,12 +46,17 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/file_attachment_group/file_attachment_group")
 public class FileAttachmentGroupController extends BaseController {
 
+    private static final Logger logger = LoggerFactory.getLogger(FileAttachmentGroupController.class);
+
     @Autowired
     private FileAttachmentGroupServiceImpl fileAttachmentGroupService;
     //private IFileAttachmentGroupService fileAttachmentGroupService;
 
     @Autowired
     private FileAttachmentGroupMapper fileAttachmentGroupMapper;
+
+    @Autowired
+    private EncryptUtilsService encryptUtilsService;
 
     /**
      * 查询附件分组列表
@@ -62,32 +74,72 @@ public class FileAttachmentGroupController extends BaseController {
         dto.setPageNum(page);
 
         //sql排序字符串
-        if (ObjectUtil.isEmpty(dto.getSortStr())) {
-            dto.setSortStr("create_time");
+        if (!ObjectUtil.isEmpty(dto.getSortStr())) {
+            //如果不为空, 判断字符串是否合法
+            String sortStr = dto.getSortStr();
+            logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
         }
-
         List<FileAttachmentGroup> list = fileAttachmentGroupService.selectFileAttachmentGroupList(dto);
-
         int i = fileAttachmentGroupMapper.queryFileAttachmentGroupList_count(dto);
-
-        return getDataTable(list, i);
+        return getDataTable_v2(list, i);
     }
 
     /**
      * 查询列表, SQL分页查询
      */
-    //@ReturnAESEncrypt()
+    @ReturnAESEncrypt()
     @PreAuthorize("@ss.hasPermi('file_attachment_group:file_attachment_group:list')")
     @PostMapping("/list_sql")
-    public TableDataInfo list_sql(@RequestBody FileAttachmentGroup dto) {
-        startPage();
-        List<Map<String, Objects>> mapList = fileAttachmentGroupMapper.queryFileAttachmentGroupList_BySQL(dto);
+    public TableDataInfo list_sql(@RequestBody EncryptDto enDto) {
+        logger.info("入参打印: {}", enDto);
+        EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
+        // json对象转Bean FileAttachmentGroup
+        FileAttachmentGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileAttachmentGroup.class);
+        logger.info("解密后的 FileAttachmentGroup 对象表单打印: {}", dto);
 
+        //startPage();
+        Integer page = dto.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = dto.getPageSize();
+        page = (page - 1) * pageSize;
+        dto.setPageNum(page);
+        //sql排序字符串
+        if (!ObjectUtil.isEmpty(dto.getSortStr())) {
+            //如果不为空, 判断字符串是否合法
+            String sortStr = dto.getSortStr();
+            logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
+        }
+        List<Map<String, Object>> mapList = fileAttachmentGroupMapper.queryFileAttachmentGroupList_BySQL(dto);
         int i = fileAttachmentGroupMapper.queryFileAttachmentGroupList_count(dto);
         logger.info("查询数据打印: {}", mapList.toString());
-        return getDataTable(mapList, i);
+        return getDataTable_v2(mapList, i);
     }
 
+    @ReturnAESEncrypt()
+    @PreAuthorize("@ss.hasPermi('file_attachment_group:file_attachment_group:list')")
+    @PostMapping("/list_sql_v3")
+    public ResultVo<?> list_sql_v3(@RequestBody FileAttachmentGroup dto) {
+        //startPage();
+        Integer page = dto.getPageNum();
+        if (page <= 0 || page == null) {
+            page = 1;
+        }
+        Integer pageSize = dto.getPageSize();
+        page = (page - 1) * pageSize;
+        dto.setPageNum(page);
+        //sql排序字符串
+        if (!ObjectUtil.isEmpty(dto.getSortStr())) {
+            //如果不为空, 判断字符串是否合法
+            String sortStr = dto.getSortStr();
+            logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
+        }
+        List<Map<String, Object>> mapList = fileAttachmentGroupMapper.queryFileAttachmentGroupList_BySQL(dto);
+        int i = fileAttachmentGroupMapper.queryFileAttachmentGroupList_count(dto);
+        logger.info("查询数据打印: {}", mapList.toString());
+        return ResultVo.success(mapList, i);
+    }
 
     /**
      * 导出附件分组列表

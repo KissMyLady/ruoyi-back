@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
@@ -14,6 +15,7 @@ import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.annotation.ReturnAESEncrypt;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.ResultVo;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.security.EncryptUtilsService;
@@ -55,31 +57,24 @@ public class AESEncryptAop {
     public Object encryptAndDecryptHandle(ProceedingJoinPoint point) throws Throwable {
         // 获得请求参数 TimeDto()
         Object[] args = point.getArgs();
-        logger.info("获取请求参数: {}", args);
-
+        //logger.info("获取请求参数: {}", args);
         MethodSignature signature = (MethodSignature) point.getSignature();
-
         //方法获取
         Method method = signature.getMethod();
-
         // 获得方法注解
         ReturnAESEncrypt annotation = method.getAnnotation(ReturnAESEncrypt.class);
-
         // 入参, 请求参数解密
 //        if (annotation != null && annotation.enable()) {
 //            this.decryptParams(args, method);
 //        }
-
         // 等待返回结果
         Object returnValue = point.proceed(args);
-
         // 返回值出参, 执行加密操作
         if (annotation != null && annotation.enable()) {
-            logger.info("返回值出参, 执行加密操作: {}", annotation);
+            // logger.info("返回值出参, 执行加密操作: {}", annotation);
             returnValue = this.resultEncrypt(returnValue);
         }
-
-        logger.info("返回值加密: {}", returnValue);
+        // logger.info("返回值加密: {}", returnValue);
         return returnValue;
     }
 
@@ -124,7 +119,9 @@ public class AESEncryptAop {
             return returnValue;
         }
         try {
-            // 执行加密过程
+            /**
+             * AjaxResult 加密
+             */
             if (returnValue instanceof AjaxResult) {
                 // 重新赋值 data
                 AjaxResult ret = (AjaxResult) returnValue;
@@ -133,24 +130,36 @@ public class AESEncryptAop {
 
                 if (ObjectUtil.isNotEmpty(content) && content != null && !content.toString().equals("")) {
                     String sData = encryptUtilsService.aesEncryptListMap(content);
-                    ret.put("content", sData);
+                    ret.put("text", sData);
                     ret.setContent(null);
                 }
             }
-//            //list sql查询分页, 返回加密
-//            else if (returnValue instanceof TableDataInfo) {
-//                // 重新赋值 data
-//                TableDataInfo ret = (TableDataInfo) returnValue;
-//                List<Map<String, Object>> content = ret.getContent();
-//
-//                //int code = ret.getCode();
-//                //返回消息是200才加密, 错误消息不加密?
-//                if (ObjectUtil.isNotEmpty(content) && content != null && !content.toString().equals("")) {
-//                    String sData = encryptUtilsService.aesEncryptListMap(content);
-//                    ret.setText(sData);
-//                    ret.setContent(null);
-//                }
-//            }
+            /**
+             * TableDataInfo 加密
+             */
+            else if (returnValue instanceof TableDataInfo) {
+                TableDataInfo ret = (TableDataInfo) returnValue;
+                List<?> rows = ret.getRows();
+                if (ObjectUtil.isNotEmpty(rows) && rows != null && !rows.toString().equals("")) {
+                    String sData = encryptUtilsService.aesEncryptListMap((List<Map<String, Object>>) rows);
+                    ret.setText(sData);
+                    ret.setRows(null);
+                }
+            }
+            /**
+             * ResultVo 加密
+             */
+            else if (returnValue instanceof ResultVo) {
+                ResultVo<Object> ret = (ResultVo<Object>) returnValue;
+                //调用加密 Object 对象
+                Object data = ret.getData();
+                Object msg = ret.getMsg();
+                if(data != null && !data.toString().equals("")){
+                    //这里不确定加密的方式, 不再这里进行加密
+                    String sData = encryptUtilsService.aesEncryptObject(data);
+                    ret.setData(sData);
+                }
+            }
             //其他情况
             else {
                 logger.warn("返回值不是AjaxResult类型, 直接 aesEncryptObject 对Object进行 加密");

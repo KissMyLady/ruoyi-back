@@ -48,7 +48,7 @@ public class SysConfigController extends BaseController {
         List<SysConfig> list = configService.selectConfigList(dto);
 
         int i = sysConfigMapper.queryRwoTotal(dto);
-        return getDataTable(list, i);
+        return getDataTable_v2(list, i);
     }
 
     @Log(title = "导出参数管理", businessType = BusinessType.EXPORT)

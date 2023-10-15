@@ -2,7 +2,6 @@ package ${packageName}.mapper;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import ${packageName}.domain.${ClassName};
 #if($table.sub)
 import ${packageName}.domain.${subClassName};

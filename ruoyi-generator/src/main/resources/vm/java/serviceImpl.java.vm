@@ -10,6 +10,7 @@ import java.util.List;
         #end
     #end
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.EncryptDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,6 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
         Integer pageSize = dto.getPageSize();
         page = (page - 1) * pageSize;
         dto.setPageNum(page);
-
         //sql排序字符串
         if (!ObjectUtil.isEmpty(dto.getSortStr())) {
             //如果不为空, 判断字符串是否合法
@@ -79,25 +79,15 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
         try {
             //查询列表
             List<Map<String, Object>> resList = ${className}Mapper.select${ClassName}List_BySQL(dto);
+            //查询总数
+            int countTotal = ${className}Mapper.query${ClassName}List_count(dto);
+            ajax.put("total" , countTotal);
             ajax.setContent(resList);
         }
         catch (Exception e){
             logger.error("查询列表失败, 原因是: {}", ""+e);
             ajax.put("code" , 500);
             ajax.put("msg" , "查询列表失败"+e);
-        }
-        try {
-            //查询总数
-            int countTotal = ${className}Mapper.query${ClassName}List_count(dto);
-            ajax.put("total" , countTotal);
-            ajax.put("msg" , "查询成功");
-            ajax.put("code" , 200);
-        }
-        catch (Exception e){
-            ajax.put("msg" , "查询总数失败");
-            ajax.put("msg2" , "原因" + e.toString());
-            ajax.put("code" , 500);
-            logger.warn("sql查询表错误, 原因是: {}" , e.toString());
         }
         return ajax;
     }

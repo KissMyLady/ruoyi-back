@@ -62,7 +62,7 @@ public class SysDictDataController extends BaseController {
         int i = sysDictDataMapper.queryRwoTotal_DictDataList(dto);
 
         List<SysDictData> list = dictDataService.selectDictDataList(dto);
-        return getDataTable(list, i);
+        return getDataTable_v2(list, i);
     }
 
     @Log(title = "字典数据导出" , businessType = BusinessType.EXPORT)

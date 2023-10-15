@@ -377,7 +377,8 @@
       update${BusinessName}
   } from "@/api/platform/${moduleName}/${businessName}";
   import TipMessage from '@/utils/myUtils/TipMessage'
-
+  import { changeDictToString } from '@/utils/myUtils/changeSomething'
+  import { aesEncrypt, aesDecrypt } from '@/utils/encrypt/encryption'
   export default {
     //dicts: ['is_delete'],
     name: "${BusinessName}",
@@ -481,7 +482,12 @@
               #end
           #end
         list${BusinessName}(this.queryParams).then(response => {
+          // let privateObj = response.text;
+          // let publicObj = aesDecrypt(privateObj);
+          // let jsonData = JSON.parse(publicObj);
+          // this.${businessName}List = jsonData;
           this.${businessName}List = response.rows;
+
           this.total = response.total;
           this.loading = false;
         }).catch((err) => {
@@ -489,18 +495,6 @@
           //Message({ message: ""+err, type: 'error' })
           console.log("请求错误: ", err);
         });
-      },
-      getList_v2(){
-        this.loading = true
-        list_sql${BusinessName}(this.queryParams).then(response => {
-          this.${businessName}List = response.rows;
-          this.total = response.total
-          this.loading = false
-        }).catch((err) => {
-          this.loading = false
-          console.log('请求错误: ', err)
-          // TipMessage.Warning("请求错误"+ err);
-        })
       },
       // 取消按钮
       cancel() {
@@ -556,7 +550,13 @@
         this.reset();
         const ${pkColumn.javaField} = row.${pkColumn.javaField} || this.ids
         get${BusinessName}(${pkColumn.javaField}).then(response => {
+
+          // let privateObj = response.text;
+          // let publicObj = aesDecrypt(privateObj);
+          // let jsonData = JSON.parse(publicObj);
+          // this.form = jsonData;
           this.form = response.data;
+
             #foreach ($column in $columns)
                 #if($column.htmlType == "checkbox")
                   this.form.$column.javaField = this.form.${column.javaField}.split(",");
@@ -573,6 +573,12 @@
       submitForm() {
         this.#[[$]]#refs["form"].validate(valid => {
           if (valid) {
+            let sendData = {
+              "a": aesEncrypt("1024"),
+              "b": aesEncrypt(this.form.${pkColumn.javaField),
+              "c": aesEncrypt("Hello World !")
+            }
+
             #foreach ($column in $columns)
             #if($column.htmlType == "checkbox")
             this.form.$column.javaField = this.form.${column.javaField}.join(",");
@@ -581,14 +587,28 @@
             #if($table.sub)
             this.form.${subclassName}List = this.${subclassName}List;
             #end
+            //发送内容加密
             if (this.form.${pkColumn.javaField} != null) {
+              //update${sendData).then(response => {
               update${BusinessName}(this.form).then(response => {
+
+                // let privateObj = response.text;
+                // let publicObj = aesDecrypt(privateObj);
+                // let jsonData = JSON.parse(publicObj);
+                // TipMessage.isOK(jsonData);
+
                 this.#[[$modal]]#.msgSuccess("修改成功");
                 this.open = false;
                 this.getList();
               });
             } else {
+              //add${BusinessName}(sendData).then(response => {
               add${BusinessName}(this.form).then(response => {
+                // let privateObj = response.text;
+                // let publicObj = aesDecrypt(privateObj);
+                // let jsonData = JSON.parse(publicObj);
+                // TipMessage.isOK(jsonData);
+
                 this.#[[$modal]]#.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();

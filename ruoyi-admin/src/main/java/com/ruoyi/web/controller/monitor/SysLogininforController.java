@@ -57,7 +57,7 @@ public class SysLogininforController extends BaseController {
         List<SysLogininfor> list = logininforService.selectLogininforList(dto);
         int i = sysLogininforMapper.queryRwoTotal_Logininfo(dto);
 
-        return getDataTable(list, i);
+        return getDataTable_v2(list, i);
     }
 
     @Log(title = "export登录日志" , businessType = BusinessType.EXPORT)

@@ -50,7 +50,7 @@ public class SysOperlogController extends BaseController {
 
         List<SysOperLog> list = operLogService.selectOperLogList(dto);
         int i = sysOperLogMapper.queryRwoTotal_OperLogList(dto);
-        return getDataTable(list, i);
+        return getDataTable_v2(list, i);
     }
 
     @Log(title = "导出操作日志" , businessType = BusinessType.EXPORT)

@@ -1,4 +1,5 @@
 package com.ruoyi.common.core.domain;
+import cn.hutool.json.JSONObject;
 import lombok.Data;
 
 
@@ -34,4 +35,7 @@ public class EncryptDto {
      * 其他 2
      */
     private String e;
+
+    private JSONObject jsonObject;
+
 }

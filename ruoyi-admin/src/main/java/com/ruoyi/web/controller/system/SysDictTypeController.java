@@ -52,7 +52,7 @@ public class SysDictTypeController extends BaseController {
         startPage();
         List<SysDictType> list = dictTypeService.selectDictTypeList(dto);
         int i = sysDictTypeMapper.queryRwoTotal_dictType(dto);
-        return getDataTable(list, i);
+        return getDataTable_v2(list, i);
     }
 
     @Log(title = "导出字典类型", businessType = BusinessType.EXPORT)

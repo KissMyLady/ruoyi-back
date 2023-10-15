@@ -4,6 +4,7 @@ import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class BaseController {
         return rspData;
     }
 
-    protected TableDataInfo getDataTable(List<?> list, int count) {
+    protected TableDataInfo getDataTable_v2(List<?> list, int count) {
         TableDataInfo rspData = new TableDataInfo();
         rspData.setCode(HttpStatus.SUCCESS);
         rspData.setMsg("查询成功");
@@ -92,6 +93,16 @@ public class BaseController {
         rspData.setTotal(count);
         return rspData;
     }
+
+    protected TableDataInfo getDataTable_v3(List<Map<String, Object>> mapList, int count) {
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setContent(mapList);
+        rspData.setMsg("查询成功");
+        rspData.setTotal(count);
+        return rspData;
+    }
+
 
     /**
      * 返回成功

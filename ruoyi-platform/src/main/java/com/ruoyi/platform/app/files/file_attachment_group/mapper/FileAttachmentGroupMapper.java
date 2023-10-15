@@ -2,7 +2,6 @@ package com.ruoyi.platform.app.files.file_attachment_group.mapper;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import com.ruoyi.platform.app.files.file_attachment_group.domain.FileAttachmentGroup;
 import org.apache.ibatis.annotations.MapKey;
@@ -36,7 +35,7 @@ public interface FileAttachmentGroupMapper {
 
     // 查询列表, 通过sql
     @MapKey("id")
-    List<Map<String, Objects>> queryFileAttachmentGroupList_BySQL(FileAttachmentGroup dto);
+    List<Map<String, Object>> queryFileAttachmentGroupList_BySQL(FileAttachmentGroup dto);
 
     //查询列表 总条数
     int queryFileAttachmentGroupList_count(FileAttachmentGroup dto);

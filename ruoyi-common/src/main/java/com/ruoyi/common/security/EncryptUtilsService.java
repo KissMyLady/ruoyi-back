@@ -158,7 +158,15 @@ public class EncryptUtilsService {
             dto.setA(aesDecrypt(dto.getA()));
         }
         if (ObjectUtil.isNotEmpty(dto.getB())) {
-            dto.setB(aesDecrypt(dto.getB()));
+            try {
+                //字符串转json
+                dto.setJsonObject(JSONUtil.parseObj(dto.getB()));
+                dto.setB(null);
+            }
+            catch (Exception e){
+                logger.error("解密表单数据操作失败, 原因是: {}", ""+e);
+                dto.setJsonObject(null);
+            }
         }
         if (ObjectUtil.isNotEmpty(dto.getC())) {
             dto.setC(aesDecrypt(dto.getC()));
@@ -169,6 +177,8 @@ public class EncryptUtilsService {
         if (ObjectUtil.isNotEmpty(dto.getE())) {
             dto.setE(aesDecrypt(dto.getE()));
         }
+
+        logger.info("解密后的对象打印: {}", dto);
         return dto;
     }
 
