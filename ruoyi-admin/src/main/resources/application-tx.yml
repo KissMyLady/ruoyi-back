@@ -94,13 +94,13 @@ spring:
       slave:
         # 从数据源开关/默认关闭
         enabled: true
-        url: jdbc:mysql://localhost:29012/mydoc?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        url: jdbc:mysql://127.0.0.1:29012/mydoc?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         username: root
         password: YING123ZZ
       slaveZblog:
         # 从数据源开关/默认关闭
         enabled: true
-        url: jdbc:mysql://localhost:29012/zblog?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        url: jdbc:mysql://127.0.0.1:29012/zblog?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         username: root
         password: YING123ZZ
       # 初始连接数
