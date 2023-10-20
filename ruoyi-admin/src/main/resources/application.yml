@@ -1,7 +1,7 @@
 # Spring配置
 spring:
   profiles:
-    active: air
+    active: dev
   # 资源信息
   messages:
     # 国际化资源文件路径
@@ -14,8 +14,8 @@ spring:
 
 # 忽略鉴权url
 ignored:
-  urls: /hi/**, /hello/**, /openApi/**, /file_image/**
-  # urls: /hi/**, /hello/**, /openApi/**, /app_doc_doc/** , /file_attachment/**
+  urls: /hi/**, /hello/**, /openApi/**
+  # urls: /hi/**, /hello/**, /openApi/**, /app_doc_doc/** , /file_attachment/**, /file_image/**
 
 
 # 配置包路径日志级别
