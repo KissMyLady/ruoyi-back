@@ -181,7 +181,7 @@ public class EncryptUtilsService {
             dto.setE(aesDecrypt(dto.getE()));
         }
 
-        logger.info("解密后的对象打印: {}", dto);
+        //logger.info("解密后的对象打印: {}", dto);
         return dto;
     }
 

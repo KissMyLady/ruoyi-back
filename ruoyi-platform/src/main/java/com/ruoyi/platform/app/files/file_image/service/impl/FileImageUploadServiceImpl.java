@@ -5,6 +5,7 @@ import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.platform.app.files.file_image.domain.file_image;
@@ -113,13 +114,15 @@ public class FileImageUploadServiceImpl implements IFileImageUploadService {
             //绝对路径与url设置
             String replacePath = fileName.replace("/media/imgUpload", "");
             String absPath = filePath + replacePath;
+            dto.setAbsPath(absPath);
 
-            // String url = this.getUrl() + fileName;
+            String url = this.getUrl() + fileName;
+            dto.setUrl(url);
 
             int i = fileImageMapper.insertfile_image(dto);
 
             ajax.put("success", i);
-            ajax.put("url", "none");
+            ajax.put("url", url);
             ajax.put("absPath", absPath);
             return ajax;
         } catch (Exception e) {
@@ -147,16 +150,11 @@ public class FileImageUploadServiceImpl implements IFileImageUploadService {
                 continue;
             }
 
-            String filePath = (String) stringObjectMap.get("filePath");
-
+            String absPath = (String) stringObjectMap.get("absPath");
             //拼接
-            // 上传文件路径
-            String img_prefix_path = RuoYiConfig.getProfile();
-
-            //将重复字段替换
-             String replacePath = filePath.replace("/media/imgUpload", "/imgUpload");
-
-            String absPath = img_prefix_path + replacePath;
+//            String img_prefix_path = RuoYiConfig.getProfile();
+//            String replacePath = filePath.replace("/media/imgUpload", "/imgUpload");
+//            String absPath = img_prefix_path + replacePath;
 
             logger.warn("执行图片删除操作.删除图片路径: {}", absPath);
             //移除文件
@@ -166,4 +164,14 @@ public class FileImageUploadServiceImpl implements IFileImageUploadService {
         return sb.toString();
     }
 
+    public String getUrl() {
+        HttpServletRequest request = ServletUtils.getRequest();
+        return getDomain(request);
+    }
+
+    public static String getDomain(HttpServletRequest request) {
+        StringBuffer url = request.getRequestURL();
+        String contextPath = request.getServletContext().getContextPath();
+        return url.delete(url.length() - request.getRequestURI().length(), url.length()).append(contextPath).toString();
+    }
 }

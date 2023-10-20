@@ -13,6 +13,8 @@
         <result property="filePath" column="file_path"/>
         <result property="fileSize" column="file_size"/>
         <result property="upMethod" column="up_method"/>
+        <result property="url" column="url"/>
+        <result property="absPath" column="abs_path"/>
         <result property="md5" column="md5"/>
         <result property="fileSuffix" column="file_suffix"/>
         <result property="isDelete" column="is_delete"/>
@@ -29,6 +31,8 @@
                file_path as filePath,
                file_size as fileSize,
                up_method as upMethod,
+               url,
+               abs_path as absPath,
                md5,
                file_suffix as fileSuffix,
                is_delete as isDelete,
@@ -76,6 +80,11 @@
         limit ${pageNum}, ${pageSize}
     </select>
     
+    <select id="query_group_image_count" resultType="int">
+        select count(1) as OK
+        from file_image
+        where group_id = ${group_id}
+    </select>
     
     <select id="queryfile_imageList_count"
             parameterType="file_image"
@@ -109,6 +118,8 @@
             <if test="filePath != null">file_path,</if>
             <if test="fileSize != null">file_size,</if>
             <if test="upMethod != null">up_method,</if>
+            <if test="url != null">url,</if>
+            <if test="absPath != null">abs_path,</if>
             <if test="md5 != null">md5,</if>
             <if test="fileSuffix != null">file_suffix,</if>
             <if test="isDelete != null">is_delete,</if>
@@ -121,6 +132,8 @@
             <if test="filePath != null">#{filePath},</if>
             <if test="fileSize != null">#{fileSize},</if>
             <if test="upMethod != null">#{upMethod},</if>
+            <if test="url != null">#{url},</if>
+            <if test="absPath != null">#{absPath},</if>
             <if test="md5 != null">#{md5},</if>
             <if test="fileSuffix != null">#{fileSuffix},</if>
             <if test="isDelete != null">#{isDelete},</if>
@@ -137,6 +150,8 @@
             <if test="filePath != null">file_path = #{filePath},</if>
             <if test="fileSize != null">file_size = #{fileSize},</if>
             <if test="upMethod != null">up_method = #{upMethod},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="absPath != null">abs_path = #{absPath},</if>
             <if test="md5 != null">md5 = #{md5},</if>
             <if test="fileSuffix != null">file_suffix = #{fileSuffix},</if>
             <if test="isDelete != null">is_delete = #{isDelete},</if>

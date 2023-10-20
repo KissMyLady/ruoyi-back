@@ -29,6 +29,11 @@ public interface file_imageMapper {
     List<file_image> selectfile_imageList(file_image dto);
 
     /**
+     * 查询组下图片数量
+     */
+    int query_group_image_count(@Param("group_id") String group_id);
+
+    /**
      * SQL查询列表
      */
     // @MapKey("id")

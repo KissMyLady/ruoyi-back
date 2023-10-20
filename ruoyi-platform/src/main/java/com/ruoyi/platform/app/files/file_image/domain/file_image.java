@@ -62,6 +62,12 @@ public class file_image extends BaseEntity {
     @Excel(name = "上传方式")
     private String upMethod;
 
+    @Excel(name = "url")
+    private String url;
+
+    @Excel(name = "绝对路径")
+    private String absPath;
+
     /**
      * md5校验值
      */
@@ -168,23 +174,39 @@ public class file_image extends BaseEntity {
         return isDelete;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("userId", getUserId())
-                .append("groupId", getGroupId())
-                .append("title", getTitle())
-                .append("fileName", getFileName())
-                .append("filePath", getFilePath())
-                .append("fileSize", getFileSize())
-                .append("upMethod", getUpMethod())
-                .append("md5", getMd5())
-                .append("fileSuffix", getFileSuffix())
-                .append("isDelete", getIsDelete())
-                .append("createTime", getCreateTime())
-                .append("updateTime", getUpdateTime())
-                .toString();
+    public String getUrl() {
+        return url;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getAbsPath() {
+        return absPath;
+    }
+
+    public void setAbsPath(String absPath) {
+        this.absPath = absPath;
+    }
+
+
+    @Override
+    public String toString() {
+        return "file_image{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", groupId=" + groupId +
+                ", title='" + title + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", filePath='" + filePath + '\'' +
+                ", fileSize='" + fileSize + '\'' +
+                ", upMethod='" + upMethod + '\'' +
+                ", url='" + url + '\'' +
+                ", absPath='" + absPath + '\'' +
+                ", md5='" + md5 + '\'' +
+                ", fileSuffix='" + fileSuffix + '\'' +
+                ", isDelete=" + isDelete +
+                '}';
+    }
 }

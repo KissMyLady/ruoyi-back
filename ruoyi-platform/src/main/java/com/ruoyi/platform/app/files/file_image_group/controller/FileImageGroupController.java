@@ -3,6 +3,8 @@ package com.ruoyi.platform.app.files.file_image_group.controller;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.platform.app.files.file_image.mapper.file_imageMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +50,9 @@ public class FileImageGroupController extends BaseController {
 
     @Autowired
     private EncryptUtilsService encryptUtilsService;
+
+    @Autowired
+    private file_imageMapper fileImageMapper;
 
     /**
      * 查询列表
@@ -110,7 +115,7 @@ public class FileImageGroupController extends BaseController {
     public AjaxResult add(@RequestBody EncryptDto enDto) {
         //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
-        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+        if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE());
         }
 
@@ -127,7 +132,7 @@ public class FileImageGroupController extends BaseController {
     public AjaxResult edit(@RequestBody EncryptDto enDto) {
         //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
-        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+        if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE());
         }
 
@@ -142,10 +147,20 @@ public class FileImageGroupController extends BaseController {
     @Log(title = "删除图片分组", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
-
         //删除检查
-
-
+        for (long db_id : ids) {
+            //查询组数据
+            Map<String, Object> stringObjectMap = fileImageGroupService.selectFileImageGroupById(db_id);
+            //logger.info("打印stringObjectMap: {}", stringObjectMap);
+            //根据组数据查询 组下的文件
+            Object groupId = stringObjectMap.get("groupId");
+            int i = fileImageMapper.query_group_image_count(String.valueOf(groupId));
+            logger.info("查询数量打印: {}", i);
+            //logger.info("根据组数据查询 组下的文件大小: {}", maps.size());
+            if (ObjectUtil.isNotEmpty(i) && i >= 1) {
+                return AjaxResult.error("当前组存在图片数据, 不允许删除.");
+            }
+        }
         return toAjax(fileImageGroupService.deleteFileImageGroupByIds(ids));
     }
 
