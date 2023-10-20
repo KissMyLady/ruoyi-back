@@ -45,7 +45,9 @@ public class FileUploadServiceImpl implements IFileUploadService {
 
     @Override
     public AjaxResult uploadFile(HttpServletRequest request, MultipartFile file) {
-        if (ObjectUtil.isEmpty(request.getHeader("group_id"))) {
+        String group_id = request.getHeader("group_id");
+        logger.info("获取到的group_id: {}", group_id);
+        if (ObjectUtil.isEmpty(group_id)) {
             return AjaxResult.error("组id不能为空");
         }
         SysUser user = SecurityUtils.getLoginUser().getUser();
@@ -54,7 +56,6 @@ public class FileUploadServiceImpl implements IFileUploadService {
         //dto拼接
         FileAttachment dto = new FileAttachment();
         dto.setUserId(userId);
-        String group_id = request.getHeader("group_id");
 
         try {
             long group_id_long = Long.parseLong(group_id);
