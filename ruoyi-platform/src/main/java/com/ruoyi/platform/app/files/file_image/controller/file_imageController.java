@@ -1,8 +1,10 @@
-package com.ruoyi.platform.app.files.file_image_group.controller;
+package com.ruoyi.platform.app.files.file_image.controller;
 
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.platform.app.files.file_image.service.impl.FileImageUploadServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,40 +24,43 @@ import com.ruoyi.common.annotation.ReturnAESEncrypt;
 import com.ruoyi.common.security.EncryptUtilsService;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
-import com.ruoyi.platform.app.files.file_image_group.domain.FileImageGroup;
-//import com.ruoyi.platform.app.files.file_image_group.service.IFileImageGroupService;
-import com.ruoyi.platform.app.files.file_image_group.service.impl.FileImageGroupServiceImpl;
+import com.ruoyi.platform.app.files.file_image.domain.file_image;
+//import com.ruoyi.platform.app.files.file_image.service.Ifile_imageService;
+import com.ruoyi.platform.app.files.file_image.service.impl.file_imageServiceImpl;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.platform.app.files.file_image_group.mapper.FileImageGroupMapper;
+import com.ruoyi.platform.app.files.file_image.mapper.file_imageMapper;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 图片分组Controller
+ * 素材图片Controller
  *
  * @author mylady
- * @date 2023-10-15
+ * @date 2023-10-20
  */
 @RestController
-@RequestMapping("/file_image_group/file_image_group")
-public class FileImageGroupController extends BaseController {
+@RequestMapping("/file_image/file_image")
+public class file_imageController extends BaseController {
 
     @Autowired
-    private FileImageGroupServiceImpl fileImageGroupService;
-    //private IFileImageGroupService fileImageGroupService;
+    private file_imageServiceImpl file_imageService;
+    //private Ifile_imageService file_imageService;
 
     @Autowired
-    private FileImageGroupMapper fileImageGroupMapper;
+    private file_imageMapper file_imageMapper;
 
     @Autowired
     private EncryptUtilsService encryptUtilsService;
+
+    @Autowired
+    private FileImageUploadServiceImpl fileImageUploadService;
 
     /**
      * 查询列表
      */
     @ReturnAESEncrypt()
-    @PreAuthorize("@ss.hasPermi('file_image_group:file_image_group:list')")
+    @PreAuthorize("@ss.hasPermi('file_image:file_image:list')")
     @PostMapping("/list")
-    public TableDataInfo list(@RequestBody FileImageGroup dto) {
+    public TableDataInfo list(@RequestBody file_image dto) {
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
             page = 1;
@@ -69,84 +74,86 @@ public class FileImageGroupController extends BaseController {
             String sortStr = dto.getSortStr();
             // logger.info("如果排序字符串不为空, 判断是否合法: {}" , sortStr);
         }
-        //List<FileImageGroup> list = fileImageGroupService.selectFileImageGroupList(dto);
-        List<Map<String, Object>> mapList = fileImageGroupMapper.queryFileImageGroupList_BySQL(dto);
-        int i = fileImageGroupMapper.queryFileImageGroupList_count(dto);
+        //List<file_image> list = file_imageService.selectfile_imageList(dto);
+        List<Map<String, Object>> mapList = file_imageMapper.queryfile_imageList_BySQL(dto);
+        int i = file_imageMapper.queryfile_imageList_count(dto);
         return getDataTable_v2(mapList, i);
     }
 
     /**
      * 导出列表
      */
-    @PreAuthorize("@ss.hasPermi('file_image_group:file_image_group:export')")
-    @Log(title = "导出图片分组", businessType = BusinessType.EXPORT)
+    @PreAuthorize("@ss.hasPermi('file_image:file_image:export')")
+    @Log(title = "导出素材图片", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, FileImageGroup dto) {
-        List<FileImageGroup> list = fileImageGroupService.selectFileImageGroupList(dto);
-        ExcelUtil<FileImageGroup> util = new ExcelUtil<FileImageGroup>(FileImageGroup.class);
-        util.exportExcel(response, list, "图片分组数据");
+    public void export(HttpServletResponse response, file_image dto) {
+        List<file_image> list = file_imageService.selectfile_imageList(dto);
+        ExcelUtil<file_image> util = new ExcelUtil<file_image>(file_image.class);
+        util.exportExcel(response, list, "素材图片数据");
     }
 
     /**
      * 获取详细信息
      */
     @ReturnAESEncrypt()
-    @PreAuthorize("@ss.hasPermi('file_image_group:file_image_group:query')")
+    @PreAuthorize("@ss.hasPermi('file_image:file_image:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        Map<String, Object> res = fileImageGroupService.selectFileImageGroupById(id);
-        //return success(fileImageGroupService.selectFileImageGroupById(id));
+        Map<String, Object> res = file_imageService.selectfile_imageById(id);
+        //return success(file_imageService.selectfile_imageById(id));
         //返回值加密
         return AjaxResult.success_ok(res, "操作成功");
     }
 
     /**
      * 新增
-     * FileImageGroup dto
+     * file_image dto
      */
-    @PreAuthorize("@ss.hasPermi('file_image_group:file_image_group:add')")
-    @Log(title = "新增图片分组", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('file_image:file_image:add')")
+    @Log(title = "新增素材图片", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EncryptDto enDto) {
         //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
-        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+        if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE());
         }
 
-        FileImageGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileImageGroup.class);
-        return toAjax(fileImageGroupService.insertFileImageGroup(dto));
+        file_image dto = JSONUtil.toBean(encryptDto.getJsonObject(), file_image.class);
+        return toAjax(file_imageService.insertfile_image(dto));
     }
 
     /**
      * 修改
      */
-    @PreAuthorize("@ss.hasPermi('file_image_group:file_image_group:edit')")
-    @Log(title = "修改图片分组", businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('file_image:file_image:edit')")
+    @Log(title = "修改素材图片", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EncryptDto enDto) {
         //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
-        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+        if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE());
         }
 
-        FileImageGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileImageGroup.class);
-        return toAjax(fileImageGroupService.updateFileImageGroup(dto));
+        file_image dto = JSONUtil.toBean(encryptDto.getJsonObject(), file_image.class);
+        return toAjax(file_imageService.updatefile_image(dto));
     }
 
     /**
      * 删除
      */
-    @PreAuthorize("@ss.hasPermi('file_image_group:file_image_group:remove')")
-    @Log(title = "删除图片分组", businessType = BusinessType.DELETE)
+    @PreAuthorize("@ss.hasPermi('file_image:file_image:remove')")
+    @Log(title = "删除素材图片", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
+        //删除文件
+        String res = fileImageUploadService.deleteFiles(ids);
 
-        //删除检查
+        //删除数据
+        int i = file_imageService.deletefile_imageByIds(ids);
 
-
-        return toAjax(fileImageGroupService.deleteFileImageGroupByIds(ids));
+        return AjaxResult.success(res + " 删除数据成功: " + i);
     }
 
 }

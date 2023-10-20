@@ -30,9 +30,14 @@ public interface FileImageGroupMapper {
     List<FileImageGroup> selectFileImageGroupList(FileImageGroup dto);
 
     /**
+     * 查询图片组是否存在
+     */
+    Map<String, Object> queryGroupExist(FileImageGroup dto);
+
+    /**
      * SQL查询列表
      */
-    @MapKey("id")
+    // @MapKey("id")
     List<Map<String, Object>> queryFileImageGroupList_BySQL(FileImageGroup dto);
 
     //查询列表 总条数

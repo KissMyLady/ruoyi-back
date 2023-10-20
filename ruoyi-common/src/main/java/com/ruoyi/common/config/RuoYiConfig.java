@@ -124,7 +124,7 @@ public class RuoYiConfig {
     }
 
     /**
-     * 获取上传路径
+     * 获取文件上传路径
      */
     public static String getUploadPath() {
         //在yml配置的路径. 结果就是 绝对路径
@@ -132,5 +132,12 @@ public class RuoYiConfig {
         //linux: /home/mylady/files/web_file/ruoyi_files/uploadPath/
         //linux: /home/mylady/g100/django/zblog/media/upload
         return getProfile() + "/upload";
+    }
+
+    /**
+     * 获取图片上传路径
+     */
+    public static String getImgUploadPath() {
+        return getProfile() + "/imgUpload";
     }
 }

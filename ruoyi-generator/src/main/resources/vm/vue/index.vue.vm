@@ -464,6 +464,8 @@
     methods: {
       /** 查询${functionName}列表 */
       getList() {
+        this.total = 0;
+        this.${businessName}List = [];
         this.loading = true;
           #foreach ($column in $columns)
               #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")

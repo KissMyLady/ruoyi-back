@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.files.file_image.mapper.file_imageMapper">
+    
+    <resultMap type="file_image" id="file_imageResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="title" column="title"/>
+        <result property="fileName" column="file_name"/>
+        <result property="filePath" column="file_path"/>
+        <result property="fileSize" column="file_size"/>
+        <result property="upMethod" column="up_method"/>
+        <result property="md5" column="md5"/>
+        <result property="fileSuffix" column="file_suffix"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectfile_imageVo">
+        select id,
+               user_id as userId,
+               group_id as groupId,
+               title,
+               file_name as fileName,
+               file_path as filePath,
+               file_size as fileSize,
+               up_method as upMethod,
+               md5,
+               file_suffix as fileSuffix,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from file_image
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectfile_imageList"
+            parameterType="file_image"
+            resultMap="file_imageResult">
+        <include refid="selectfile_imageVo"/>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="groupId != null ">and group_id = #{groupId}</if>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="fileSuffix != null  and fileSuffix != ''">and file_suffix = #{fileSuffix}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryfile_imageList_BySQL"
+            parameterType="file_image"
+            resultType="map">
+        <include refid="selectfile_imageVo"/>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="groupId != null ">and group_id = #{groupId}</if>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="fileSuffix != null  and fileSuffix != ''">and file_suffix = #{fileSuffix}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryfile_imageList_count"
+            parameterType="file_image"
+            resultType="int">
+        select count(1) as total
+        from file_image
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="groupId != null ">and group_id = #{groupId}</if>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="fileSuffix != null  and fileSuffix != ''">and file_suffix = #{fileSuffix}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectfile_imageById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectfile_imageVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertfile_image" parameterType="file_image" useGeneratedKeys="true" keyProperty="id">
+        insert into file_image
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="groupId != null">group_id,</if>
+            <if test="title != null">title,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="upMethod != null">up_method,</if>
+            <if test="md5 != null">md5,</if>
+            <if test="fileSuffix != null">file_suffix,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="groupId != null">#{groupId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="upMethod != null">#{upMethod},</if>
+            <if test="md5 != null">#{md5},</if>
+            <if test="fileSuffix != null">#{fileSuffix},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+    
+    <update id="updatefile_image" parameterType="file_image">
+        update file_image
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="upMethod != null">up_method = #{upMethod},</if>
+            <if test="md5 != null">md5 = #{md5},</if>
+            <if test="fileSuffix != null">file_suffix = #{fileSuffix},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deletefile_imageById" parameterType="Long">
+        delete
+        from file_image
+        where id = #{id}
+    </delete>
+    
+    <delete id="deletefile_imageByIds" parameterType="String">
+        delete from file_image where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

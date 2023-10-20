@@ -1,8 +1,6 @@
 package com.ruoyi.platform.app.files.file_attachment.controller;
 
 import com.ruoyi.platform.app.files.file_attachment.service.impl.FileUploadServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

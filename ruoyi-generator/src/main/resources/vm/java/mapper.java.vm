@@ -23,7 +23,7 @@ public interface ${ClassName}Mapper {
     /**
      * 查询详情
      */
-    @MapKey("id")
+    //@MapKey("id")
     Map<String, Object> select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaType} ${pkColumn.javaField});
 
     /**
@@ -34,7 +34,7 @@ public interface ${ClassName}Mapper {
     /**
      * SQL查询列表
      */
-    @MapKey("id")
+    //@MapKey("id")
     List<Map<String, Object>> query${ClassName}List_BySQL(${ClassName} dto);
 
     //查询列表 总条数
