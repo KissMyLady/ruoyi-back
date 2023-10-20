@@ -91,8 +91,32 @@
     <select id="selectFileAttachmentGroupById"
             parameterType="Long"
             resultType="map">
-        <include refid="selectFileAttachmentGroupVo"/>
+        select id,
+               user_id as userId,
+               group_id as groupId,
+               group_name as groupName,
+               note,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from file_attachment_group
         where id = #{id}
+    </select>
+    
+    
+    <select id="queryGroupExist"
+            parameterType="FileAttachmentGroup"
+            resultType="map">
+        select id,
+               user_id as userId,
+               group_id as groupId,
+               group_name as groupName,
+               note,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from file_attachment_group
+        where group_id = #{groupId}
     </select>
     
     <insert id="insertFileAttachmentGroup" parameterType="FileAttachmentGroup" useGeneratedKeys="true" keyProperty="id">

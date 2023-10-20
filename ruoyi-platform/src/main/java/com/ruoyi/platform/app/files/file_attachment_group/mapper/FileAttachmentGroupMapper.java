@@ -26,6 +26,13 @@ public interface FileAttachmentGroupMapper {
     Map<String, Object> selectFileAttachmentGroupById(Long id);
 
     /**
+     * 查询数据是否存在
+     */
+    // @MapKey("id")
+    List<Map<String, Object>> queryGroupExist(FileAttachmentGroup fileAttachmentGroup);
+
+
+    /**
      * 查询附件分组列表
      *
      * @param dto 附件分组

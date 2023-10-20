@@ -131,7 +131,7 @@ public class FileAttachmentController extends BaseController {
         //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
         if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
-            return AjaxResult.error(encryptDto.getE());
+            return AjaxResult.error(encryptDto.getE(), enDto.toString());
         }
 
         FileAttachment dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileAttachment.class);
