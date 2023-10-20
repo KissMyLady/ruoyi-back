@@ -19,6 +19,7 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.platform.app.files.file_attachment.domain.FileAttachment;
 import com.ruoyi.platform.app.files.file_attachment_group.domain.FileAttachmentGroup;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,10 +67,10 @@ public class FileUploadServiceImpl implements IFileUploadService {
         FileAttachmentGroup group = new FileAttachmentGroup();
         group.setGroupId(Long.parseLong(group_id));
         List<Map<String, Object>> maps = fileAttachmentGroupMapper.queryGroupExist(group);
-        if(ObjectUtil.isEmpty(maps)){
+        if (ObjectUtil.isEmpty(maps)) {
             if (group_id.equals("9999")) {
                 return AjaxResult.error("默认文件组不存在, 请联系管理员创建一个group_id为9999的文件组");
-            }else {
+            } else {
                 return AjaxResult.error("文件组groupId不存在, 请检查组id是否正确");
             }
         }
@@ -152,10 +153,10 @@ public class FileUploadServiceImpl implements IFileUploadService {
         FileAttachmentGroup group = new FileAttachmentGroup();
         group.setGroupId(Long.parseLong(group_id));
         List<Map<String, Object>> maps = fileAttachmentGroupMapper.queryGroupExist(group);
-        if(ObjectUtil.isEmpty(maps)){
+        if (ObjectUtil.isEmpty(maps)) {
             if (group_id.equals("9999")) {
                 return AjaxResult.error("默认文件组不存在, 请联系管理员创建一个group_id为9999的文件组");
-            }else {
+            } else {
                 return AjaxResult.error("文件组groupId不存在, 请检查组id是否正确");
             }
         }
@@ -208,7 +209,7 @@ public class FileUploadServiceImpl implements IFileUploadService {
 
                 int i = fileAttachmentMapper.insertFileAttachment(dto);
 
-                successInsertData.add(" ,数据插入成功: "+i);
+                successInsertData.add(" ,数据插入成功: " + i);
 
                 fileNames.add(fileName);
                 newFileNames.add(FileUtils.getName(fileName));
@@ -246,5 +247,26 @@ public class FileUploadServiceImpl implements IFileUploadService {
         StringBuffer url = request.getRequestURL();
         String contextPath = request.getServletContext().getContextPath();
         return url.delete(url.length() - request.getRequestURI().length(), url.length()).append(contextPath).toString();
+    }
+
+    @Override
+    public String deleteFiles(Long[] ids) {
+        StringBuilder sb = new StringBuilder();
+        for (Long fileId : ids) {
+            //查询文件 by id
+            Map<String, Object> stringObjectMap = fileAttachmentMapper.selectFileAttachmentById(fileId);
+            if (ObjectUtil.isEmpty(stringObjectMap)) {
+                logger.warn("附件id: {} 查询不存在.跳过", fileId);
+                sb.append(String.format("附件id: %s 查询不存在.跳过", fileId));
+                continue;
+            }
+
+            String absPath = (String) stringObjectMap.get("absPath");
+            logger.info("执行图片删除操作.删除文件路径: {}", absPath);
+            //移除文件
+            String s = FileUploadUtils.deleteToLocal(absPath);
+            sb.append(String.format(" 附件id: %s 文件删除成功 %s.", fileId, s));
+        }
+        return sb.toString();
     }
 }

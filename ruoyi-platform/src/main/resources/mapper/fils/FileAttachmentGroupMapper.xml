@@ -50,25 +50,29 @@
     <select id="queryFileAttachmentGroupList_BySQL"
             parameterType="FileAttachmentGroup"
             resultType="map">
-        select id,
-               user_id as userId,
-               group_id as groupId,
-               group_name as groupName,
-               note,
-               is_delete as isDelete,
-                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-                DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
-        from file_attachment_group
+        select file_gg.id,
+               file_gg.user_id                                       as userId,
+               file_gg.group_id                                      as groupId,
+               file_gg.group_name                                    as groupName,
+               file_gg.note,
+               file_gg.is_delete                                     as isDelete,
+               DATE_FORMAT(file_gg.create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(file_gg.update_time, '%Y-%m-%d %H:%i:%S') as updatTime,
+               (
+                select count(1) from file_attachment where file_attachment.group_id = file_gg.group_id
+               )                                                     as fileCount
+        from file_attachment_group as file_gg
+        
         <where>
-            <if test="userId != null ">and user_id = #{userId}</if>
-            <if test="groupId != null ">and group_id = #{groupId}</if>
-            <if test="groupName != null  and groupName != ''">and group_name like concat('%', #{groupName}, '%')</if>
-            <if test="note != null  and note != ''">and note like concat('%', #{note}, '%')</if>
-            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+            <if test="userId != null ">and file_gg.user_id = #{userId}</if>
+            <if test="groupId != null ">and file_gg.group_id = #{groupId}</if>
+            <if test="groupName != null  and groupName != ''">and file_gg.group_name like concat('%', #{groupName}, '%')</if>
+            <if test="note != null  and note != ''">and file_gg.note like concat('%', #{note}, '%')</if>
+            <if test="isDelete != null ">and file_gg.is_delete = #{isDelete}</if>
         </where>
         
         <if test="sortStr != null ">
-            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+            <if test="isAsc != null ">order by file_gg.${sortStr} ${isAsc}</if>
         </if>
         limit ${pageNum}, ${pageSize}
     </select>

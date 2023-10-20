@@ -2,12 +2,12 @@ package com.ruoyi.platform.app.files.file_attachment.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.platform.app.files.file_attachment.mapper.FileAttachmentMapper;
+import com.ruoyi.platform.app.files.file_attachment.service.impl.FileUploadServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +50,9 @@ public class FileAttachmentController extends BaseController {
 
     @Autowired
     private EncryptUtilsService encryptUtilsService;
+
+    @Autowired
+    private FileUploadServiceImpl fileUploadService;
 
     /**
      * 查询列表
@@ -113,7 +116,7 @@ public class FileAttachmentController extends BaseController {
     public AjaxResult add(@RequestBody EncryptDto enDto) {
         //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
-        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+        if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE());
         }
 
@@ -130,7 +133,7 @@ public class FileAttachmentController extends BaseController {
     public AjaxResult edit(@RequestBody EncryptDto enDto) {
         //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
-        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+        if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE(), enDto.toString());
         }
 
@@ -145,7 +148,11 @@ public class FileAttachmentController extends BaseController {
     @Log(title = "删除附件", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(fileAttachmentService.deleteFileAttachmentByIds(ids));
+        //删除文件
+        String res = fileUploadService.deleteFiles(ids);
+        //删除数据
+        int i = fileAttachmentService.deleteFileAttachmentByIds(ids);
+        return AjaxResult.success(res + " 删除数据成功: " + i);
     }
 
 }

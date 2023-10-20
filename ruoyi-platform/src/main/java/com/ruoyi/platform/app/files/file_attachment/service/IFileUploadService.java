@@ -24,4 +24,8 @@ public interface IFileUploadService {
      */
     AjaxResult uploadFiles(HttpServletRequest request, List<MultipartFile> files);
 
+    /**
+     * 文件删除
+     */
+    String deleteFiles(Long[] ids);
 }

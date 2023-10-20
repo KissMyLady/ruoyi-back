@@ -23,6 +23,13 @@ public interface FileAttachmentMapper {
     Map<String, Object> selectFileAttachmentById(Long id);
 
     /**
+     * 根据 group_id 查询图片
+     */
+    //@MapKey("id")
+    List<Map<String, Object>> select_file_by_group_id(@Param("group_id") long group_id);
+
+
+    /**
      * 查询列表
      */
     List<FileAttachment> selectFileAttachmentList(FileAttachment dto);

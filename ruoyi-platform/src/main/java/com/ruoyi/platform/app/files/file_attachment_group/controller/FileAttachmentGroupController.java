@@ -14,6 +14,7 @@ import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.domain.ResultVo;
 import com.ruoyi.common.core.domain.EncryptDto;
 import com.ruoyi.common.security.EncryptUtilsService;
+import com.ruoyi.platform.app.files.file_attachment.mapper.FileAttachmentMapper;
 import com.ruoyi.platform.app.files.file_attachment_group.mapper.FileAttachmentGroupMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,9 @@ public class FileAttachmentGroupController extends BaseController {
 
     @Autowired
     private EncryptUtilsService encryptUtilsService;
+
+    @Autowired
+    private FileAttachmentMapper fileAttachmentMapper;
 
     /**
      * 查询列表, SQL分页查询
@@ -118,7 +122,7 @@ public class FileAttachmentGroupController extends BaseController {
     public AjaxResult add(@RequestBody EncryptDto enDto) {
         //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
-        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+        if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE());
         }
         FileAttachmentGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileAttachmentGroup.class);
@@ -134,10 +138,28 @@ public class FileAttachmentGroupController extends BaseController {
     public AjaxResult edit(@RequestBody EncryptDto enDto) {
         //传递值解密
         EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
-        if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
+        if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE());
         }
         FileAttachmentGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileAttachmentGroup.class);
+
+        //不允许修改 code字段
+        //检查是否允许修改group_id字段
+        Map<String, Object> stringObjectMap = fileAttachmentGroupMapper.selectFileAttachmentGroupById(dto.getId());
+        long old_group_id = Long.parseLong((String) stringObjectMap.get("groupId"));
+        long new_group_id = dto.getGroupId();
+
+        StringBuilder sb = new StringBuilder();
+        //新旧数据不一致, 修改判断
+        if (!Objects.equals(old_group_id, new_group_id)) {
+            List<Map<String, Object>> maps = fileAttachmentMapper.select_file_by_group_id(old_group_id);
+            if (ObjectUtil.isNotEmpty(maps) && maps.size() >= 1) {
+                dto.setGroupId(null);
+                sb.append("当前组下存在文件数据,code字段不允许修改.");
+                sb.append("其他字段");
+            }
+        }
+        dto.setUserId(null); //创建用户不允许修改
         return toAjax(fileAttachmentGroupService.updateFileAttachmentGroup(dto));
     }
 
@@ -148,6 +170,18 @@ public class FileAttachmentGroupController extends BaseController {
     @Log(title = "删除附件分组", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
+        for (long db_id : ids) {
+            //查询组数据
+            Map<String, Object> stringObjectMap = fileAttachmentGroupMapper.selectFileAttachmentGroupById(db_id);
+            //logger.info("打印stringObjectMap: {}", stringObjectMap);
+            //根据组数据查询 组下的文件
+            long groupId = Long.parseLong(String.valueOf((Integer) stringObjectMap.get("groupId")));
+            List<Map<String, Object>> maps = fileAttachmentMapper.select_file_by_group_id(groupId);
+            //logger.info("根据组数据查询 组下的文件大小: {}", maps.size());
+            if (ObjectUtil.isNotEmpty(maps) && maps.size() >= 1) {
+                return AjaxResult.error("当前组存在文件数据, 不允许删除.");
+            }
+        }
         return toAjax(fileAttachmentGroupService.deleteFileAttachmentGroupByIds(ids));
     }
 

@@ -103,6 +103,13 @@
         where id = #{id}
     </select>
     
+    <select id="select_file_by_group_id"
+            parameterType="long"
+            resultType="map">
+        <include refid="selectFileAttachmentVo"/>
+        where group_id = ${group_id}
+    </select>
+    
     <insert id="insertFileAttachment" parameterType="FileAttachment" useGeneratedKeys="true" keyProperty="id">
         insert into file_attachment
         <trim prefix="(" suffix=")" suffixOverrides=",">
