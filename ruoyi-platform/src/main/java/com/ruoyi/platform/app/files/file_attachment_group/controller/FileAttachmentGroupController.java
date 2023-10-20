@@ -146,7 +146,7 @@ public class FileAttachmentGroupController extends BaseController {
         //不允许修改 code字段
         //检查是否允许修改group_id字段
         Map<String, Object> stringObjectMap = fileAttachmentGroupMapper.selectFileAttachmentGroupById(dto.getId());
-        long old_group_id = Long.parseLong((String) stringObjectMap.get("groupId"));
+        long old_group_id = Long.parseLong(String.valueOf((Integer) stringObjectMap.get("groupId")));
         long new_group_id = dto.getGroupId();
 
         StringBuilder sb = new StringBuilder();
