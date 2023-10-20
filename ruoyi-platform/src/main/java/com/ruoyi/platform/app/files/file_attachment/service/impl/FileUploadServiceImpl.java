@@ -45,7 +45,11 @@ public class FileUploadServiceImpl implements IFileUploadService {
 
     @Override
     public AjaxResult uploadFile(HttpServletRequest request, MultipartFile file) {
-        String group_id = request.getHeader("group_id");
+        String group_id;
+        String group_id1 = request.getHeader("group_id");
+        String group_id2 = request.getHeader("Group_id");
+        group_id = group_id2 == null ? group_id1 : group_id2;
+        
         logger.info("获取到的group_id: {}", group_id);
         if (ObjectUtil.isEmpty(group_id)) {
             return AjaxResult.error("组id不能为空");
