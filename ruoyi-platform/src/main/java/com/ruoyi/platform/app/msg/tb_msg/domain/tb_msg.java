@@ -199,6 +199,7 @@ public class tb_msg extends BaseEntity {
                 .append("isDelete", getIsDelete())
                 .append("createTime", getCreateTime())
                 .append("updateTime", getUpdateTime())
+                .append("timeStamp", getTimeStamp())
                 .toString();
     }
 

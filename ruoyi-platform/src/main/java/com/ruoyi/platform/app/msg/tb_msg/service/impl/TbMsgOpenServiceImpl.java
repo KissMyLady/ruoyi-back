@@ -3,8 +3,10 @@ package com.ruoyi.platform.app.msg.tb_msg.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.http.RequestEncoder;
 import com.ruoyi.platform.app.msg.tb_msg.domain.tb_msg;
 import com.ruoyi.platform.app.msg.tb_msg.service.ITbMsgOpenService;
+import com.ruoyi.platform.app.openApi.request_api_key.mapper.request_api_keyMapper;
 import com.ruoyi.platform.app.openApi.request_api_key.service.impl.RequestOpenApiServerImpl;
 import com.ruoyi.platform.app.openApi.request_api_key_log.domain.request_api_key_log;
 import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
@@ -17,9 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import com.ruoyi.platform.app.openApi.request_api_key_log.mapper.request_api_key_logMapper;
 import com.ruoyi.platform.app.msg.tb_msg.mapper.tb_msgMapper;
+
 import javax.servlet.http.HttpServletRequest;
 
 import eu.bitwalker.useragentutils.UserAgent;
+
+import java.util.TreeMap;
 
 
 /**
@@ -34,6 +39,9 @@ public class TbMsgOpenServiceImpl implements ITbMsgOpenService {
 
     @Autowired
     private request_api_key_logMapper request_api_key_logMapper;
+
+    @Autowired
+    private request_api_keyMapper requestApiKeyMapper;
 
     @Autowired
     private tb_msgMapper tb_msgMapper;
@@ -84,8 +92,8 @@ public class TbMsgOpenServiceImpl implements ITbMsgOpenService {
         //是否成功
         Long ss = System.currentTimeMillis() - startTime;
         logEntity.setTimeOut(ss);  //执行时间
-        logEntity.setIsSuccess(ajaxResult.isSuccess() ? 1: 0);
-        logEntity.setException(""+ ajaxResult.get("msg"));
+        logEntity.setIsSuccess(ajaxResult.isSuccess() ? 1 : 0);
+        logEntity.setException("" + ajaxResult.get("msg"));
         logEntity.setEffectRows("1");
 
         //不管成功否, 写入日志记录
@@ -98,40 +106,35 @@ public class TbMsgOpenServiceImpl implements ITbMsgOpenService {
      */
     @Override
     public AjaxResult pushData(tb_msg dto) {
-        //判断校验key是否存在, 是否有效 ?
-        String s = requestOpenApiServer.hasEffect(dto.getKey());
-        if (!ObjectUtil.equals(s, "")) {
-            return AjaxResult.error(s);
-        }
-
-        String key = dto.getKey();
-        String md5 = dto.getMd5();
-        String timeStamp = dto.getTimeStamp();
-
-        if (ObjectUtil.isEmpty(dto.getMd5())) {
-            return AjaxResult.error("传入 md5 不能为空");
-        }
         if (ObjectUtil.isEmpty(dto.getKey())) {
             return AjaxResult.error("传入 key 不能为空");
+        }
+        //判断校验key是否存在, 是否有效 ?
+        String hasKey = requestOpenApiServer.hasEffect(dto.getKey());
+        if (!ObjectUtil.equals(hasKey, "")) {
+            return AjaxResult.error(hasKey);
         }
 
         //校验md5值
         if (hasCheckMd5) {
             if (ObjectUtil.isEmpty(dto.getMd5())) {
-                return AjaxResult.error("md5不能为空");
+                return AjaxResult.error("传入参数md5不能为空");
             }
-            //生成md5
+            String md5 = dto.getMd5();
+            //服务器参数校验,生成md5
             String md5Str = this.verificationMd5(dto);
-            if (!md5Str.isEmpty()) {
-                return AjaxResult.error(md5Str);
+            if (md5Str.isEmpty()) {
+                return AjaxResult.error("服务端错误.md5为空" + md5Str);
             }
             //比对md5
-            if (!ObjectUtil.equals(md5, md5Str)){
+            if (!ObjectUtil.equals(md5, md5Str)) {
                 return AjaxResult.error("md5校验不通过");
             }
         }
         //校验通过, 写入数据
         int i = tb_msgMapper.inserttb_msg(dto);
+        //成功数+1
+        int addSelf = requestApiKeyMapper.addSendCount(dto.getKey());
         return AjaxResult.success("推送数据成功 " + i);
     }
 
@@ -140,7 +143,28 @@ public class TbMsgOpenServiceImpl implements ITbMsgOpenService {
      */
     @Override
     public String verificationMd5(tb_msg dto) {
+        String msgUuid = dto.getMsgUuid();
+        String title = dto.getTitle();
+        // String content = dto.getContent();
+        String timeStamp = dto.getTimeStamp();
 
-        return "";
+        //时间戳验证, 是否在最近的3秒类
+
+        //验证 1+2+3 = 4
+        TreeMap<String, String> requestData = new TreeMap<>();
+        requestData.put("msgUuid", msgUuid);
+        requestData.put("title", title);
+        requestData.put("timeStamp", timeStamp);
+
+        String encodeParams = RequestEncoder.formatRequest(requestData);
+        // logger.info("encodeParams: {}", encodeParams);
+
+        String signStr = msgUuid + title + encodeParams + title + msgUuid;
+
+        //生成md5
+        String encodeMd5 = RequestEncoder.encode(signStr);
+
+        logger.info("消息推送.校验md5, 服务器生成的md5是: {}", encodeMd5);
+        return encodeMd5;
     }
 }
