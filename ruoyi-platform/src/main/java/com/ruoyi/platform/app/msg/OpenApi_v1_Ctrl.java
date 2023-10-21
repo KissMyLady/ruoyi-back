@@ -1,6 +1,7 @@
 package com.ruoyi.platform.app.msg;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.EncryptDto;
 import com.ruoyi.platform.app.msg.tb_msg.domain.tb_msg;
 import com.ruoyi.platform.app.msg.tb_msg.service.impl.TbMsgOpenServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,14 @@ public class OpenApi_v1_Ctrl {
     public AjaxResult push(@RequestBody tb_msg dto, HttpServletRequest request) {
         return tbMsgOpenService.push(request, dto);
     }
+
+    /**
+     * 接收加密的推送数据
+     */
+    @PostMapping("/push_v2")
+    public AjaxResult push(@RequestBody EncryptDto dto, HttpServletRequest request) {
+        return tbMsgOpenService.push_v2(request, dto);
+    }
+
 
 }

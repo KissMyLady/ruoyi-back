@@ -3,6 +3,8 @@ package com.ruoyi.platform.app.msg.tb_msg.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.EncryptDto;
+import com.ruoyi.common.security.EncryptUtilsService;
 import com.ruoyi.common.utils.http.RequestEncoder;
 import com.ruoyi.platform.app.msg.tb_msg.domain.tb_msg;
 import com.ruoyi.platform.app.msg.tb_msg.service.ITbMsgOpenService;
@@ -55,6 +57,9 @@ public class TbMsgOpenServiceImpl implements ITbMsgOpenService {
     //是否需要校验md5
     @Value("${openApi.hasCheckMd5}")
     private boolean hasCheckMd5;
+
+    @Autowired
+    private EncryptUtilsService encryptUtilsService;
 
     /**
      * 接收推送数据
@@ -133,8 +138,8 @@ public class TbMsgOpenServiceImpl implements ITbMsgOpenService {
         }
         //校验通过, 写入数据
         int i = tb_msgMapper.inserttb_msg(dto);
-        //成功数+1
-        int addSelf = requestApiKeyMapper.addSendCount(dto.getKey());
+        //成功数 +1
+        requestApiKeyMapper.addSendCount(dto.getKey());
         return AjaxResult.success("推送数据成功 " + i);
     }
 
@@ -164,7 +169,25 @@ public class TbMsgOpenServiceImpl implements ITbMsgOpenService {
         //生成md5
         String encodeMd5 = RequestEncoder.encode(signStr);
 
-        logger.info("消息推送.校验md5, 服务器生成的md5是: {}", encodeMd5);
+        //logger.info("消息推送.校验md5, 服务器生成的md5是: {}", encodeMd5);
         return encodeMd5;
+    }
+
+    /**
+     * 接收加密的推送数据
+     */
+    @Override
+    public AjaxResult push_v2(HttpServletRequest request, EncryptDto enDto) {
+        //传递值解密
+        EncryptDto encryptDto = encryptUtilsService.decryptString2Dto(enDto);
+        if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
+            return AjaxResult.error(encryptDto.getE());
+        }
+
+        tb_msg dto = JSONUtil.toBean(encryptDto.getJsonObject(), tb_msg.class);
+        // logger.info("解密后的dto打印: {}", dto.toString());
+
+        AjaxResult pushRes = this.push(request, dto);
+        return pushRes;
     }
 }
