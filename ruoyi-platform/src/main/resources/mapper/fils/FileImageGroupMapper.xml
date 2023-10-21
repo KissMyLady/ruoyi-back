@@ -23,7 +23,11 @@
                note ,
                is_delete as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime,
+               (
+                   select count(1) from file_image
+                   where file_image.group_id = file_image_group.group_id
+               )                                             AS countImage
         from file_image_group
     </sql>
     
@@ -109,8 +113,6 @@
             <if test="groupName != null">group_name,</if>
             <if test="note != null">note,</if>
             <if test="isDelete != null">is_delete,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
@@ -118,8 +120,6 @@
             <if test="groupName != null">#{groupName},</if>
             <if test="note != null">#{note},</if>
             <if test="isDelete != null">#{isDelete},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="updateTime != null">#{updateTime},</if>
         </trim>
     </insert>
     
@@ -131,7 +131,6 @@
             <if test="groupName != null">group_name = #{groupName},</if>
             <if test="note != null">note = #{note},</if>
             <if test="isDelete != null">is_delete = #{isDelete},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where id = #{id}

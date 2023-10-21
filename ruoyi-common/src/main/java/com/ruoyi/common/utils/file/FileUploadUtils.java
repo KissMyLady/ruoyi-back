@@ -132,7 +132,7 @@ public class FileUploadUtils {
     public static String extractFilename(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
 
-        logger.info("编码文件名 获取的文件名: {}", originalFilename);
+        //logger.info("编码文件名 获取的文件名: {}", originalFilename);  //blob
 //        String format = StringUtils.format(
 //                "{}/{}_{}.{}",
 //                DateUtils.datePath(),

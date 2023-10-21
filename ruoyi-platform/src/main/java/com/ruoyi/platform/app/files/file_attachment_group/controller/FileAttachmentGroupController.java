@@ -146,21 +146,29 @@ public class FileAttachmentGroupController extends BaseController {
         //不允许修改 code字段
         //检查是否允许修改group_id字段
         Map<String, Object> stringObjectMap = fileAttachmentGroupMapper.selectFileAttachmentGroupById(dto.getId());
-        long old_group_id = Long.parseLong(String.valueOf((Integer) stringObjectMap.get("groupId")));
-        long new_group_id = dto.getGroupId();
 
         StringBuilder sb = new StringBuilder();
-        //新旧数据不一致, 修改判断
-        if (!Objects.equals(old_group_id, new_group_id)) {
-            List<Map<String, Object>> maps = fileAttachmentMapper.select_file_by_group_id(old_group_id);
-            if (ObjectUtil.isNotEmpty(maps) && maps.size() >= 1) {
-                dto.setGroupId(null);
-                sb.append("当前组下存在文件数据,code字段不允许修改.");
-                sb.append("其他字段");
+        //校验字段是否存在
+        if(ObjectUtil.isNotEmpty(dto.getGroupId())
+                && ObjectUtil.isNotEmpty(stringObjectMap.get("groupId"))
+        ){
+            long old_group_id = Long.parseLong(String.valueOf((Integer) stringObjectMap.get("groupId")));
+            long new_group_id = dto.getGroupId();
+            //新旧数据不一致, 修改判断
+            if (!Objects.equals(old_group_id, new_group_id)) {
+                List<Map<String, Object>> maps = fileAttachmentMapper.select_file_by_group_id(old_group_id);
+                if (ObjectUtil.isNotEmpty(maps) && maps.size() >= 1) {
+                    dto.setGroupId(null);
+                    sb.append("当前组下存在文件数据,code字段不允许修改.");
+                    sb.append("其他字段");
+                }
             }
         }
         dto.setUserId(null); //创建用户不允许修改
-        return toAjax(fileAttachmentGroupService.updateFileAttachmentGroup(dto));
+        int i = fileAttachmentGroupService.updateFileAttachmentGroup(dto);
+        sb.append("修改成功: ");
+        sb.append(i);
+        return AjaxResult.success(sb.toString());
     }
 
     /**

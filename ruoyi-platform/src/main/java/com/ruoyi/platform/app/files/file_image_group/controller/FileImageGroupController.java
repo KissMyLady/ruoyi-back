@@ -2,6 +2,7 @@ package com.ruoyi.platform.app.files.file_image_group.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.platform.app.files.file_image.mapper.file_imageMapper;
@@ -137,7 +138,36 @@ public class FileImageGroupController extends BaseController {
         }
 
         FileImageGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileImageGroup.class);
-        return toAjax(fileImageGroupService.updateFileImageGroup(dto));
+
+        //查询是否允许修改
+        //不允许修改 code字段
+        //检查是否允许修改group_id字段
+        Map<String, Object> stringObjectMap = fileImageGroupMapper.selectFileImageGroupById(dto.getId());
+        StringBuilder sb = new StringBuilder();
+        //校验字段是否存在
+        if(ObjectUtil.isNotEmpty(dto.getGroupId())
+                && ObjectUtil.isNotEmpty(stringObjectMap.get("groupId"))
+        ){
+            Integer groupId = (Integer) stringObjectMap.get("groupId");
+            long old_group_id = groupId;
+            long new_group_id = dto.getGroupId();
+            //新旧数据不一致, 修改判断
+            if (!Objects.equals(old_group_id, new_group_id)) {
+                int i = fileImageMapper.query_group_image_count(String.valueOf(groupId));
+                // logger.info("查询图片数量: {}", i);
+                if (ObjectUtil.isNotEmpty(i) && i >= 1) {
+                    dto.setGroupId(null);
+                    sb.append("当前组下存在文件数据, code字段不允许修改.");
+                    sb.append("其他字段");
+                }
+            }
+        }
+        dto.setUserId(null); //创建用户不允许修改
+        int i = fileImageGroupService.updateFileImageGroup(dto);
+
+        sb.append("修改成功: ");
+        sb.append(i);
+        return AjaxResult.success(sb.toString());
     }
 
     /**
