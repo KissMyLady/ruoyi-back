@@ -85,7 +85,7 @@ public class TbMsgOpenServiceImpl implements ITbMsgOpenService {
         Long ss = System.currentTimeMillis() - startTime;
         logEntity.setTimeOut(ss);  //执行时间
         logEntity.setIsSuccess(ajaxResult.isSuccess() ? 1: 0);
-        logEntity.setException("");
+        logEntity.setException(""+ ajaxResult.get("msg"));
         logEntity.setEffectRows("1");
 
         //不管成功否, 写入日志记录
@@ -125,17 +125,14 @@ public class TbMsgOpenServiceImpl implements ITbMsgOpenService {
             if (!md5Str.isEmpty()) {
                 return AjaxResult.error(md5Str);
             }
-
             //比对md5
             if (!ObjectUtil.equals(md5, md5Str)){
                 return AjaxResult.error("md5校验不通过");
             }
         }
-
         //校验通过, 写入数据
         int i = tb_msgMapper.inserttb_msg(dto);
         return AjaxResult.success("推送数据成功 " + i);
-
     }
 
     /**

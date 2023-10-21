@@ -130,8 +130,9 @@ public class request_api_keyController extends BaseController {
         if(ObjectUtil.isEmpty(encryptDto.getJsonObject())){
             return AjaxResult.error(encryptDto.getE());
         }
-
         request_api_key dto = JSONUtil.toBean(encryptDto.getJsonObject(), request_api_key.class);
+        //respKey 值不允许被修改
+        dto.setRespKey(null);
         return toAjax(request_api_keyService.updaterequest_api_key(dto));
     }
 
