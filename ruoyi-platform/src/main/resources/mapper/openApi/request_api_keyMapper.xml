@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.openApi.request_api_key.mapper.request_api_keyMapper">
+    
+    <resultMap type="request_api_key" id="request_api_keyResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="respKey" column="resp_key"/>
+        <result property="reqParams" column="req_params"/>
+        <result property="keyOverdue" column="key_overdue"/>
+        <result property="keySmsCount" column="key_sms_count"/>
+        <result property="sendCount" column="send_count"/>
+        <result property="ipAllowList" column="ip_allow_list"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectrequest_api_keyVo">
+        select id,
+               user_id as userId,
+               resp_key as respKey,
+               req_params as reqParams,
+               DATE_FORMAT(key_overdue, '%Y-%m-%d %H:%i:%S') as keyOverdue,
+               key_sms_count as keySmsCount,
+               send_count as sendCount,
+               ip_allow_list as ipAllowList,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from request_api_key
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectrequest_api_keyList"
+            parameterType="request_api_key"
+            resultMap="request_api_keyResult">
+        <include refid="selectrequest_api_keyVo"/>
+        <where>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryrequest_api_keyList_BySQL"
+            parameterType="request_api_key"
+            resultType="map">
+        <include refid="selectrequest_api_keyVo"/>
+        <where>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryrequest_api_keyList_count"
+            parameterType="request_api_key"
+            resultType="int">
+        select count(1) as total
+        from request_api_key
+        <where>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectrequest_api_keyById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectrequest_api_keyVo"/>
+        where id = #{id}
+    </select>
+    
+    <select id="selectByKey"
+            parameterType="string"
+            resultType="request_api_key">
+        <include refid="selectrequest_api_keyVo"/>
+        where resp_key = #{key}
+             and is_delete = 0
+    </select>
+    
+    <insert id="insertrequest_api_key"
+            parameterType="request_api_key"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into request_api_key
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="respKey != null">resp_key,</if>
+            <if test="reqParams != null">req_params,</if>
+            <if test="keyOverdue != null">key_overdue,</if>
+            <if test="keySmsCount != null">key_sms_count,</if>
+            <if test="sendCount != null">send_count,</if>
+            <if test="ipAllowList != null">ip_allow_list,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="respKey != null">#{respKey},</if>
+            <if test="reqParams != null">#{reqParams},</if>
+            <if test="keyOverdue != null">#{keyOverdue},</if>
+            <if test="keySmsCount != null">#{keySmsCount},</if>
+            <if test="sendCount != null">#{sendCount},</if>
+            <if test="ipAllowList != null">#{ipAllowList},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+    
+    <update id="updaterequest_api_key" parameterType="request_api_key">
+        update request_api_key
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="respKey != null">resp_key = #{respKey},</if>
+            <if test="reqParams != null">req_params = #{reqParams},</if>
+            <if test="keyOverdue != null">key_overdue = #{keyOverdue},</if>
+            <if test="keySmsCount != null">key_sms_count = #{keySmsCount},</if>
+            <if test="sendCount != null">send_count = #{sendCount},</if>
+            <if test="ipAllowList != null">ip_allow_list = #{ipAllowList},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleterequest_api_keyById" parameterType="Long">
+        delete
+        from request_api_key
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleterequest_api_keyByIds" parameterType="String">
+        delete from request_api_key where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    
+    <update id="addSendCount" parameterType="String">
+        UPDATE request_api_key
+        SET send_count = send_count + 1
+        WHERE resp_key = #{key}
+    </update>
+    
+</mapper>

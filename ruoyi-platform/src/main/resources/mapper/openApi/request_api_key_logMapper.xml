@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.openApi.request_api_key_log.mapper.request_api_key_logMapper">
+    
+    <resultMap type="request_api_key_log" id="request_api_key_logResult">
+        <result property="id" column="id"/>
+        <result property="logTitle" column="log_title"/>
+        <result property="reqIp" column="req_ip"/>
+        <result property="reqAddress" column="req_address"/>
+        <result property="reqAgent" column="req_agent"/>
+        <result property="reqBrowser" column="req_browser"/>
+        <result property="reqSystem" column="req_system"/>
+        <result property="reqUrl" column="req_url"/>
+        <result property="reqMethod" column="req_method"/>
+        <result property="reqKey" column="req_key"/>
+        <result property="reqParams" column="req_params"/>
+        <result property="isSuccess" column="is_success"/>
+        <result property="effectRows" column="effect_rows"/>
+        <result property="timeOut" column="time_out"/>
+        <result property="exception" column="exception"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectrequest_api_key_logVo">
+        select id,
+               log_title as logTitle,
+               req_ip as reqIp,
+               req_address as reqAddress,
+               req_agent as reqAgent,
+               req_browser as reqBrowser,
+               req_system as reqSystem,
+               req_url as reqUrl,
+               req_method as reqMethod,
+               req_key as reqKey,
+               req_params as reqParams,
+               is_success as isSuccess,
+               effect_rows as effectRows,
+               time_out as timeOut,
+               exception,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from request_api_key_log
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectrequest_api_key_logList"
+            parameterType="request_api_key_log"
+            resultMap="request_api_key_logResult">
+        <include refid="selectrequest_api_key_logVo"/>
+        <where>
+            <if test="logTitle != null  and logTitle != ''">and log_title like concat('%', #{logTitle}, '%')</if>
+            <if test="isSuccess != null ">and is_success = #{isSuccess}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryrequest_api_key_logList_BySQL"
+            parameterType="request_api_key_log"
+            resultType="map">
+        <include refid="selectrequest_api_key_logVo"/>
+        <where>
+            <if test="logTitle != null  and logTitle != ''">and log_title like concat('%', #{logTitle}, '%')</if>
+            <if test="isSuccess != null ">and is_success = #{isSuccess}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryrequest_api_key_logList_count"
+            parameterType="request_api_key_log"
+            resultType="int">
+        select count(1) as total
+        from request_api_key_log
+        <where>
+            <if test="logTitle != null  and logTitle != ''">and log_title like concat('%', #{logTitle}, '%')</if>
+            <if test="isSuccess != null ">and is_success = #{isSuccess}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectrequest_api_key_logById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectrequest_api_key_logVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertrequest_api_key_log" parameterType="request_api_key_log" useGeneratedKeys="true" keyProperty="id">
+        insert into request_api_key_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logTitle != null">log_title,</if>
+            <if test="reqIp != null">req_ip,</if>
+            <if test="reqAddress != null">req_address,</if>
+            <if test="reqAgent != null">req_agent,</if>
+            <if test="reqBrowser != null">req_browser,</if>
+            <if test="reqSystem != null">req_system,</if>
+            <if test="reqUrl != null">req_url,</if>
+            <if test="reqMethod != null">req_method,</if>
+            <if test="reqKey != null">req_key,</if>
+            <if test="reqParams != null">req_params,</if>
+            <if test="isSuccess != null">is_success,</if>
+            <if test="effectRows != null">effect_rows,</if>
+            <if test="timeOut != null">time_out,</if>
+            <if test="exception != null">exception,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logTitle != null">#{logTitle},</if>
+            <if test="reqIp != null">#{reqIp},</if>
+            <if test="reqAddress != null">#{reqAddress},</if>
+            <if test="reqAgent != null">#{reqAgent},</if>
+            <if test="reqBrowser != null">#{reqBrowser},</if>
+            <if test="reqSystem != null">#{reqSystem},</if>
+            <if test="reqUrl != null">#{reqUrl},</if>
+            <if test="reqMethod != null">#{reqMethod},</if>
+            <if test="reqKey != null">#{reqKey},</if>
+            <if test="reqParams != null">#{reqParams},</if>
+            <if test="isSuccess != null">#{isSuccess},</if>
+            <if test="effectRows != null">#{effectRows},</if>
+            <if test="timeOut != null">#{timeOut},</if>
+            <if test="exception != null">#{exception},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+    
+    <update id="updaterequest_api_key_log" parameterType="request_api_key_log">
+        update request_api_key_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logTitle != null">log_title = #{logTitle},</if>
+            <if test="reqIp != null">req_ip = #{reqIp},</if>
+            <if test="reqAddress != null">req_address = #{reqAddress},</if>
+            <if test="reqAgent != null">req_agent = #{reqAgent},</if>
+            <if test="reqBrowser != null">req_browser = #{reqBrowser},</if>
+            <if test="reqSystem != null">req_system = #{reqSystem},</if>
+            <if test="reqUrl != null">req_url = #{reqUrl},</if>
+            <if test="reqMethod != null">req_method = #{reqMethod},</if>
+            <if test="reqKey != null">req_key = #{reqKey},</if>
+            <if test="reqParams != null">req_params = #{reqParams},</if>
+            <if test="isSuccess != null">is_success = #{isSuccess},</if>
+            <if test="effectRows != null">effect_rows = #{effectRows},</if>
+            <if test="timeOut != null">time_out = #{timeOut},</if>
+            <if test="exception != null">exception = #{exception},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleterequest_api_key_logById" parameterType="Long">
+        delete
+        from request_api_key_log
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleterequest_api_key_logByIds" parameterType="String">
+        delete from request_api_key_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
