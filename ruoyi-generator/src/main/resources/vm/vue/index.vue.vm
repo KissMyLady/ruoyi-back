@@ -464,7 +464,7 @@
     methods: {
       /** 查询${functionName}列表 */
       getList() {
-        this.total = 0;
+        //this.total = 0;
         this.${businessName}List = [];
         this.loading = true;
           #foreach ($column in $columns)
@@ -580,7 +580,6 @@
               "b": aesEncrypt(dict2String),
               "c": aesEncrypt("Hello World !")
             }
-
             #foreach ($column in $columns)
             #if($column.htmlType == "checkbox")
             this.form.$column.javaField = this.form.${column.javaField}.join(",");
@@ -665,6 +664,35 @@
     this.download('${moduleName}/${businessName}/export', {
       ...this.queryParams
     }, `${businessName}_#[[${new Date().getTime()}]]#.xlsx`)
+  },
+  //删除切换
+  switchDeleteState(rowId, isD, switchRow="isDelete") {
+    //console.log("删除切换row: ", rowId);
+    let sendForm = {
+      'id': rowId,
+      // 'isDelete': isD
+    }
+    sendForm[`${switchRow}`] = isD
+    let dict2String = changeDictToString(sendForm);
+    let sendData = {
+      'a': aesEncrypt('1024'),
+      'b': aesEncrypt(dict2String),
+      'c': aesEncrypt('Hello World !')
+    }
+    update${BusinessName}(sendData).then((res) => {
+      if (res.code !== 200) {
+        TipMessage.Warning(res.msg)
+        return null
+      }
+      if (isD == 1) {
+        TipMessage.Warning(res.msg)
+      } else {
+        TipMessage.isOK(res.msg)
+      }
+      this.getList()
+    }).catch((err) => {
+      //TipMessage.Error("错误"+ err);
+    })
   },
   //==========================底部结束==================================
   }
