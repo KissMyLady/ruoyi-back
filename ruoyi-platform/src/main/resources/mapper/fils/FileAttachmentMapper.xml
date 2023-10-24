@@ -66,6 +66,7 @@
             resultType="map">
         <include refid="selectFileAttachmentVo"/>
         <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
             <if test="groupId != null ">and group_id = #{groupId}</if>
             <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
             <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>
@@ -87,6 +88,7 @@
         select count(1) as total
         from file_attachment
         <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
             <if test="groupId != null ">and group_id = #{groupId}</if>
             <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
             <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>

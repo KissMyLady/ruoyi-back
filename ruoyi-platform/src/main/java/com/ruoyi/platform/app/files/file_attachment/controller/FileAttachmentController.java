@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.platform.app.files.file_attachment.mapper.FileAttachmentMapper;
 import com.ruoyi.platform.app.files.file_attachment.service.impl.FileUploadServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,6 +63,15 @@ public class FileAttachmentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('file_attachment:file_attachment:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody FileAttachment dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
             page = 1;

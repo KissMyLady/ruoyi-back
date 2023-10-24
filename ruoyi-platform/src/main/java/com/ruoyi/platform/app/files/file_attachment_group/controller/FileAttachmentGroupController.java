@@ -13,7 +13,9 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.domain.ResultVo;
 import com.ruoyi.common.core.domain.EncryptDto;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.security.EncryptUtilsService;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.platform.app.files.file_attachment.mapper.FileAttachmentMapper;
 import com.ruoyi.platform.app.files.file_attachment_group.mapper.FileAttachmentGroupMapper;
 import org.slf4j.Logger;
@@ -71,6 +73,15 @@ public class FileAttachmentGroupController extends BaseController {
     @PreAuthorize("@ss.hasPermi('file_attachment_group:file_attachment_group:list')")
     @PostMapping("/list_sql")
     public TableDataInfo list_sql(@RequestBody FileAttachmentGroup dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         //startPage();
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
@@ -96,6 +107,15 @@ public class FileAttachmentGroupController extends BaseController {
     @Log(title = "导出附件分组", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, FileAttachmentGroup dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         List<FileAttachmentGroup> list = fileAttachmentGroupService.selectFileAttachmentGroupList(dto);
         ExcelUtil<FileAttachmentGroup> util = new ExcelUtil<FileAttachmentGroup>(FileAttachmentGroup.class);
         util.exportExcel(response, list, "附件分组数据");
@@ -126,6 +146,10 @@ public class FileAttachmentGroupController extends BaseController {
             return AjaxResult.error(encryptDto.getE());
         }
         FileAttachmentGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileAttachmentGroup.class);
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        dto.setUserId(userId);
         return toAjax(fileAttachmentGroupService.insertFileAttachmentGroup(dto));
     }
 

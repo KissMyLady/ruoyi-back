@@ -31,7 +31,8 @@ import com.ruoyi.platform.app.files.file_image_group.service.impl.FileImageGroup
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.platform.app.files.file_image_group.mapper.FileImageGroupMapper;
 import com.ruoyi.common.core.page.TableDataInfo;
-
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 /**
  * 图片分组Controller
  *
@@ -62,6 +63,15 @@ public class FileImageGroupController extends BaseController {
     @PreAuthorize("@ss.hasPermi('file_image_group:file_image_group:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody FileImageGroup dto) {
+        //校验用户是什么角色
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
             page = 1;
@@ -121,6 +131,10 @@ public class FileImageGroupController extends BaseController {
         }
 
         FileImageGroup dto = JSONUtil.toBean(encryptDto.getJsonObject(), FileImageGroup.class);
+        //设置创建用户id
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        dto.setUserId(userId);
         return toAjax(fileImageGroupService.insertFileImageGroup(dto));
     }
 

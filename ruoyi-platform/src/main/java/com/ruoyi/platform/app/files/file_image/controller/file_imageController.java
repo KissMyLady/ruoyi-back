@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.platform.app.files.file_image.service.impl.FileImageUploadServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,15 @@ public class file_imageController extends BaseController {
     @PreAuthorize("@ss.hasPermi('file_image:file_image:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody file_image dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
             page = 1;
@@ -87,6 +98,15 @@ public class file_imageController extends BaseController {
     @Log(title = "导出素材图片", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, file_image dto) {
+        //设置创建用户id
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         List<file_image> list = file_imageService.selectfile_imageList(dto);
         ExcelUtil<file_image> util = new ExcelUtil<file_image>(file_image.class);
         util.exportExcel(response, list, "素材图片数据");
@@ -99,6 +119,7 @@ public class file_imageController extends BaseController {
     @PreAuthorize("@ss.hasPermi('file_image:file_image:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
+        //检查当前资源是否有权限查询
         Map<String, Object> res = file_imageService.selectfile_imageById(id);
         //return success(file_imageService.selectfile_imageById(id));
         //返回值加密
@@ -118,8 +139,11 @@ public class file_imageController extends BaseController {
         if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE());
         }
-
         file_image dto = JSONUtil.toBean(encryptDto.getJsonObject(), file_image.class);
+        //设置创建用户id
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        dto.setUserId(userId);
         return toAjax(file_imageService.insertfile_image(dto));
     }
 

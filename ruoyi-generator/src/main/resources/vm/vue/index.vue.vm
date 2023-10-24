@@ -466,7 +466,7 @@
       /** 查询${functionName}列表 */
       getList() {
         //this.total = 0;
-        this.${businessName}List = [];
+        //this.${businessName}List = [];
         this.loading = true;
           #foreach ($column in $columns)
               #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
@@ -488,6 +488,7 @@
           //let publicObj = aesDecrypt(privateObj);
           //let jsonData = JSON.parse(publicObj);
           let jsonData = aesDecrypt2Json(privateObj)
+          this.${businessName}List = [];
           console.log("list数据查询结果", jsonData)
           this.${businessName}List = jsonData;
           //this.${businessName}List = response.rows;

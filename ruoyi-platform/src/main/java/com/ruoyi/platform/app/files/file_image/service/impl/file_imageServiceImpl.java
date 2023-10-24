@@ -52,7 +52,7 @@ public class file_imageServiceImpl implements Ifile_imageService {
      */
     @Override
     public int insertfile_image(file_image file_image) {
-        file_image.setCreateTime(DateUtils.getNowDate());
+        //file_image.setCreateTime(DateUtils.getNowDate());
         return file_imageMapper.insertfile_image(file_image);
     }
 
