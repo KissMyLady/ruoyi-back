@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.blog.blog_history.mapper.BlogHistoryMapper">
+    
+    <resultMap type="BlogHistory" id="BlogHistoryResult">
+        <result property="id" column="id"/>
+        <result property="blogId" column="blog_id"/>
+        <result property="preContent" column="pre_content"/>
+        <result property="userId" column="user_id"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectBlogHistoryVo">
+        select id,
+               blog_id as blogId,
+               pre_content as preContent,
+               user_id as userId,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from blog_history
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectBlogHistoryList"
+            parameterType="BlogHistory"
+            resultMap="BlogHistoryResult">
+        <include refid="selectBlogHistoryVo"/>
+        <where>
+            <if test="blogId != null ">and blog_id = #{blogId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBlogHistoryList_BySQL"
+            parameterType="BlogHistory"
+            resultType="map">
+        select id,
+               blog_id as blogId,
+               user_id as userId,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from blog_history
+        <where>
+            <if test="blogId != null ">and blog_id = #{blogId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBlogHistoryList_count"
+            parameterType="BlogHistory"
+            resultType="int">
+        select count(1) as total
+        from blog_history
+        <where>
+            <if test="blogId != null ">and blog_id = #{blogId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectBlogHistoryById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectBlogHistoryVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertBlogHistory" parameterType="BlogHistory" useGeneratedKeys="true" keyProperty="id">
+        insert into blog_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="blogId != null">blog_id,</if>
+            <if test="preContent != null">pre_content,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="blogId != null">#{blogId},</if>
+            <if test="preContent != null">#{preContent},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateBlogHistory" parameterType="BlogHistory">
+        update blog_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="blogId != null">blog_id = #{blogId},</if>
+            <if test="preContent != null">pre_content = #{preContent},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteBlogHistoryById" parameterType="Long">
+        delete
+        from blog_history
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteBlogHistoryByIds" parameterType="String">
+        delete from blog_history where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

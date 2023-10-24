@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.blog.blog_common.mapper.BlogCommonMapper">
+    
+    <resultMap type="BlogCommon" id="BlogCommonResult">
+        <result property="id" column="id"/>
+        <result property="blogIt" column="blog_it"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="author" column="author"/>
+        <result property="content" column="content"/>
+        <result property="operIp" column="oper_ip"/>
+        <result property="operLocation" column="oper_location"/>
+        <result property="reqAgent" column="req_agent"/>
+        <result property="reqBrowser" column="req_browser"/>
+        <result property="reqSystem" column="req_system"/>
+        <result property="likeNum" column="like_num"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectBlogCommonVo">
+        select id,
+               blog_it as blogIt,
+               parent_id as parentId,
+               author,
+               content,
+               oper_ip as operIp,
+               oper_location as operLocation,
+               req_agent as reqAgent,
+               req_browser as reqBrowser,
+               req_system as reqSystem,
+               like_num as likeNum,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from blog_common
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectBlogCommonList"
+            parameterType="BlogCommon"
+            resultMap="BlogCommonResult">
+        <include refid="selectBlogCommonVo"/>
+        <where>
+            <if test="operLocation != null  and operLocation != ''">and oper_location = #{operLocation}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBlogCommonList_BySQL"
+            parameterType="BlogCommon"
+            resultType="map">
+        <include refid="selectBlogCommonVo"/>
+        <where>
+            <if test="operLocation != null  and operLocation != ''">and oper_location = #{operLocation}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBlogCommonList_count"
+            parameterType="BlogCommon"
+            resultType="int">
+        select count(1) as total
+        from blog_common
+        <where>
+            <if test="operLocation != null  and operLocation != ''">and oper_location = #{operLocation}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectBlogCommonById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectBlogCommonVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertBlogCommon" parameterType="BlogCommon" useGeneratedKeys="true" keyProperty="id">
+        insert into blog_common
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="blogIt != null">blog_it,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="author != null">author,</if>
+            <if test="content != null">content,</if>
+            <if test="operIp != null">oper_ip,</if>
+            <if test="operLocation != null">oper_location,</if>
+            <if test="reqAgent != null">req_agent,</if>
+            <if test="reqBrowser != null">req_browser,</if>
+            <if test="reqSystem != null">req_system,</if>
+            <if test="likeNum != null">like_num,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="blogIt != null">#{blogIt},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="author != null">#{author},</if>
+            <if test="content != null">#{content},</if>
+            <if test="operIp != null">#{operIp},</if>
+            <if test="operLocation != null">#{operLocation},</if>
+            <if test="reqAgent != null">#{reqAgent},</if>
+            <if test="reqBrowser != null">#{reqBrowser},</if>
+            <if test="reqSystem != null">#{reqSystem},</if>
+            <if test="likeNum != null">#{likeNum},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateBlogCommon" parameterType="BlogCommon">
+        update blog_common
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="blogIt != null">blog_it = #{blogIt},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="author != null">author = #{author},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="operIp != null">oper_ip = #{operIp},</if>
+            <if test="operLocation != null">oper_location = #{operLocation},</if>
+            <if test="reqAgent != null">req_agent = #{reqAgent},</if>
+            <if test="reqBrowser != null">req_browser = #{reqBrowser},</if>
+            <if test="reqSystem != null">req_system = #{reqSystem},</if>
+            <if test="likeNum != null">like_num = #{likeNum},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteBlogCommonById" parameterType="Long">
+        delete
+        from blog_common
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteBlogCommonByIds" parameterType="String">
+        delete from blog_common where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

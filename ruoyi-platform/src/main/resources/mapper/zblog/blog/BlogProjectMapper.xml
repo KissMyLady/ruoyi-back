@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.blog.blog_project.mapper.BlogProjectMapper">
+    
+    <resultMap type="BlogProject" id="BlogProjectResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="blogType" column="blog_type"/>
+        <result property="name" column="name"/>
+        <result property="intro" column="intro"/>
+        <result property="icon" column="icon"/>
+        <result property="coverImg" column="cover_img"/>
+        <result property="authorityCode" column="authority_code"/>
+        <result property="authorityValue" column="authority_value"/>
+        <result property="isWatermark" column="is_watermark"/>
+        <result property="watermarkType" column="watermark_type"/>
+        <result property="watermarkValue" column="watermark_value"/>
+        <result property="isTop" column="is_top"/>
+        <result property="visitor" column="visitor"/>
+        <result property="sort" column="sort"/>
+        <result property="sortField" column="sort_field"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectBlogProjectVo">
+        select id,
+               user_id as userId,
+               blog_type as blogType,
+               name,
+               intro,
+               icon,
+               cover_img as coverImg,
+               authority_code as authorityCode,
+               authority_value as authorityValue,
+               is_watermark as isWatermark,
+               watermark_type as watermarkType,
+               watermark_value as watermarkValue,
+               is_top as isTop,
+               visitor,
+               sort,
+               sort_field as sortField,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+        from blog_project
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectBlogProjectList"
+            parameterType="BlogProject"
+            resultMap="BlogProjectResult">
+        <include refid="selectBlogProjectVo"/>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="blogType != null  and blogType != ''">and blog_type = #{blogType}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="authorityCode != null  and authorityCode != ''">and authority_code = #{authorityCode}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBlogProjectList_BySQL"
+            parameterType="BlogProject"
+            resultType="map">
+        <include refid="selectBlogProjectVo"/>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="blogType != null  and blogType != ''">and blog_type = #{blogType}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="authorityCode != null  and authorityCode != ''">and authority_code = #{authorityCode}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBlogProjectList_count"
+            parameterType="BlogProject"
+            resultType="int">
+        select count(1) as total
+        from blog_project
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="blogType != null  and blogType != ''">and blog_type = #{blogType}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="authorityCode != null  and authorityCode != ''">and authority_code = #{authorityCode}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectBlogProjectById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectBlogProjectVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertBlogProject" parameterType="BlogProject" useGeneratedKeys="true" keyProperty="id">
+        insert into blog_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="blogType != null">blog_type,</if>
+            <if test="name != null">name,</if>
+            <if test="intro != null">intro,</if>
+            <if test="icon != null">icon,</if>
+            <if test="coverImg != null">cover_img,</if>
+            <if test="authorityCode != null">authority_code,</if>
+            <if test="authorityValue != null">authority_value,</if>
+            <if test="isWatermark != null">is_watermark,</if>
+            <if test="watermarkType != null">watermark_type,</if>
+            <if test="watermarkValue != null">watermark_value,</if>
+            <if test="isTop != null">is_top,</if>
+            <if test="visitor != null">visitor,</if>
+            <if test="sort != null">sort,</if>
+            <if test="sortField != null">sort_field,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="blogType != null">#{blogType},</if>
+            <if test="name != null">#{name},</if>
+            <if test="intro != null">#{intro},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="coverImg != null">#{coverImg},</if>
+            <if test="authorityCode != null">#{authorityCode},</if>
+            <if test="authorityValue != null">#{authorityValue},</if>
+            <if test="isWatermark != null">#{isWatermark},</if>
+            <if test="watermarkType != null">#{watermarkType},</if>
+            <if test="watermarkValue != null">#{watermarkValue},</if>
+            <if test="isTop != null">#{isTop},</if>
+            <if test="visitor != null">#{visitor},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="sortField != null">#{sortField},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateBlogProject" parameterType="BlogProject">
+        update blog_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="blogType != null">blog_type = #{blogType},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="intro != null">intro = #{intro},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="coverImg != null">cover_img = #{coverImg},</if>
+            <if test="authorityCode != null">authority_code = #{authorityCode},</if>
+            <if test="authorityValue != null">authority_value = #{authorityValue},</if>
+            <if test="isWatermark != null">is_watermark = #{isWatermark},</if>
+            <if test="watermarkType != null">watermark_type = #{watermarkType},</if>
+            <if test="watermarkValue != null">watermark_value = #{watermarkValue},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="visitor != null">visitor = #{visitor},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="sortField != null">sort_field = #{sortField},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteBlogProjectById" parameterType="Long">
+        delete
+        from blog_project
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteBlogProjectByIds" parameterType="String">
+        delete from blog_project where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
