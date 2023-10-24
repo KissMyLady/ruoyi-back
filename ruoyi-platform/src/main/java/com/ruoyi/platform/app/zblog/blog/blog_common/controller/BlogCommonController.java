@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +59,15 @@ public class BlogCommonController extends BaseController {
     @PreAuthorize("@ss.hasPermi('blog_common:blog_common:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody BlogCommon dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setAuthor(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setAuthor(""+user.getUserId());
+        }
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
             page = 1;
@@ -83,6 +94,15 @@ public class BlogCommonController extends BaseController {
     @Log(title = "导出博客评论", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BlogCommon dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setAuthor(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setAuthor(""+user.getUserId());
+        }
         List<BlogCommon> list = blogCommonService.selectBlogCommonList(dto);
         ExcelUtil<BlogCommon> util = new ExcelUtil<BlogCommon>(BlogCommon.class);
         util.exportExcel(response, list, "博客评论数据");
@@ -116,6 +136,8 @@ public class BlogCommonController extends BaseController {
         }
 
         BlogCommon dto = JSONUtil.toBean(encryptDto.getJsonObject(), BlogCommon.class);
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        dto.setAuthor(""+user.getUserId());
         return toAjax(blogCommonService.insertBlogCommon(dto));
     }
 

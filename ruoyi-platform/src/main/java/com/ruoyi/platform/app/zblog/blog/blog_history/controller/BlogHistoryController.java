@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +59,15 @@ public class BlogHistoryController extends BaseController {
     @PreAuthorize("@ss.hasPermi('blog_history:blog_history:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody BlogHistory dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         //查询当前用户
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
@@ -84,6 +95,15 @@ public class BlogHistoryController extends BaseController {
     @Log(title = "导出博客文档历史记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BlogHistory dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         List<BlogHistory> list = blogHistoryService.selectBlogHistoryList(dto);
         ExcelUtil<BlogHistory> util = new ExcelUtil<BlogHistory>(BlogHistory.class);
         util.exportExcel(response, list, "博客文档历史记录数据");
@@ -117,6 +137,8 @@ public class BlogHistoryController extends BaseController {
         }
 
         BlogHistory dto = JSONUtil.toBean(encryptDto.getJsonObject(), BlogHistory.class);
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        dto.setUserId(user.getUserId());
         return toAjax(blogHistoryService.insertBlogHistory(dto));
     }
 

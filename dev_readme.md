@@ -1,8 +1,25 @@
 
 
+插入数据时, 设置当前用户字段
+```java
+SysUser user = SecurityUtils.getLoginUser().getUser();
+dto.setUserId(user.getUserId());
+```
+
 
 list查询 分页封装
 ```java
+//设置查询自己
+//获取到用户
+SysUser user = SecurityUtils.getLoginUser().getUser();
+Long userId = user.getUserId();
+if(userId == 1){
+    dto.setUserId(null);
+}else {
+    //普通用户, 仅查询自己
+    dto.setUserId(user.getUserId());
+}
+//分页
 Integer page = dto.getPageNum();
 if (page <= 0 || page == null) {
     page = 1;
@@ -21,7 +38,6 @@ String sort = dto.getSort();
 //查询
 //查询列表
 List<Map<String, Object>> queryArticleList(QueryArticleListDto dto);
-        
 ```
 
 分页设置后, 使用sql查询

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -60,6 +62,16 @@ public class ${ClassName}Controller extends BaseController {
     @PostMapping("/list")
     #if($table.crud || $table.sub)
     public TableDataInfo list(@RequestBody ${ClassName} dto) {
+        //设置用户可见
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
+        //分页
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
             page = 1;
@@ -92,6 +104,15 @@ public class ${ClassName}Controller extends BaseController {
     @Log(title = "导出${functionName}", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ${ClassName} dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         List<${ClassName}> list = ${className}Service.select${ClassName}List(dto);
         ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
         util.exportExcel(response, list, "${functionName}数据");
@@ -125,6 +146,8 @@ public class ${ClassName}Controller extends BaseController {
         }
 
         ${ClassName} dto = JSONUtil.toBean(encryptDto.getJsonObject(), ${ClassName}.class);
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        dto.setUserId(user.getUserId());
         return toAjax(${className}Service.insert${ClassName}(dto));
     }
 

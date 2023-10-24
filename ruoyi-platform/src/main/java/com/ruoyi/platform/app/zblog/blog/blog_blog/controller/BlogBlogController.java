@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +59,15 @@ public class BlogBlogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('blog_blog:blog_blog:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody BlogBlog dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
             page = 1;
@@ -83,6 +94,15 @@ public class BlogBlogController extends BaseController {
     @Log(title = "导出博客文档", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BlogBlog dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         List<BlogBlog> list = blogBlogService.selectBlogBlogList(dto);
         ExcelUtil<BlogBlog> util = new ExcelUtil<BlogBlog>(BlogBlog.class);
         util.exportExcel(response, list, "博客文档数据");
@@ -116,6 +136,8 @@ public class BlogBlogController extends BaseController {
         }
 
         BlogBlog dto = JSONUtil.toBean(encryptDto.getJsonObject(), BlogBlog.class);
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        dto.setUserId(user.getUserId());
         return toAjax(blogBlogService.insertBlogBlog(dto));
     }
 

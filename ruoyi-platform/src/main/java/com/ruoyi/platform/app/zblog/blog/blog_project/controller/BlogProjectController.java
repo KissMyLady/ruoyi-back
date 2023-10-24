@@ -3,6 +3,9 @@ package com.ruoyi.platform.app.zblog.blog.blog_project.controller;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,6 +59,15 @@ public class BlogProjectController extends BaseController {
     @PreAuthorize("@ss.hasPermi('blog_project:blog_project:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody BlogProject dto) {
+        //获取到用户
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         //查询当前用户的文档
         Integer page = dto.getPageNum();
         if (page <= 0 || page == null) {
@@ -83,6 +95,14 @@ public class BlogProjectController extends BaseController {
     @Log(title = "导出博客文集", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BlogProject dto) {
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        if(userId == 1){
+            dto.setUserId(null);
+        }else {
+            //普通用户, 仅查询自己
+            dto.setUserId(user.getUserId());
+        }
         List<BlogProject> list = blogProjectService.selectBlogProjectList(dto);
         ExcelUtil<BlogProject> util = new ExcelUtil<BlogProject>(BlogProject.class);
         util.exportExcel(response, list, "博客文集数据");
@@ -116,6 +136,8 @@ public class BlogProjectController extends BaseController {
         }
 
         BlogProject dto = JSONUtil.toBean(encryptDto.getJsonObject(), BlogProject.class);
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        dto.setUserId(user.getUserId());
         return toAjax(blogProjectService.insertBlogProject(dto));
     }
 
