@@ -45,7 +45,7 @@
                sort_field as sortField,
                is_delete as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
         from blog_project
     </sql>
     
@@ -71,7 +71,32 @@
     <select id="queryBlogProjectList_BySQL"
             parameterType="BlogProject"
             resultType="map">
-        <include refid="selectBlogProjectVo"/>
+        select id,
+               user_id as userId,
+               blog_type as blogType,
+               name,
+               intro,
+               icon,
+               cover_img as coverImg,
+               authority_code as authorityCode,
+               authority_value as authorityValue,
+               is_watermark as isWatermark,
+               watermark_type as watermarkType,
+               watermark_value as watermarkValue,
+               is_top as isTop,
+               visitor,
+               sort,
+               sort_field as sortField,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime,
+                (
+                    select count(1)
+                    from blog_blog bb
+                    where bb.project_id = blog_project.id
+                    and bb.is_delete = 0
+                )                                             AS countSum
+               from blog_project
         <where>
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="blogType != null  and blogType != ''">and blog_type = #{blogType}</if>

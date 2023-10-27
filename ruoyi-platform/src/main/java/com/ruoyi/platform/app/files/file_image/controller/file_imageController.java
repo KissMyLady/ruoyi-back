@@ -159,9 +159,9 @@ public class file_imageController extends BaseController {
         if (ObjectUtil.isEmpty(encryptDto.getJsonObject())) {
             return AjaxResult.error(encryptDto.getE());
         }
-
         file_image dto = JSONUtil.toBean(encryptDto.getJsonObject(), file_image.class);
-        return toAjax(file_imageService.updatefile_image(dto));
+        int i = file_imageService.updatefile_image(dto);
+        return AjaxResult.success("修改成功"+ i);
     }
 
     /**

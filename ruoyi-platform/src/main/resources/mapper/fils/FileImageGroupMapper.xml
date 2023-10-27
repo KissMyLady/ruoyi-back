@@ -23,7 +23,7 @@
                note ,
                is_delete as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime,
                (
                    select count(1) from file_image
                    where file_image.group_id = file_image_group.group_id
@@ -93,7 +93,7 @@
                note ,
                is_delete as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
         from file_image_group
         where group_id = #{groupId}
     </select>

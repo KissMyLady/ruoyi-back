@@ -57,7 +57,7 @@
                file_gg.note,
                file_gg.is_delete                                     as isDelete,
                DATE_FORMAT(file_gg.create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(file_gg.update_time, '%Y-%m-%d %H:%i:%S') as updatTime,
+               DATE_FORMAT(file_gg.update_time, '%Y-%m-%d %H:%i:%S') as updateTime,
                (
                 select count(1) from file_attachment where file_attachment.group_id = file_gg.group_id
                )                                                     as fileCount
@@ -102,7 +102,7 @@
                note,
                is_delete as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
         from file_attachment_group
         where id = #{id}
     </select>
@@ -118,7 +118,7 @@
                note,
                is_delete as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
         from file_attachment_group
         where group_id = #{groupId}
     </select>

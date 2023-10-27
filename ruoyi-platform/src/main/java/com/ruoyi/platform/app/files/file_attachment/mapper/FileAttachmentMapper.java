@@ -37,7 +37,7 @@ public interface FileAttachmentMapper {
     /**
      * SQL查询列表
      */
-    @MapKey("id")
+    //@MapKey("id")
     List<Map<String, Object>> queryFileAttachmentList_BySQL(FileAttachment dto);
 
     //查询列表 总条数

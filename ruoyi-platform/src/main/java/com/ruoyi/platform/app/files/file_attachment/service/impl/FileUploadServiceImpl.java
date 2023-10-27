@@ -56,9 +56,10 @@ public class FileUploadServiceImpl implements IFileUploadService {
 //            }
 //        }
         String group_id = request.getHeader("http-group-id");
-        logger.info("获取到的group_id: {}", group_id);
+        //logger.info("获取到的group_id: {}", group_id);
         if (ObjectUtil.isEmpty(group_id)) {
-            return AjaxResult.error("组id不能为空");
+            // return AjaxResult.error("组id不能为空");
+            group_id = "0";
         }
         SysUser user = SecurityUtils.getLoginUser().getUser();
         Long userId = user.getUserId();
@@ -81,6 +82,8 @@ public class FileUploadServiceImpl implements IFileUploadService {
         if (ObjectUtil.isEmpty(maps)) {
             if (group_id.equals("9999")) {
                 return AjaxResult.error("默认文件组不存在, 请联系管理员创建一个group_id为9999的文件组");
+            } else if (group_id.equals("0")) {
+
             } else {
                 return AjaxResult.error("文件组groupId不存在, 请检查组id是否正确");
             }

@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.platform.app.zblog.blog.blog_history.domain.BlogHistory;
+import com.ruoyi.platform.app.zblog.blog.blog_history.mapper.BlogHistoryMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +53,10 @@ public class BlogBlogController extends BaseController {
 
     @Autowired
     private EncryptUtilsService encryptUtilsService;
+
+    @Autowired
+    private BlogHistoryMapper blogHistoryMapper;
+
 
     /**
      * 查询列表
@@ -135,7 +141,10 @@ public class BlogBlogController extends BaseController {
             return AjaxResult.error(encryptDto.getE());
         }
 
+        //长文本内容
+        // String longTextContent = encryptDto.getC();
         BlogBlog dto = JSONUtil.toBean(encryptDto.getJsonObject(), BlogBlog.class);
+
         SysUser user = SecurityUtils.getLoginUser().getUser();
         dto.setUserId(user.getUserId());
         return toAjax(blogBlogService.insertBlogBlog(dto));
@@ -155,7 +164,24 @@ public class BlogBlogController extends BaseController {
         }
 
         BlogBlog dto = JSONUtil.toBean(encryptDto.getJsonObject(), BlogBlog.class);
-        return toAjax(blogBlogService.updateBlogBlog(dto));
+
+        //查询历史数据, 保存到表
+        Map<String, Object> stringObjectMap = blogBlogService.selectBlogBlogById(dto.getId());
+
+        BlogBlog historyDto = JSONUtil.toBean(JSONUtil.toJsonStr(stringObjectMap), BlogBlog.class);
+
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+
+        //保存到表
+        BlogHistory blogHistory = new BlogHistory();
+        blogHistory.setBlogId(historyDto.getId());  //文档id
+        blogHistory.setUserId(userId);  //用户id
+        blogHistory.setPreContent(historyDto.getPreContent());  //内容
+        int i_blogHistory = blogHistoryMapper.insertBlogHistory(blogHistory);
+
+        int i = blogBlogService.updateBlogBlog(dto);
+        return toAjax(i);
     }
 
     /**

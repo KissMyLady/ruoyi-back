@@ -35,7 +35,7 @@
                like_num as likeNum,
                is_delete as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updatTime
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
         from blog_common
     </sql>
     
