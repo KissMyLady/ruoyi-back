@@ -8,6 +8,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.platform.app.zblog.blog.blog_history.domain.BlogHistory;
 import com.ruoyi.platform.app.zblog.blog.blog_history.mapper.BlogHistoryMapper;
+import com.ruoyi.platform.app.zblog.blog.blog_project.domain.BlogProject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,7 +58,6 @@ public class BlogBlogController extends BaseController {
     @Autowired
     private BlogHistoryMapper blogHistoryMapper;
 
-
     /**
      * 查询列表
      */
@@ -68,9 +68,9 @@ public class BlogBlogController extends BaseController {
         //获取到用户
         SysUser user = SecurityUtils.getLoginUser().getUser();
         Long userId = user.getUserId();
-        if(userId == 1){
+        if (userId == 1) {
             dto.setUserId(null);
-        }else {
+        } else {
             //普通用户, 仅查询自己
             dto.setUserId(user.getUserId());
         }
@@ -103,9 +103,9 @@ public class BlogBlogController extends BaseController {
         //获取到用户
         SysUser user = SecurityUtils.getLoginUser().getUser();
         Long userId = user.getUserId();
-        if(userId == 1){
+        if (userId == 1) {
             dto.setUserId(null);
-        }else {
+        } else {
             //普通用户, 仅查询自己
             dto.setUserId(user.getUserId());
         }
@@ -173,13 +173,15 @@ public class BlogBlogController extends BaseController {
         SysUser user = SecurityUtils.getLoginUser().getUser();
         Long userId = user.getUserId();
 
-        //保存到表
+        //保存到历史记录
         BlogHistory blogHistory = new BlogHistory();
         blogHistory.setBlogId(historyDto.getId());  //文档id
+        blogHistory.setName(historyDto.getName());  //文档名称
         blogHistory.setUserId(userId);  //用户id
         blogHistory.setPreContent(historyDto.getPreContent());  //内容
-        int i_blogHistory = blogHistoryMapper.insertBlogHistory(blogHistory);
+        blogHistoryMapper.insertBlogHistory(blogHistory);
 
+        //更新
         int i = blogBlogService.updateBlogBlog(dto);
         return toAjax(i);
     }
@@ -191,6 +193,33 @@ public class BlogBlogController extends BaseController {
     @Log(title = "删除博客文档", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        Long userId = user.getUserId();
+        //删除前, 将文档备份到历史数据表
+        for (Long dbId : ids) {
+            Map<String, Object> stringObjectMap = blogBlogMapper.selectBlogBlogById(dbId);
+            //转对象
+            BlogBlog dto = JSONUtil.toBean(JSONUtil.toJsonStr(stringObjectMap), BlogBlog.class);
+            BlogHistory blogHistory = new BlogHistory();
+            blogHistory.setUserId(userId);
+            blogHistory.setBlogId(dbId);
+            blogHistory.setName(dto.getName());  //文档名称
+
+            //判断编辑器类别
+            Long editorMode = dto.getEditorMode();
+            if (editorMode == 1){
+                //md编辑器, 内容字段为 preContent
+                blogHistory.setPreContent(dto.getPreContent());
+            } else if (editorMode == 2) {
+                //富文本编辑器, 存文本txt内容
+                blogHistory.setPreContent(dto.getPreContent());
+            }else if (editorMode == 9) {
+                blogHistory.setPreContent(dto.getContent());
+            }else {
+                blogHistory.setPreContent(dto.getPreContent());
+            }
+            blogHistoryMapper.insertBlogHistory(blogHistory);
+        }
         return toAjax(blogBlogService.deleteBlogBlogByIds(ids));
     }
 

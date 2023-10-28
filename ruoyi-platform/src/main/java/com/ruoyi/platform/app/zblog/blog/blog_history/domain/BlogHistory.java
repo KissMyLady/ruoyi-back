@@ -26,6 +26,9 @@ public class BlogHistory extends BaseEntity {
     @Excel(name = "文档id")
     private Long blogId;
 
+    @Excel(name = "文档标题")
+    private String name;
+
     /**
      * 文档历史编辑内容
      */
@@ -84,17 +87,23 @@ public class BlogHistory extends BaseEntity {
         return isDelete;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("blogId", getBlogId())
-                .append("preContent", getPreContent())
-                .append("userId", getUserId())
-                .append("isDelete", getIsDelete())
-                .append("createTime", getCreateTime())
-                .append("updateTime", getUpdateTime())
-                .toString();
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "BlogHistory{" +
+                "id=" + id +
+                ", blogId=" + blogId +
+                ", name='" + name + '\'' +
+                ", preContent='" + preContent + '\'' +
+                ", userId=" + userId +
+                ", isDelete=" + isDelete +
+                '}';
+    }
 }

@@ -84,6 +84,7 @@ public class BlogHistoryController extends BaseController {
         }
         //List<BlogHistory> list = blogHistoryService.selectBlogHistoryList(dto);
         List<Map<String, Object>> mapList = blogHistoryMapper.queryBlogHistoryList_BySQL(dto);
+        // logger.info("数据长度: {} 查询历史记录mapList: {}", mapList.size(), mapList.toString());
         int i = blogHistoryMapper.queryBlogHistoryList_count(dto);
         return getDataTable_v2(mapList, i);
     }

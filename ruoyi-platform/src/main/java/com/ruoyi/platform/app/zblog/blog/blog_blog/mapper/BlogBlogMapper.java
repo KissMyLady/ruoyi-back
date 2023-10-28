@@ -3,6 +3,7 @@ package com.ruoyi.platform.app.zblog.blog.blog_blog.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.platform.app.zblog.blog.blog_blog.domain.BatchChangeAuthCodeDto;
 import com.ruoyi.platform.app.zblog.blog.blog_blog.domain.BlogBlog;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
@@ -47,6 +48,11 @@ public interface BlogBlogMapper {
      * 修改
      */
     int updateBlogBlog(BlogBlog dto);
+
+    /**
+     * 批量更新权限
+     */
+    int batch_update_authority(BatchChangeAuthCodeDto dto);
 
     /**
      * -删除-

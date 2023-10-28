@@ -7,6 +7,7 @@
     <resultMap type="BlogHistory" id="BlogHistoryResult">
         <result property="id" column="id"/>
         <result property="blogId" column="blog_id"/>
+        <result property="name" column="name"/>
         <result property="preContent" column="pre_content"/>
         <result property="userId" column="user_id"/>
         <result property="isDelete" column="is_delete"/>
@@ -17,6 +18,7 @@
     <sql id="selectBlogHistoryVo">
         select id,
                blog_id as blogId,
+               name,
                pre_content as preContent,
                user_id as userId,
                is_delete as isDelete,
@@ -48,11 +50,13 @@
         select id,
                blog_id as blogId,
                user_id as userId,
+               name,
                is_delete as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
                DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
         from blog_history
         <where>
+            <if test="name != null ">and name like '%${name}%'</if>
             <if test="blogId != null ">and blog_id = #{blogId}</if>
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="isDelete != null ">and is_delete = #{isDelete}</if>
@@ -69,8 +73,9 @@
             parameterType="BlogHistory"
             resultType="int">
         select count(1) as total
-        from blog_history
+            from blog_history
         <where>
+            <if test="name != null ">and name like '%${name}%'</if>
             <if test="blogId != null ">and blog_id = #{blogId}</if>
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="isDelete != null ">and is_delete = #{isDelete}</if>
@@ -80,20 +85,30 @@
     <select id="selectBlogHistoryById"
             parameterType="Long"
             resultType="map">
-        <include refid="selectBlogHistoryVo"/>
-        where id = #{id}
+        select id,
+               blog_id as blogId,
+               name,
+               pre_content as preContent,
+               user_id as userId,
+               is_delete as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
+        from blog_history
+            where id = #{id}
     </select>
     
     <insert id="insertBlogHistory" parameterType="BlogHistory" useGeneratedKeys="true" keyProperty="id">
         insert into blog_history
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="blogId != null">blog_id,</if>
+            <if test="name != null">name,</if>
             <if test="preContent != null">pre_content,</if>
             <if test="userId != null">user_id,</if>
             <if test="isDelete != null">is_delete,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="blogId != null">#{blogId},</if>
+            <if test="name != null">#{name},</if>
             <if test="preContent != null">#{preContent},</if>
             <if test="userId != null">#{userId},</if>
             <if test="isDelete != null">#{isDelete},</if>
@@ -104,6 +119,7 @@
         update blog_history
         <trim prefix="SET" suffixOverrides=",">
             <if test="blogId != null">blog_id = #{blogId},</if>
+            <if test="name != null">name = #{name},</if>
             <if test="preContent != null">pre_content = #{preContent},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="isDelete != null">is_delete = #{isDelete},</if>
