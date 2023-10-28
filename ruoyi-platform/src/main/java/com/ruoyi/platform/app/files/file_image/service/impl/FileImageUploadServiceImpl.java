@@ -81,7 +81,7 @@ public class FileImageUploadServiceImpl implements IFileImageUploadService {
 
         try {
             // 上传文件路径
-            String filePath = RuoYiConfig.getImgUploadPath();
+            String filePath = RuoYiConfig.getUploadPath();
 
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
@@ -115,7 +115,7 @@ public class FileImageUploadServiceImpl implements IFileImageUploadService {
             dto.setUpMethod("spring");
 
             //绝对路径与url设置
-            String replacePath = fileName.replace("/media/imgUpload", "");
+            String replacePath = fileName.replace("/media/upload", "");
             String absPath = filePath + replacePath;
             dto.setAbsPath(absPath);
 
