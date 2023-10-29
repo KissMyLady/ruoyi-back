@@ -161,6 +161,16 @@
         where id = #{id}
     </update>
     
+    <update id="batch_change_image_group" parameterType="FileImageGroupDto">
+        update file_image
+            set group_id = ${group_id}
+
+        where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
     <delete id="deletefile_imageById" parameterType="Long">
         delete
         from file_image

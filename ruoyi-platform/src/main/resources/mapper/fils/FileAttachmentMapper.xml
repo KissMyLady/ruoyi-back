@@ -164,6 +164,16 @@
         where id = #{id}
     </update>
     
+    <update id="batch_change_file_group" parameterType="FileGroupDto">
+        update file_attachment
+        set group_id = ${group_id}
+        
+        where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
     <delete id="deleteFileAttachmentById" parameterType="Long">
         delete
         from file_attachment

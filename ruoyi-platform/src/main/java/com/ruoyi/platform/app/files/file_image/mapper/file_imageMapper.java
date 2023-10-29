@@ -2,8 +2,11 @@ package com.ruoyi.platform.app.files.file_image.mapper;
 
 import java.util.List;
 import java.util.Map;
+
+import com.ruoyi.platform.app.files.file_image.domain.FileImageGroupDto;
 import com.ruoyi.platform.app.files.file_image.domain.file_image;
 import org.apache.ibatis.annotations.MapKey;
+import com.ruoyi.platform.app.files.file_attachment.domain.FileGroupDto;
 import org.apache.ibatis.annotations.Param;
 //import com.ruoyi.common.annotation.DataSource;
 //import com.ruoyi.common.enums.DataSourceType;
@@ -51,6 +54,11 @@ public interface file_imageMapper {
      * 修改
      */
     int updatefile_image(file_image dto);
+
+    /**
+     * 批量修改图片 所属组
+     */
+    int batch_change_image_group(FileImageGroupDto dto);
 
     /**
      * -删除-

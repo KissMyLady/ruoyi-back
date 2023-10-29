@@ -3,6 +3,7 @@ package com.ruoyi.platform.app.files.file_attachment.mapper;
 import java.util.List;
 import java.util.Map;
 import com.ruoyi.platform.app.files.file_attachment.domain.FileAttachment;
+import com.ruoyi.platform.app.files.file_attachment.domain.FileGroupDto;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 //import com.ruoyi.common.annotation.DataSource;
@@ -52,6 +53,12 @@ public interface FileAttachmentMapper {
      * 修改
      */
     int updateFileAttachment(FileAttachment dto);
+
+
+    /**
+     * 批量修改文件所属组
+     */
+    int batch_change_file_group(FileGroupDto dto);
 
     /**
      * -删除-

@@ -3,6 +3,7 @@ package com.ruoyi.platform.app.zblog.ideal.ideal_detail.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.platform.app.zblog.blog.blog_blog.domain.BatchChangeAuthCodeDto;
 import com.ruoyi.platform.app.zblog.ideal.ideal_detail.domain.IdealDetail;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
@@ -47,6 +48,11 @@ public interface IdealDetailMapper {
      * 修改
      */
     int updateIdealDetail(IdealDetail dto);
+
+    /**
+     * 批量修改权限代号
+     */
+    int batch_update_authority(BatchChangeAuthCodeDto dto);
 
     /**
      * -删除-

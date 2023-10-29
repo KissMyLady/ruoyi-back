@@ -44,8 +44,8 @@
                visitor          as visitor,
                is_allow_comment as isAllowComment,
                is_delete        as isDelete,
-               create_time      as createTime,
-               update_time      as updateTime
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
         from ideal_detail
     </sql>
     
@@ -86,16 +86,17 @@
                visitor          as visitor,
                is_allow_comment as isAllowComment,
                is_delete        as isDelete,
-               create_time      as createTime,
-               update_time      as updateTime
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
         from ideal_detail
         <where>
             <if test="projectId != null ">and project_id = #{projectId}</if>
-            <if test="title != null and title != ''">and title = #{title}</if>
+            <if test="title != null and title != ''">and title like '%${title}%'</if>
             <if test="descNote != null  and descNote != ''">and desc_note = #{descNote}</if>
             <if test="editorMode != null ">and editor_mode = #{editorMode}</if>
             <if test="authorityCode != null and authorityCode != ''">and authority_code = #{authorityCode}</if>
             <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
         </where>
         
         <if test="sortStr != null ">
@@ -112,10 +113,11 @@
         from ideal_detail
         <where>
             <if test="projectId != null ">and project_id = #{projectId}</if>
-            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="title != null  and title != ''">and title like '%${title}%'</if>
             <if test="editorMode != null ">and editor_mode = #{editorMode}</if>
             <if test="authorityCode != null and authorityCode != ''">and authority_code = #{authorityCode}</if>
             <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
         </where>
     </select>
     
@@ -188,6 +190,16 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where id = #{id}
+    </update>
+    
+    <update id="batch_update_authority" parameterType="BatchChangeAuthCodeDto">
+        update ideal_detail
+        set authority_code = #{code}
+        
+        where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </update>
     
     <delete id="deleteIdealDetailById" parameterType="Long">

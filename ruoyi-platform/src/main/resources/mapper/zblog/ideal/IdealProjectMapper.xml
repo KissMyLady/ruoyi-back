@@ -42,8 +42,8 @@
                is_top           as isTop,
                visitor          as visitor,
                is_delete        as isDelete,
-               create_time      as createTime,
-               update_time      as updateTime
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
         from ideal_project
     </sql>
     
@@ -83,8 +83,13 @@
                 is_top           as isTop,
                 visitor          as visitor,
                 is_delete        as isDelete,
-                create_time      as createTime,
-                update_time      as updateTime
+                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+                DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime,
+                (
+                    select count(1)
+                    from ideal_detail
+                    where project_id = ideal_project.id
+                )                as countSum
         from ideal_project
         <where>
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
@@ -92,7 +97,6 @@
             <if test="isDelete != null ">and is_delete = #{isDelete}</if>
             <if test="typeCode != null ">and type_code = #{typeCode}</if>
         </where>
-        
         <if test="sortStr != null ">
             <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
         </if>
