@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.ideal.ideal_detail.mapper.IdealDetailMapper">
+    
+    <resultMap type="IdealDetail" id="IdealDetailResult">
+        <result property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="title" column="title"/>
+        <result property="descNote" column="desc_note"/>
+        <result property="editorMode" column="editor_mode"/>
+        <result property="content" column="content"/>
+        <result property="preContent" column="pre_content"/>
+        <result property="sort" column="sort"/>
+        <result property="authorityCode" column="authority_code"/>
+        <result property="authorityValue" column="authority_value"/>
+        <result property="indexImgStatic" column="index_img_static"/>
+        <result property="srcType" column="src_type"/>
+        <result property="srcUrl" column="src_url"/>
+        <result property="visitor" column="visitor"/>
+        <result property="isAllowComment" column="is_allow_comment"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectIdealDetailVo">
+        select id,
+               project_id       as projectId,
+               user_id          as userId,
+               title            as title,
+               desc_note        as descNote,
+               editor_mode      as editorMode,
+               content          as content,
+               pre_content      as preContent,
+               sort             as sort,
+               authority_code   as authorityCode,
+               authority_value  as authorityValue,
+               index_img_static as indexImgStatic,
+               src_type         as srcType,
+               src_url          as srcUrl,
+               visitor          as visitor,
+               is_allow_comment as isAllowComment,
+               is_delete        as isDelete,
+               create_time      as createTime,
+               update_time      as updateTime
+        from ideal_detail
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectIdealDetailList"
+            parameterType="IdealDetail"
+            resultMap="IdealDetailResult">
+        <include refid="selectIdealDetailVo"/>
+        <where>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="editorMode != null ">and editor_mode = #{editorMode}</if>
+            <if test="authorityCode != null  and authorityCode != ''">and authority_code = #{authorityCode}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryIdealDetailList_BySQL"
+            parameterType="IdealDetail"
+            resultType="map">
+        select id,
+               project_id       as projectId,
+               user_id          as userId,
+               title            as title,
+               desc_note        as descNote,
+               editor_mode      as editorMode,
+               sort             as sort,
+               authority_code   as authorityCode,
+               authority_value  as authorityValue,
+               index_img_static as indexImgStatic,
+               src_type         as srcType,
+               src_url          as srcUrl,
+               visitor          as visitor,
+               is_allow_comment as isAllowComment,
+               is_delete        as isDelete,
+               create_time      as createTime,
+               update_time      as updateTime
+        from ideal_detail
+        <where>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="title != null and title != ''">and title = #{title}</if>
+            <if test="descNote != null  and descNote != ''">and desc_note = #{descNote}</if>
+            <if test="editorMode != null ">and editor_mode = #{editorMode}</if>
+            <if test="authorityCode != null and authorityCode != ''">and authority_code = #{authorityCode}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryIdealDetailList_count"
+            parameterType="IdealDetail"
+            resultType="int">
+        select count(1) as total
+        from ideal_detail
+        <where>
+            <if test="projectId != null ">and project_id = #{projectId}</if>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="editorMode != null ">and editor_mode = #{editorMode}</if>
+            <if test="authorityCode != null and authorityCode != ''">and authority_code = #{authorityCode}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectIdealDetailById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectIdealDetailVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertIdealDetail" parameterType="IdealDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into ideal_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">project_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="title != null">title,</if>
+            <if test="descNote != null">desc_note,</if>
+            <if test="editorMode != null">editor_mode,</if>
+            <if test="content != null">content,</if>
+            <if test="preContent != null">pre_content,</if>
+            <if test="sort != null">sort,</if>
+            <if test="authorityCode != null">authority_code,</if>
+            <if test="authorityValue != null">authority_value,</if>
+            <if test="indexImgStatic != null">index_img_static,</if>
+            <if test="srcType != null">src_type,</if>
+            <if test="srcUrl != null">src_url,</if>
+            <if test="visitor != null">visitor,</if>
+            <if test="isAllowComment != null">is_allow_comment,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="descNote != null">#{descNote},</if>
+            <if test="editorMode != null">#{editorMode},</if>
+            <if test="content != null">#{content},</if>
+            <if test="preContent != null">#{preContent},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="authorityCode != null">#{authorityCode},</if>
+            <if test="authorityValue != null">#{authorityValue},</if>
+            <if test="indexImgStatic != null">#{indexImgStatic},</if>
+            <if test="srcType != null">#{srcType},</if>
+            <if test="srcUrl != null">#{srcUrl},</if>
+            <if test="visitor != null">#{visitor},</if>
+            <if test="isAllowComment != null">#{isAllowComment},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateIdealDetail" parameterType="IdealDetail">
+        update ideal_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="descNote != null">desc_note = #{descNote},</if>
+            <if test="editorMode != null">editor_mode = #{editorMode},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="preContent != null">pre_content = #{preContent},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="authorityCode != null">authority_code = #{authorityCode},</if>
+            <if test="authorityValue != null">authority_value = #{authorityValue},</if>
+            <if test="indexImgStatic != null">index_img_static = #{indexImgStatic},</if>
+            <if test="srcType != null">src_type = #{srcType},</if>
+            <if test="srcUrl != null">src_url = #{srcUrl},</if>
+            <if test="visitor != null">visitor = #{visitor},</if>
+            <if test="isAllowComment != null">is_allow_comment = #{isAllowComment},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteIdealDetailById" parameterType="Long">
+        delete
+        from ideal_detail
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteIdealDetailByIds" parameterType="String">
+        delete from ideal_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

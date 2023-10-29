@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.ideal.ideal_project.mapper.IdealProjectMapper">
+    
+    <resultMap type="IdealProject" id="IdealProjectResult">
+        <result property="id" column="id"/>
+        <result property="typeCode" column="type_code"/>
+        <result property="userId" column="user_id"/>
+        <result property="name" column="name"/>
+        <result property="coverImage" column="cover_image"/>
+        <result property="editorMode" column="editor_mode"/>
+        <result property="content" column="content"/>
+        <result property="preContent" column="pre_content"/>
+        <result property="authorityCode" column="authority_code"/>
+        <result property="authorityValue" column="authority_value"/>
+        <result property="sort" column="sort"/>
+        <result property="sortField" column="sort_field"/>
+        <result property="isAllowComment" column="is_allow_comment"/>
+        <result property="isTop" column="is_top"/>
+        <result property="visitor" column="visitor"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectIdealProjectVo">
+        select id,
+               type_code        as typeCode,
+               user_id          as userId,
+               name             as name,
+               cover_image      as coverImage,
+               editor_mode      as editorMode,
+               content          as content,
+               pre_content      as preContent,
+               authority_code   as authorityCode,
+               authority_value  as authorityValue,
+               sort             as sort,
+               sort_field       as sortField,
+               is_allow_comment as isAllowComment,
+               is_top           as isTop,
+               visitor          as visitor,
+               is_delete        as isDelete,
+               create_time      as createTime,
+               update_time      as updateTime
+        from ideal_project
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectIdealProjectList"
+            parameterType="IdealProject"
+            resultMap="IdealProjectResult">
+        <include refid="selectIdealProjectVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="authorityCode != null  and authorityCode != ''">and authority_code = #{authorityCode}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryIdealProjectList_BySQL"
+            parameterType="IdealProject"
+            resultType="map">
+        select id,
+                type_code        as typeCode,
+                user_id          as userId,
+                name             as name,
+                cover_image      as coverImage,
+                editor_mode      as editorMode,
+                content          as content,
+                pre_content      as preContent,
+                authority_code   as authorityCode,
+                authority_value  as authorityValue,
+                sort             as sort,
+                sort_field       as sortField,
+                is_allow_comment as isAllowComment,
+                is_top           as isTop,
+                visitor          as visitor,
+                is_delete        as isDelete,
+                create_time      as createTime,
+                update_time      as updateTime
+        from ideal_project
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="authorityCode != null  and authorityCode != ''">and authority_code = #{authorityCode}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+            <if test="typeCode != null ">and type_code = #{typeCode}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryIdealProjectList_count"
+            parameterType="IdealProject"
+            resultType="int">
+        select count(1) as total
+        from ideal_project
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="authorityCode != null  and authorityCode != ''">and authority_code = #{authorityCode}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectIdealProjectById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectIdealProjectVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertIdealProject" parameterType="IdealProject" useGeneratedKeys="true" keyProperty="id">
+        insert into ideal_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeCode != null">type_code,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="name != null">name,</if>
+            <if test="coverImage != null">cover_image,</if>
+            <if test="editorMode != null">editor_mode,</if>
+            <if test="content != null">content,</if>
+            <if test="preContent != null">pre_content,</if>
+            <if test="authorityCode != null">authority_code,</if>
+            <if test="authorityValue != null">authority_value,</if>
+            <if test="sort != null">sort,</if>
+            <if test="sortField != null">sort_field,</if>
+            <if test="isAllowComment != null">is_allow_comment,</if>
+            <if test="isTop != null">is_top,</if>
+            <if test="visitor != null">visitor,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeCode != null">#{typeCode},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="coverImage != null">#{coverImage},</if>
+            <if test="editorMode != null">#{editorMode},</if>
+            <if test="content != null">#{content},</if>
+            <if test="preContent != null">#{preContent},</if>
+            <if test="authorityCode != null">#{authorityCode},</if>
+            <if test="authorityValue != null">#{authorityValue},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="sortField != null">#{sortField},</if>
+            <if test="isAllowComment != null">#{isAllowComment},</if>
+            <if test="isTop != null">#{isTop},</if>
+            <if test="visitor != null">#{visitor},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateIdealProject" parameterType="IdealProject">
+        update ideal_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeCode != null">type_code = #{typeCode},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="coverImage != null">cover_image = #{coverImage},</if>
+            <if test="editorMode != null">editor_mode = #{editorMode},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="preContent != null">pre_content = #{preContent},</if>
+            <if test="authorityCode != null">authority_code = #{authorityCode},</if>
+            <if test="authorityValue != null">authority_value = #{authorityValue},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="sortField != null">sort_field = #{sortField},</if>
+            <if test="isAllowComment != null">is_allow_comment = #{isAllowComment},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="visitor != null">visitor = #{visitor},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteIdealProjectById" parameterType="Long">
+        delete
+        from ideal_project
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteIdealProjectByIds" parameterType="String">
+        delete from ideal_project where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

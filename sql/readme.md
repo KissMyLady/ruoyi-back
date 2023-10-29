@@ -6,7 +6,7 @@
 导出表结构
 
 ```sh
-mysqldump -uroot -p my_ry_vue > my_ry_vue_102_1315.sql
+mysqldump -uroot -pYING123ZZ my_ry_vue > my_ry_vue_102_1315.sql
 mysqldump -uroot -p zblog > zblog_102_1315.sql
 mysqldump -uroot -p mydoc > mydoc_1315.sql
 ```
