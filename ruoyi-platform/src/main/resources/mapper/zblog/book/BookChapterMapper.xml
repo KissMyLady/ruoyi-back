@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.book.book_chapter.mapper.BookChapterMapper">
+    
+    <resultMap type="BookChapter" id="BookChapterResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="bookId" column="book_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="title" column="title"/>
+        <result property="descNote" column="desc_note"/>
+        <result property="coverImg" column="cover_img"/>
+        <result property="editorMode" column="editor_mode"/>
+        <result property="content" column="content"/>
+        <result property="preContent" column="pre_content"/>
+        <result property="editOpenChildren" column="edit_open_children"/>
+        <result property="showOpenChildren" column="show_open_children"/>
+        <result property="visitor" column="visitor"/>
+        <result property="authorityCode" column="authority_code"/>
+        <result property="authorityValue" column="authority_value"/>
+        <result property="allowComment" column="allow_comment"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectBookChapterVo">
+        select id,
+               user_id            as userId,
+               book_id            as bookId,
+               parent_id          as parentId,
+               title              as title,
+               desc_note          as descNote,
+               cover_img          as coverImg,
+               editor_mode        as editorMode,
+               content            as content,
+               pre_content        as preContent,
+               edit_open_children as editOpenChildren,
+               show_open_children as showOpenChildren,
+               visitor            as visitor,
+               authority_code     as authorityCode,
+               authority_value    as authorityValue,
+               allow_comment      as allowComment,
+               is_delete          as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
+        from book_chapter
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectBookChapterList"
+            parameterType="BookChapter"
+            resultMap="BookChapterResult">
+        <include refid="selectBookChapterVo"/>
+        <where>
+            <if test="bookId != null ">and book_id = #{bookId}</if>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBookChapterList_BySQL"
+            parameterType="BookChapter"
+            resultType="map">
+        select bc.id,
+               bc.user_id                                       as userId,
+               bc.book_id                                       as bookId,
+               bc.parent_id                                     as parentId,
+               bc.title                                         as title,
+               bc.desc_note                                     as descNote,
+               bc.cover_img                                     as coverImg,
+               bc.editor_mode                                   as editorMode,
+               bc.edit_open_children                            as editOpenChildren,
+               bc.show_open_children                            as showOpenChildren,
+               bc.visitor                                       as visitor,
+               bc.authority_code                                as authorityCode,
+               bc.authority_value                               as authorityValue,
+               bc.allow_comment                                 as allowComment,
+               bc.is_delete                                     as isDelete,
+               DATE_FORMAT(bc.create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(bc.update_time, '%Y-%m-%d %H:%i:%S') as updateTime,
+               bb.book_name                                     as bookName
+        from book_chapter bc
+                left join book_book bb on bb.id = bc.book_id
+        <where>
+            <if test="descNote != null and descNote != ''">and bb.book_name like '%${descNote}%'</if>
+            <if test="bookId != null ">and bc.book_id = #{bookId}</if>
+            <if test="title != null and title != ''">and bc.title like '%${title}%'</if>
+            <if test="isDelete != null ">and bc.is_delete = #{isDelete}</if>
+            <if test="userId != null ">and bc.user_id = #{userId}</if>
+            <if test="authorityCode != null and authorityCode != ''">and bc.authority_code = #{authorityCode}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by bc.${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBookChapterList_count"
+            parameterType="BookChapter"
+            resultType="int">
+        select count(1) as total
+            from book_chapter bc
+        left join book_book bb
+            on bb.id = bc.book_id
+        <where>
+            <if test="descNote != null and descNote != ''">and bb.book_name like '%${descNote}%'</if>
+            <if test="bookId != null ">and bc.book_id = #{bookId}</if>
+            <if test="title != null  and title != ''">and bc.title like '%${title}%'</if>
+            <if test="isDelete != null ">and bc.is_delete = #{isDelete}</if>
+            <if test="userId != null ">and bc.user_id = #{userId}</if>
+            <if test="authorityCode != null and authorityCode != ''">and bc.authority_code = #{authorityCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectBookChapterById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectBookChapterVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertBookChapter" parameterType="BookChapter" useGeneratedKeys="true" keyProperty="id">
+        insert into book_chapter
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="bookId != null">book_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="title != null">title,</if>
+            <if test="descNote != null">desc_note,</if>
+            <if test="coverImg != null">cover_img,</if>
+            <if test="editorMode != null">editor_mode,</if>
+            <if test="content != null">content,</if>
+            <if test="preContent != null">pre_content,</if>
+            <if test="editOpenChildren != null">edit_open_children,</if>
+            <if test="showOpenChildren != null">show_open_children,</if>
+            <if test="visitor != null">visitor,</if>
+            <if test="authorityCode != null">authority_code,</if>
+            <if test="authorityValue != null">authority_value,</if>
+            <if test="allowComment != null">allow_comment,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="bookId != null">#{bookId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="descNote != null">#{descNote},</if>
+            <if test="coverImg != null">#{coverImg},</if>
+            <if test="editorMode != null">#{editorMode},</if>
+            <if test="content != null">#{content},</if>
+            <if test="preContent != null">#{preContent},</if>
+            <if test="editOpenChildren != null">#{editOpenChildren},</if>
+            <if test="showOpenChildren != null">#{showOpenChildren},</if>
+            <if test="visitor != null">#{visitor},</if>
+            <if test="authorityCode != null">#{authorityCode},</if>
+            <if test="authorityValue != null">#{authorityValue},</if>
+            <if test="allowComment != null">#{allowComment},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateBookChapter" parameterType="BookChapter">
+        update book_chapter
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="bookId != null">book_id = #{bookId},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="descNote != null">desc_note = #{descNote},</if>
+            <if test="coverImg != null">cover_img = #{coverImg},</if>
+            <if test="editorMode != null">editor_mode = #{editorMode},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="preContent != null">pre_content = #{preContent},</if>
+            <if test="editOpenChildren != null">edit_open_children = #{editOpenChildren},</if>
+            <if test="showOpenChildren != null">show_open_children = #{showOpenChildren},</if>
+            <if test="visitor != null">visitor = #{visitor},</if>
+            <if test="authorityCode != null">authority_code = #{authorityCode},</if>
+            <if test="authorityValue != null">authority_value = #{authorityValue},</if>
+            <if test="allowComment != null">allow_comment = #{allowComment},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteBookChapterById" parameterType="Long">
+        delete
+        from book_chapter
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteBookChapterByIds" parameterType="String">
+        delete from book_chapter where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.app.zblog.book.book_book.mapper.BookBookMapper">
+    
+    <resultMap type="BookBook" id="BookBookResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="bookType" column="book_type"/>
+        <result property="bookName" column="book_name"/>
+        <result property="bookCover" column="book_cover"/>
+        <result property="bAuthor" column="b_author"/>
+        <result property="bPublisher" column="b_publisher"/>
+        <result property="bPublicData" column="b_public_data"/>
+        <result property="bTranslate" column="b_translate"/>
+        <result property="bReadStartTime" column="b_read_start_time"/>
+        <result property="bReadEndTime" column="b_read_end_time"/>
+        <result property="bIsOver" column="b_is_over"/>
+        <result property="bPrice" column="b_price"/>
+        <result property="intro" column="intro"/>
+        <result property="editorMode" column="editor_mode"/>
+        <result property="content" column="content"/>
+        <result property="preContent" column="pre_content"/>
+        <result property="authorityCode" column="authority_code"/>
+        <result property="authorityValue" column="authority_value"/>
+        <result property="sortField" column="sort_field"/>
+        <result property="sort" column="sort"/>
+        <result property="isAllowComment" column="is_allow_comment"/>
+        <result property="isTop" column="is_top"/>
+        <result property="visitor" column="visitor"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <sql id="selectBookBookVo">
+        select id,
+               user_id           as userId,
+               book_type         as bookType,
+               book_name         as bookName,
+               book_cover        as bookCover,
+               b_author          as bAuthor,
+               b_publisher       as bPublisher,
+               b_public_data     as bPublicData,
+               b_translate       as bTranslate,
+               b_read_start_time as bReadStartTime,
+               b_read_end_time   as bReadEndTime,
+               b_is_over         as bIsOver,
+               b_price           as bPrice,
+               intro             as intro,
+               editor_mode       as editorMode,
+               content           as content,
+               pre_content       as preContent,
+               authority_code    as authorityCode,
+               authority_value   as authorityValue,
+               sort_field        as sortField,
+               sort              as sort,
+               is_allow_comment  as isAllowComment,
+               is_top            as isTop,
+               visitor           as visitor,
+               is_delete         as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
+        from book_book
+    </sql>
+    
+    <!--当天时间筛选 and DATE_FORMAT(recharge_time, '%Y-%m-%d') = DATE_FORMAT(#{rechargeTime}, '%Y-%m-%d') -->
+    <select id="selectBookBookList"
+            parameterType="BookBook"
+            resultMap="BookBookResult">
+        <include refid="selectBookBookVo"/>
+        <where>
+            <if test="bookType != null  and bookType != ''">and book_type like concat('%', #{bookType}, '%')</if>
+            <if test="bookName != null  and bookName != ''">and book_name like concat('%', #{bookName}, '%')</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+        </where>
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBookBookList_BySQL"
+            parameterType="BookBook"
+            resultType="map">
+        select id,
+               user_id           as userId,
+               book_type         as bookType,
+               book_name         as bookName,
+               book_cover        as bookCover,
+               b_author          as bAuthor,
+               b_publisher       as bPublisher,
+               b_public_data     as bPublicData,
+               b_translate       as bTranslate,
+               b_read_start_time as bReadStartTime,
+               b_read_end_time   as bReadEndTime,
+               b_is_over         as bIsOver,
+               b_price           as bPrice,
+               intro             as intro,
+               editor_mode       as editorMode,
+               authority_code    as authorityCode,
+               authority_value   as authorityValue,
+               sort_field        as sortField,
+               sort              as sort,
+               is_allow_comment  as isAllowComment,
+               is_top            as isTop,
+               visitor           as visitor,
+               is_delete         as isDelete,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime,
+                (
+                    select count(1)
+                    from book_chapter
+                    where book_id = book_book.id
+                )                                             as countSum
+        from book_book
+        <where>
+            <if test="bookType != null  and bookType != ''">and book_type like concat('%', #{bookType}, '%')</if>
+            <if test="bookName != null  and bookName != ''">and book_name like concat('%', #{bookName}, '%')</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+        </where>
+        
+        <if test="sortStr != null ">
+            <if test="isAsc != null ">order by ${sortStr} ${isAsc}</if>
+        </if>
+        limit ${pageNum}, ${pageSize}
+    </select>
+    
+    
+    <select id="queryBookBookList_count"
+            parameterType="BookBook"
+            resultType="int">
+        select count(1) as total
+        from book_book
+        <where>
+            <if test="bookType != null  and bookType != ''">and book_type like concat('%', #{bookType}, '%')</if>
+            <if test="bookName != null  and bookName != ''">and book_name like concat('%', #{bookName}, '%')</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBookBookById"
+            parameterType="Long"
+            resultType="map">
+        <include refid="selectBookBookVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertBookBook" parameterType="BookBook" useGeneratedKeys="true" keyProperty="id">
+        insert into book_book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="bookType != null">book_type,</if>
+            <if test="bookName != null">book_name,</if>
+            <if test="bookCover != null">book_cover,</if>
+            <if test="bAuthor != null">b_author,</if>
+            <if test="bPublisher != null">b_publisher,</if>
+            <if test="bPublicData != null">b_public_data,</if>
+            <if test="bTranslate != null">b_translate,</if>
+            <if test="bReadStartTime != null">b_read_start_time,</if>
+            <if test="bReadEndTime != null">b_read_end_time,</if>
+            <if test="bIsOver != null">b_is_over,</if>
+            <if test="bPrice != null">b_price,</if>
+            <if test="intro != null">intro,</if>
+            <if test="editorMode != null">editor_mode,</if>
+            <if test="content != null">content,</if>
+            <if test="preContent != null">pre_content,</if>
+            <if test="authorityCode != null">authority_code,</if>
+            <if test="authorityValue != null">authority_value,</if>
+            <if test="sortField != null">sort_field,</if>
+            <if test="sort != null">sort,</if>
+            <if test="isAllowComment != null">is_allow_comment,</if>
+            <if test="isTop != null">is_top,</if>
+            <if test="visitor != null">visitor,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="bookType != null">#{bookType},</if>
+            <if test="bookName != null">#{bookName},</if>
+            <if test="bookCover != null">#{bookCover},</if>
+            <if test="bAuthor != null">#{bAuthor},</if>
+            <if test="bPublisher != null">#{bPublisher},</if>
+            <if test="bPublicData != null">#{bPublicData},</if>
+            <if test="bTranslate != null">#{bTranslate},</if>
+            <if test="bReadStartTime != null">#{bReadStartTime},</if>
+            <if test="bReadEndTime != null">#{bReadEndTime},</if>
+            <if test="bIsOver != null">#{bIsOver},</if>
+            <if test="bPrice != null">#{bPrice},</if>
+            <if test="intro != null">#{intro},</if>
+            <if test="editorMode != null">#{editorMode},</if>
+            <if test="content != null">#{content},</if>
+            <if test="preContent != null">#{preContent},</if>
+            <if test="authorityCode != null">#{authorityCode},</if>
+            <if test="authorityValue != null">#{authorityValue},</if>
+            <if test="sortField != null">#{sortField},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="isAllowComment != null">#{isAllowComment},</if>
+            <if test="isTop != null">#{isTop},</if>
+            <if test="visitor != null">#{visitor},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateBookBook" parameterType="BookBook">
+        update book_book
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="bookType != null">book_type = #{bookType},</if>
+            <if test="bookName != null">book_name = #{bookName},</if>
+            <if test="bookCover != null">book_cover = #{bookCover},</if>
+            <if test="bAuthor != null">b_author = #{bAuthor},</if>
+            <if test="bPublisher != null">b_publisher = #{bPublisher},</if>
+            <if test="bPublicData != null">b_public_data = #{bPublicData},</if>
+            <if test="bTranslate != null">b_translate = #{bTranslate},</if>
+            <if test="bReadStartTime != null">b_read_start_time = #{bReadStartTime},</if>
+            <if test="bReadEndTime != null">b_read_end_time = #{bReadEndTime},</if>
+            <if test="bIsOver != null">b_is_over = #{bIsOver},</if>
+            <if test="bPrice != null">b_price = #{bPrice},</if>
+            <if test="intro != null">intro = #{intro},</if>
+            <if test="editorMode != null">editor_mode = #{editorMode},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="preContent != null">pre_content = #{preContent},</if>
+            <if test="authorityCode != null">authority_code = #{authorityCode},</if>
+            <if test="authorityValue != null">authority_value = #{authorityValue},</if>
+            <if test="sortField != null">sort_field = #{sortField},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="isAllowComment != null">is_allow_comment = #{isAllowComment},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="visitor != null">visitor = #{visitor},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteBookBookById" parameterType="Long">
+        delete
+        from book_book
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteBookBookByIds" parameterType="String">
+        delete from book_book where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
