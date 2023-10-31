@@ -95,7 +95,10 @@
                visitor,
                is_delete as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime,
+               (
+                  select name from blog_project where blog_project.id = blog_blog.project_id
+               ) as projectName
         from blog_blog
         <where>
             <if test="projectId != null ">and project_id = #{projectId}</if>

@@ -87,7 +87,10 @@
                is_allow_comment as isAllowComment,
                is_delete        as isDelete,
                DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
-               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime
+               DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%S') as updateTime,
+               (
+                  select name from ideal_project where ideal_project.id = ideal_detail.project_id
+               ) as projectName
         from ideal_detail
         <where>
             <if test="projectId != null ">and project_id = #{projectId}</if>

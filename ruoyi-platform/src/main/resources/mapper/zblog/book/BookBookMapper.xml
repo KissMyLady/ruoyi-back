@@ -115,7 +115,14 @@
                     select count(1)
                     from book_chapter
                     where book_id = book_book.id
-                )                                             as countSum
+                )                                             as countSum,
+                (
+                    select group_concat(book_chapter.title, ',')
+                    from book_chapter
+                    where book_id = book_book.id
+                    order by book_chapter.create_time desc
+                    limit 0, 5
+                ) as bookLastChapter
         from book_book
         <where>
             <if test="bookType != null  and bookType != ''">and book_type like concat('%', #{bookType}, '%')</if>
