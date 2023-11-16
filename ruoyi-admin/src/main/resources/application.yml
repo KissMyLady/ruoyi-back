@@ -14,7 +14,7 @@ spring:
 
 # 忽略鉴权url
 ignored:
-  urls: /hi/**, /hello/**, /openApi/**
+  urls: /hi/**, /hello/**, /openApi/**, /magic/**
   # urls: /hi/**, /hello/**, /openApi/**, /app_doc_doc/** , /file_attachment/**, /file_image/**
 
 
