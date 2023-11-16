@@ -67,7 +67,8 @@ magic-api:
     # datasource: magic # 指定数据源（单数据源时无需配置，多数据源时默认使用主数据源，如果存在其他数据源中需要指定。）
     prefix: /magic-api # key前缀
     readonly: false  # 是否是只读模式
-
+  # 配置项地址
+  editor-config: classpath:./magic-editor-config.js
 
 spring:
   web:

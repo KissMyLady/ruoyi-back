@@ -101,6 +101,8 @@
     <!-- Spring日志级别控制  -->
     <logger name="org.springframework" level="warn"/>
     <logger name="org.apache.shiro.cache.ehcache" level="warn"/>
+    <!-- magicapi日志级别控制  -->
+    <logger name="org.ssssssss.magicapi" level="warn"/>
     
     
 <!--    <root level="debug">-->

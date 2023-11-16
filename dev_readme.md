@@ -94,7 +94,7 @@ magic-api:
   web: /magic/web
   security: # 登录
     username: zhuying  # 用户名
-    password: Zkil+-U)HwVE&k?qwJ+Aj5nUf@^{{}00  # 密码  11-89
+        password: Zkil+-U)HwVE&k?qwJ+Aj5nUf@^{{}00  # 密码  11-89
   resource: #配置存储方式
     # 配置文件存储位置。当以classpath开头时，为只读模式
     # mac用户请改为可读写的目录
@@ -105,4 +105,15 @@ magic-api:
     # datasource: magic # 指定数据源（单数据源时无需配置，多数据源时默认使用主数据源，如果存在其他数据源中需要指定。）
     prefix: /magic-api # key前缀
     readonly: false  # 是否是只读模式
+```
+
+创建表
+```sql
+CREATE TABLE magic_api_file
+(
+    file_path    varchar(512) not null comment '路径',
+    file_content mediumtext   null comment '内容',
+    PRIMARY KEY (file_path)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
 ```
