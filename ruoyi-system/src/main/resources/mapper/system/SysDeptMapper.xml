@@ -53,9 +53,9 @@
         <if test="status != null and status != ''">
             AND status = #{status}
         </if>
-        <!-- 数据范围过滤 ${params.dataScope}-->
+        <!-- 数据范围过滤 ${params.dataScope}    limit ${pageNum}, ${pageSize}-->
         order by d.parent_id, d.order_num
-        limit ${pageNum}, ${pageSize}
+
     </select>
     
     <select id="queryRwoTotal_dept" parameterType="SysDept" resultType="int">

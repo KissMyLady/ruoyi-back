@@ -69,6 +69,10 @@ magic-api:
     readonly: false  # 是否是只读模式
   # 配置项地址
   editor-config: classpath:./magic-editor-config.js
+  banner: false # 打印banner
+  auto-import-module: db  # 自动导入的模块
+  auto-import-package: java.lang.*,java.util.* #自动导包
+
 
 spring:
   web:
